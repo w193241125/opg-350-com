@@ -15,13 +15,12 @@ class CreateMenusTable extends Migration
     {
         Schema::create('menus', function (Blueprint $table) {
             $table->increments('id');
-            $table->tinyInteger('type')->comment('1:项目 2:栏目 3:菜单');
-            $table->Integer('cid')->comment('项目id');
-            $table->Integer('pid')->comment('栏目id');
-            $table->string('name', 20)->comment('名称');
-            $table->string('permission_name', 50)->comment('权限控制名称，只能是英文');
-            $table->tinyInteger('order_id')->comment('排序id');
-            $table->tinyInteger('state')->comment('状态，1:正常，2:隐藏');
+            $table->Integer('parent_id')->default(0)->comment('父级id');
+            $table->integer('order')->default(0)->comment('排序id，asc');
+            $table->string('name', 50)->comment('名称');
+            $table->string('uri', 50)->comment('路由名也是权限控制名称，只能是英文');
+            $table->string('icon', 50)->default('fa-circle-o')->comment('字体图标');
+            $table->tinyInteger('state')->default(1)->comment('状态，1:正常，2:隐藏');
             $table->timestamps();
         });
     }

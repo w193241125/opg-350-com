@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Menu;
 use Illuminate\Http\Request;
 
 class IndexController extends Controller
@@ -12,8 +13,13 @@ class IndexController extends Controller
      * @param Menu $menuModel
      * @return mixed
      */
-    public function index()
+    public function index(Menu $menuModel)
     {
+        $menus = Menu::all();
+        $assign = [
+            'menus'=>$menus,
+        ];
 
+        return view('index',$assign);
     }
 }
