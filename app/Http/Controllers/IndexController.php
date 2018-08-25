@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class IndexController extends Controller
 {
+
     /**
      * 首页
      *
