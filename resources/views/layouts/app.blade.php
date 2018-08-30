@@ -30,7 +30,7 @@
     <!-- Google Font -->
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-
+    @yield('styles')
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -58,9 +58,16 @@
 <script src="/AdminLTE/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 <!-- ChartJS -->
 <script src="/AdminLTE/bower_components/chart.js/Chart.js"></script>
+
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="/AdminLTE/dist/js/pages/dashboard2.js"></script>
 <!-- AdminLTE for demo purposes -->
+
+{{--这个控制主题改变--}}
 <script src="/AdminLTE/dist/js/demo.js"></script>
+
+
+
+@yield('script')
 </body>
 </html>

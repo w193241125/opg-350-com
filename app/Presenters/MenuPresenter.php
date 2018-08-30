@@ -33,11 +33,6 @@ class MenuPresenter
     {
         $this->model_menu = $menu;
 
-//        $this->middleware(function ($request, $next) {
-//            $this->user = $request->user();
-//
-//            return $next($request);
-//        });
     }
 
     /**
@@ -95,13 +90,12 @@ class MenuPresenter
                     self::$parent_key = -1;
                 }
                 $html .= <<<Eof
-                    <li class="nav-item {$open}">
-                        <a href="javascript:;" class="nav-link nav-toggle">
-                            <i class="{$icon}"></i>
-                            <span class="title">{$name}</span>
-                            <span class="arrow {$open}"></span>
+                    <li class="treeview {$open}">
+                        <a href="javascript:;">
+                            <i class="fa {$icon}"></i> <span>{$name}</span>
+                            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                         </a>
-                        <ul class="sub-menu">
+                        <ul class="treeview-menu" style="display: none;">
                             {$html_child}
                         </ul>
                     </li>
@@ -109,15 +103,9 @@ Eof;
             } else {
                 //不存在子菜单直接输出链接导航，判断路由是否存在
                 $url = Route::getRoutes()->getByName($menu['uri']) ? route($menu['uri']) : '#';
-
                 $active = self::$active;
                 $html .= <<<Eof
-                <li class="nav-item {$active}">
-                    <a href="{$url}" class="nav-link">
-                        <i class="{$icon}"></i>
-                        <span class="title">{$name}</span>
-                    </a>
-                </li>
+                <li><a href="{$url}"><i class="fa {$icon}"></i> {$name}</a></li>
 Eof;
             }
         }
@@ -138,15 +126,17 @@ Eof;
     {
         $html = '<ol class="dd-list">';
         foreach ($menus as $key => $menu) {
-            $delete_url = route("menutable.destroy", $menu->id);
-            $edit_url = route("menutable.edit", $menu->id);
+//            $delete_url = route("menutable.destroy", $menu->id);
+//            $edit_url = route("menutable.edit", $menu->id);
+            $edit_url = '/';
+            $delete_url = '/';
             $icon = htmlspecialchars($menu->icon);
             $name = htmlspecialchars($menu->name);
             $uri = htmlspecialchars($menu->uri);
             $html .= <<<Eof
                 <li class="dd-item" id="menu_li_{$menu->id}" data-id="{$menu->id}">
                     <div class="dd-handle">
-                        <i class="{$icon}"></i>&nbsp;{$name}&nbsp;:&nbsp;{$uri}
+                        <i class="fa {$icon}"></i>&nbsp;{$name}&nbsp;:&nbsp;{$uri}
                         <span class="menu-option action dd-nodrag" data-field-name="_edit">
                             <a href="javascript:;" data-href="{$edit_url}" class="editMenu"><i class="fa fa-edit"></i></a>
                             <a href="javascript:void(0);">
