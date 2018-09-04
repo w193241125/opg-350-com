@@ -12,6 +12,7 @@ namespace App\Presenters;
 use App\Models\Menu;
 use App\Models\MyPermission;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Route;
 
 class MenuPresenter
@@ -43,7 +44,7 @@ class MenuPresenter
      * */
     public function sidebarMenuList($sidebarMenus, $parent_key = -1)
     {
-
+        Redis::set('name', 'Taylor');
         $user = Auth::user();
         //记录递归层数
         self::$layer++;
@@ -66,12 +67,12 @@ class MenuPresenter
             $uri_arr = explode('.', $menu['uri']);
 
             //相同菜单前缀保持菜单选中状态
-//            self::$active = active_class(if_route_pattern([$uri_arr[0].'.*']), 'active open');
+            self::$active = active_class(if_route_pattern([$uri_arr[0]]), 'menu-open');
             $open_arr[$key] = self::$active;
             if ($count == $key+1) {
-                if (in_array('active open', $open_arr)) {
+                if (in_array('menu-open', $open_arr)) {
                     //被选中菜单进入
-                    self::$open = 'active open';
+                    self::$open = 'active menu-open';
                     self::$parent_key = $parent_key;
                 }
             }
@@ -92,10 +93,10 @@ class MenuPresenter
                 $html .= <<<Eof
                     <li class="treeview {$open}">
                         <a href="javascript:;">
-                            <i class="fa {$icon}"></i> <span>{$name}</span>
+                            <i class="fa {$icon}"></i> <span>{$name}</span><!--栏目-->
                             <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                         </a>
-                        <ul class="treeview-menu" style="display: none;">
+                        <ul class="treeview-menu" >
                             {$html_child}
                         </ul>
                     </li>
@@ -103,9 +104,12 @@ Eof;
             } else {
                 //不存在子菜单直接输出链接导航，判断路由是否存在
                 $url = Route::getRoutes()->getByName($menu['uri']) ? route($menu['uri']) : '#';
+//                var_dump($menu['uri']);
                 $active = self::$active;
                 $html .= <<<Eof
-                <li><a href="{$url}"><i class="fa {$icon}"></i> {$name}</a></li>
+                <li>
+                    <a href="{$url}"><i class="fa {$icon}"></i>{$name}</a>
+                </li>
 Eof;
             }
         }

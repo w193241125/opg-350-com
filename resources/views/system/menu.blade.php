@@ -86,6 +86,7 @@
 
 {{--尾部前端资源--}}
 @section('script')
+    @parent
     <!-- BEGIN PAGE LEVEL PLUGINS -->
     <script src="{{ asset('vendor/jquery-nestable/jquery.nestable.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/admin/menu/scripts/ui-nestable.js') }}" type="text/javascript"></script>
@@ -96,6 +97,7 @@
     {{--sweetalert弹窗--}}
     <script src="/sweetalert2/dist/sweetalert2.min.js"></script>
     <link rel="stylesheet" href="/sweetalert2/dist/sweetalert2.min.css">
+    <script src="{{ asset('assets/admin/layouts/scripts/sweetalert/sweetalert-ajax-delete.js') }}" type="text/javascript"></script>
 
     <!-- Include a polyfill for ES6 Promises (optional) for IE11 and Android browser -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
@@ -114,7 +116,6 @@
         //保存排序
         $('#saveOrder').on('click' ,function () {
 
-            console.log(1)
             var menu = $('#nestable_list_1_output').val();
             var settings = {
                 type: "POST",

@@ -49,20 +49,20 @@
                 <div class="form-group form-md-line-input form-md-floating-label
                 <?php if ($errors->has('name')) { echo "has-error"; } ?>">
                     <input type="text" class="form-control" id="form_name" name="name" value="{{ old('name') }}">
-                    <label for="form_name">名称</label>
+                    <label for="form_name">名称（如：系统菜单）</label>
                     <span class="help-block">菜单名称</span>
                 </div>
                 <div class="form-group form-md-line-input form-md-floating-label
                 <?php if ($errors->has('icon')) { echo "has-error"; } ?>">
                     <input type="text" class="form-control" id="form_icon" name="icon" value="{{ old('icon') }}">
-                    <label for="form_icon">图标</label>
-                    <span class="help-block">字体图标代码(完整class名称支持 Fontawesome Icons，Simple Line Icons，Glyphicons)</span>
+                    <label for="form_icon">图标（如：fa-circle-o）</label>
+                    <span class="help-block">字体图标代码(完整class名称支持 Fontawesome Icons，Simple Line Icons，Glyphicons), 请为各菜单设置相关图标哟</span>
                 </div>
                 <div class="form-group form-md-line-input form-md-floating-label
                 <?php if ($errors->has('uri')) { echo "has-error"; } ?>">
                     <input type="text" class="form-control" id="form_uri" name="uri" value="{{ old('uri') }}">
-                    <label for="form_uri">路径名称</label>
-                    <span class="help-block">路由文件中设置的路由名称</span>
+                    <label for="form_uri">路径名称（URI 如：menu.index ）</label>
+                    <span class="help-block">路由文件中设置的路由名称，请按照资源路由的命名方式命名，如 menu.index</span>
                 </div>
             </div>
             <div class="form-actions noborder">

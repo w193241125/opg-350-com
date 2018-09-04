@@ -53,8 +53,10 @@ var menu = function () {
         $(menu_select.box).on('click','.createButton',function () {
             var _item = $(this);
             var _form = $('#createForm');
+            console.log(111);
+            console.log(_form.serializeArray());
             $.ajax({
-                url:'/admin/menu',
+                url:'/system/menu',
                 type:'post',
                 dataType: 'json',
                 data:_form.serializeArray(),
@@ -67,7 +69,7 @@ var menu = function () {
                 success:function (response) {
                     sweetAlert(response.message);
                     setTimeout(function(){
-                        window.location.href = '/admin/menutable';
+                        // window.location.href = '/system/menu';
                     }, 1000);
                 }
             }).fail(function(response) {
@@ -78,6 +80,8 @@ var menu = function () {
                         layerStr += data[i]+" ";
                     }
                     sweetAlert('错误', layerStr);
+                }else{
+                    sweetAlert('未知错误', '请重试');
                 }
             }).always(function () {
                 _item.removeAttr('disabled');
@@ -147,7 +151,7 @@ var menu = function () {
                 success:function (response) {
                     sweetAlert(response.message);
                     setTimeout(function(){
-                        window.location.href = '/admin/menutable';
+                        // window.location.href = '/admin/menutable';
                     }, 1000);
                 }
             }).fail(function(response) {

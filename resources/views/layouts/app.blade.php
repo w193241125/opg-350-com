@@ -12,8 +12,8 @@
     <link rel="stylesheet" href="/AdminLTE/bower_components/font-awesome/css/font-awesome.min.css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="/AdminLTE/bower_components/Ionicons/css/ionicons.min.css">
-    <!-- jvectormap -->
-    <link rel="stylesheet" href="/AdminLTE/bower_components/jvectormap/jquery-jvectormap.css">
+    {{--<!-- jvectormap -->--}}
+    {{--<link rel="stylesheet" href="/AdminLTE/bower_components/jvectormap/jquery-jvectormap.css">--}}
     <!-- Theme style -->
     <link rel="stylesheet" href="/AdminLTE/dist/css/AdminLTE.min.css">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
@@ -27,47 +27,50 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+    <!-- jQuery 3 -->
+    <script src="/AdminLTE/bower_components/jquery/dist/jquery.min.js"></script>
     <!-- Google Font -->
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    {{--<link rel="stylesheet"--}}
+          {{--href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">--}}
     @yield('styles')
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="fixed hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
     @include('layouts._header')
     @include('layouts._menu')
+
     @yield('contents')
+
     @include('layouts._footer')
     @include('layouts._tip')
     <div class="control-sidebar-bg"></div>
 </div>
-<!-- jQuery 3 -->
-<script src="/AdminLTE/bower_components/jquery/dist/jquery.min.js"></script>
+
 <!-- Bootstrap 3.3.7 -->
 <script src="/AdminLTE/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-<!-- FastClick -->
+<!-- FastClick 触摸设备快速点击体验-->
 <script src="/AdminLTE/bower_components/fastclick/lib/fastclick.js"></script>
 <!-- AdminLTE App -->
 <script src="/AdminLTE/dist/js/adminlte.min.js"></script>
-<!-- Sparkline -->
+<!-- Sparkline 信息体积小和数据密度高的图表-->
 <script src="/AdminLTE/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js"></script>
-<!-- jvectormap  -->
-<script src="/AdminLTE/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
-<script src="/AdminLTE/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
-<!-- SlimScroll -->
+{{--<!-- jvectormap  -->--}}
+{{--<script src="/AdminLTE/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>--}}
+{{--<script src="/AdminLTE/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>--}}
+<!-- SlimScroll 菜单和页面中的滚动条样式-->
 <script src="/AdminLTE/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
-<!-- ChartJS -->
+<!-- ChartJS 图表JS-->
 <script src="/AdminLTE/bower_components/chart.js/Chart.js"></script>
 
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="/AdminLTE/dist/js/pages/dashboard2.js"></script>
+{{--<!-- AdminLTE 仪表盘 demo (This is only for demo purposes) -->--}}
+{{--<script src="/AdminLTE/dist/js/pages/dashboard2.js"></script>--}}
 <!-- AdminLTE for demo purposes -->
 
 {{--这个控制主题改变--}}
 <script src="/AdminLTE/dist/js/demo.js"></script>
 
 
-
 @yield('script')
+
 </body>
 </html>

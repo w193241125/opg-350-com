@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Cache;
 class Menu extends Model
 {
 
+    // 加上对应的字段
+    protected $fillable = ['name', 'icon','uri','parent_id'];
+
     /**
      * 保存菜单
      * @param int $parent_id
@@ -21,13 +24,23 @@ class Menu extends Model
         $data['name'] = $request->name;
         $data['icon'] = $request->icon;
         $data['uri'] = $request->uri;
-        if ($this->save($data)) {
+        if ($this->create($data)) {
+            //菜单添加成功后，权限列表添加对应菜单权限
+            $pm = [];
+            $pm['name'] = $request->uri;
+            $pm['pm_type'] = 'menu';
+            $pm['pm_display_name'] = $request->name;
+            $pm['guard_name'] = 'web';
+            $pm['pm_description'] = $request->name;
+            $res = MyPermission::create($pm);
+
             $result = $this->setMenuAllCache();
         } else {
             $result = false;
         }
         return [
             'status' => $result,
+            'code' => $res,
             'message' => $result ? '菜单添加成功':'菜单添加失败',
         ];
     }

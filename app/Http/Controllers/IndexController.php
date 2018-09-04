@@ -14,13 +14,8 @@ class IndexController extends Controller
      * @param Menu $menuModel
      * @return mixed
      */
-    public function index(Menu $menuModel)
+    public function index()
     {
-        $menus = Menu::all();
-        $assign = [
-            'menus'=>$menus,
-        ];
-
-        return view('index',$assign);
+        return view('index');
     }
 }

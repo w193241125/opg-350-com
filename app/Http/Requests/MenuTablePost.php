@@ -15,11 +15,11 @@ class MenuTablePost extends FormRequest
     public function authorize(User $user)
     {
         if (request()->isMethod('POST')) {
-            $result = $user->can('menu.store');
+            $result = $user->hasPermissionTo('menu.store');
         } else {
-            $result = $user->can('menu.update');
+            $result = $user->hasPermissionTo('menu.update');
         }
-        return $result;
+        return true;
     }
 
     /**

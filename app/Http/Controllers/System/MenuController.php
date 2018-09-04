@@ -17,6 +17,20 @@ class MenuController extends Controller
     }
 
     /**
+     * 获取所有菜单
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function index()
+    {
+        $all_menu = $this->menu->getAllMenu();
+
+        $assign = [
+            'all_menu'=>$all_menu,
+        ];
+        return view('system.menu',$assign);
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -29,13 +43,14 @@ class MenuController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * 保存新建菜单
      *
      * @param  MenuTablePost  $request
      * @return \Illuminate\Http\Response
      */
     public function store(MenuTablePost $request)
     {
+
         if ($request->parent_id_1 == 0) {
             $parent_id = 0;
         } else {
@@ -60,6 +75,7 @@ class MenuController extends Controller
         $menu_info = Menu::find($id);
         return view('admin.menu.menu_edit' ,['menu_info' => $menu_info]);
     }
+
     /**
      * Update the specified resource in storage.
      *
@@ -72,6 +88,7 @@ class MenuController extends Controller
         $responseData = $this->menu->updateMenu($id, $request);
         return response()->json($responseData);
     }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -85,19 +102,6 @@ class MenuController extends Controller
         return response()->json(['state' => 'success']);
     }
 
-    /**
-     * 获取所有菜单
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function index()
-    {
-        $all_menu = $this->menu->getAllMenu();
-
-        $assign = [
-            'all_menu'=>$all_menu,
-        ];
-        return view('system.menu',$assign);
-    }
     /**
      * Show the form for creating a new resource.
      *
