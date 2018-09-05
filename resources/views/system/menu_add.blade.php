@@ -61,8 +61,8 @@
                 <div class="form-group form-md-line-input form-md-floating-label
                 <?php if ($errors->has('uri')) { echo "has-error"; } ?>">
                     <input type="text" class="form-control" id="form_uri" name="uri" value="{{ old('uri') }}">
-                    <label for="form_uri">路径名称（URI 如：menu.index ）</label>
-                    <span class="help-block">路由文件中设置的路由名称，请按照资源路由的命名方式命名，如 menu.index</span>
+                    <label for="form_uri">路径名称（URI 如：menu.index, 三级菜单必须为xxx.xxx ）</label>
+                    <span class="help-block">路由文件中设置的路由名称，请按照资源路由的命名方式命名，如 menu.index，三级菜单必须为xxx.xxx</span>
                 </div>
             </div>
             <div class="form-actions noborder">

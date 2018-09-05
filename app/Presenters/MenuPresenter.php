@@ -66,8 +66,8 @@ class MenuPresenter
             //切出路由一级前缀
             $uri_arr = explode('.', $menu['uri']);
 
-            //相同菜单前缀保持菜单选中状态
-            self::$active = active_class(if_route_pattern([$uri_arr[0]]), 'menu-open');
+            //相同菜单前缀保持菜单选中状态 菜单命名 xxx.xxx 若是格式不对，将导致菜单无法保持选中状态
+            self::$active = active_class(if_route_pattern([$uri_arr[0].'.*']), 'menu-open');
             $open_arr[$key] = self::$active;
             if ($count == $key+1) {
                 if (in_array('menu-open', $open_arr)) {
@@ -130,10 +130,8 @@ Eof;
     {
         $html = '<ol class="dd-list">';
         foreach ($menus as $key => $menu) {
-//            $delete_url = route("menutable.destroy", $menu->id);
-//            $edit_url = route("menutable.edit", $menu->id);
-            $edit_url = '/';
-            $delete_url = '/';
+            $delete_url = route("menu.destroy", $menu->id);
+            $edit_url = route("menu.edit", $menu->id);
             $icon = htmlspecialchars($menu->icon);
             $name = htmlspecialchars($menu->name);
             $uri = htmlspecialchars($menu->uri);

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title','综合后台')</title>
+    <title>@yield('title','350综合后台')</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="stylesheet" href="/AdminLTE/bower_components/bootstrap/dist/css/bootstrap.min.css">
@@ -19,6 +19,8 @@
     <!-- AdminLTE Skins. Choose a skin from the css/skins
          folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="/AdminLTE/dist/css/skins/_all-skins.min.css">
+    {{--弹窗css--}}
+    <link href="{{ asset('vendor/bootstrap-sweetalert/sweetalert.css') }}" rel="stylesheet" type="text/css" />
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -69,6 +71,21 @@
 {{--这个控制主题改变--}}
 <script src="/AdminLTE/dist/js/demo.js"></script>
 
+{{--弹窗js--}}
+<script src="{{ asset('vendor/bootstrap-sweetalert/sweetalert.min.js') }}" type="text/javascript"></script>
+
+{{--无权限弹窗_刷新页面--}}
+@if(session('error') == 'no_permissions')
+    <script type="text/javascript">
+        $(document).ready(function(){
+            sweetAlert({
+                title:"您没有此权限",
+                text:"请联系管理员",
+                type:"error"
+            });
+        });
+    </script>
+@endif
 
 @yield('script')
 

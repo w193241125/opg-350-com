@@ -73,7 +73,7 @@ class MenuController extends Controller
     public function edit($id)
     {
         $menu_info = Menu::find($id);
-        return view('admin.menu.menu_edit' ,['menu_info' => $menu_info]);
+        return view('system.menu_edit' ,['menu_info' => $menu_info]);
     }
 
     /**

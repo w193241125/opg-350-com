@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', '350综合后台')
+@section('title', '菜单管理')
 {{--顶部前端资源--}}
 @section('styles')
     <!-- BEGIN PAGE LEVEL PLUGINS -->
@@ -63,8 +63,6 @@
                         </div>
                         <!-- /.box-body -->
                     </div>
-
-
                 </div>
                 <div class="col-md-6 add_menu_html">
                     <div class="text-center middle-box" style="margin-top: 150px">
@@ -84,9 +82,9 @@
     </div>
 @endsection
 
+
 {{--尾部前端资源--}}
 @section('script')
-    @parent
     <!-- BEGIN PAGE LEVEL PLUGINS -->
     <script src="{{ asset('vendor/jquery-nestable/jquery.nestable.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/admin/menu/scripts/ui-nestable.js') }}" type="text/javascript"></script>
@@ -95,8 +93,10 @@
     <script src="{{ asset('assets/admin/menu/scripts/ui-buttons.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/admin/menu/scripts/menu.js') }}" type="text/javascript"></script>
     {{--sweetalert弹窗--}}
-    <script src="/sweetalert2/dist/sweetalert2.min.js"></script>
-    <link rel="stylesheet" href="/sweetalert2/dist/sweetalert2.min.css">
+    {{--<script src="/sweetalert2/dist/sweetalert2.min.js"></script>--}}
+    {{--<link rel="stylesheet" href="/sweetalert2/dist/sweetalert2.min.css">--}}
+    {{--弹窗js--}}
+    <script src="{{ asset('vendor/bootstrap-sweetalert/sweetalert.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/admin/layouts/scripts/sweetalert/sweetalert-ajax-delete.js') }}" type="text/javascript"></script>
 
     <!-- Include a polyfill for ES6 Promises (optional) for IE11 and Android browser -->

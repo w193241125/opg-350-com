@@ -61,6 +61,7 @@ var SweetAlert = function () {
                                         swal(sa_popupTitleSuccess, "点击按钮返回", "success");
                                     },
                                     error:function (xhr, errorText, errorType) {
+                                        console.log(xhr)
                                         if (xhr.responseJSON.error == 'no_permissions') {
                                             sweetAlert({
                                                 title:'您没有此权限',

@@ -69,7 +69,7 @@ var menu = function () {
                 success:function (response) {
                     sweetAlert(response.message);
                     setTimeout(function(){
-                        // window.location.href = '/system/menu';
+                        window.location.href = '/system/menu';
                     }, 1000);
                 }
             }).fail(function(response) {
@@ -151,7 +151,7 @@ var menu = function () {
                 success:function (response) {
                     sweetAlert(response.message);
                     setTimeout(function(){
-                        // window.location.href = '/admin/menutable';
+                        window.location.href = '/system/menu';
                     }, 1000);
                 }
             }).fail(function(response) {

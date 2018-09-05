@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', '350综合后台')
+@section('title', '350综合后台--主页')
 
 @section('contents')
     <div class="content-wrapper">
