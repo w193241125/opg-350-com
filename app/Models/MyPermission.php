@@ -3,14 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Exceptions\PermissionAlreadyExists;
 use Spatie\Permission\Guard;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 
 class MyPermission extends Permission
 {
-
 
     /**
      * 重写 permission 的 create 方法，添加了 display_name pm_description pm_type 三个字段
@@ -40,10 +41,47 @@ class MyPermission extends Permission
      * 清除权限缓存
      * @return mixed
      */
-    public function clearCache()
+    public static function clearCache()
     {
         $res = app()['cache']->forget('spatie.permission.cache');
 
+        return $res;
+    }
+
+    /**
+     * 通过权限名称删除权限
+     * @param array $name 权限名称数组
+     * @return integer 但会影响行数，0 或 正整数。
+     */
+    public static function delPmByName($name)
+    {
+        //删除角色表的权限
+        $ids = self::wherein('name', $name)->get(['id'])->toarray();
+        foreach ($ids as $id) {
+            $id_arr[] = $id['id'];
+        }
+        //删除角色权限
+        $role_res = DB::table('role_has_permissions')->whereIn('permission_id',$id_arr)->delete();
+        //删除用户权限
+        $model_res = DB::table('model_has_permissions')->whereIn('permission_id',$id_arr)->delete();
+        //删除权限
+        $res  = self::wherein('name', $name)->delete();
+        //删除权限缓存
+        self::clearCache();
+
+        return $res;
+    }
+
+    /**
+     * 通过权限名称修改权限名称
+     * @param string $name 老权限名
+     * @param string $new_name 新权限名字
+     * @return integer 但会影响行数，0 或 正整数。
+     */
+    public static function updPmByName($name, $new_name)
+    {
+        $re = self::findByName($name);
+        $res  = self::where('id','=', $re->id)->update(['name'=>$new_name]);
         return $res;
     }
 }

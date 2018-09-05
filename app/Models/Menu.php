@@ -148,7 +148,36 @@ class Menu extends Model
             }
         }
     }
+    /**
+     * 获取菜单以及子菜单名
+     * @param int $id
+     * @return array $name
+     */
+    public function getAllMenuUri($id)
+    {
+        $menu = Menu::find($id);
+        if ($menu) {
+            $uri[] = $menu->uri;
+            $child = Menu::where(['parent_id' => $menu->id])->get();
+            if ($child) {
+                foreach ($child as $value) {
+                    $uri[] = $value->uri;
+                }
+            }
+        }
+        return $uri;
+    }
 
+    /**
+     * 获取单个菜单名
+     * @param int $id
+     * @return array $name
+     */
+    public function getMenuUri($id)
+    {
+        $menu = Menu::find($id);
+        return $menu->uri;
+    }
     /**
      * 生成菜单缓存
      * @return bool

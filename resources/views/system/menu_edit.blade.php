@@ -1,4 +1,4 @@
-
+@can('menu.edit')
 <div class="portlet light bordered formBox" id="editBox">
     <div class="portlet-title">
         <div class="caption font-green">
@@ -64,3 +64,4 @@
         </form>
     </div>
 </div>
+@endcan

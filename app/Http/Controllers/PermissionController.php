@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MyPermission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
@@ -22,15 +23,17 @@ class PermissionController extends Controller
 
     /**
      * 添加角色
-     * @param $name 角色名
+     * @param string $name  角色名
+     * @return boolean
      */
     public function addRole($name)
     {
         $user = Auth::user();
-        dd($user);
         if(!Role::create(['name'=>$name])){
             return false;
         }
         return true;
     }
+
+
 }

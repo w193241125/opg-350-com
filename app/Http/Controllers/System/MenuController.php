@@ -4,6 +4,7 @@ namespace App\Http\Controllers\System;
 
 use App\Http\Requests\MenuTablePost;
 use App\Models\Menu;
+use App\Models\MyPermission;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -31,7 +32,7 @@ class MenuController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * 展示菜单创建页面
      *
      * @return \Illuminate\Http\Response
      */
@@ -65,7 +66,7 @@ class MenuController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * 展示编辑菜单页面
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -77,7 +78,7 @@ class MenuController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * 执行菜单更新
      *
      * @param  MenuTablePost  $request
      * @param  int  $id
@@ -85,25 +86,35 @@ class MenuController extends Controller
      */
     public function update(MenuTablePost $request, $id)
     {
+        //获取此 id 菜单名
+        $menu_uri = $this->menu->getMenuUri($id);
+        //更新权限名称
+        MyPermission::updPmByName($menu_uri, $request->uri);
         $responseData = $this->menu->updateMenu($id, $request);
         return response()->json($responseData);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 删除菜单
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
+        //获取此 id 下所有菜单 名
+        $menuName = $this->menu->getAllMenuUri($id);
+        //删除权限表对应菜单
+        MyPermission::delPmByName($menuName);
+
+        //删除菜单
         $this->menu->delAllMenu($id);
         $this->menu->setMenuAllCache();
         return response()->json(['state' => 'success']);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * 创建菜单
      *
      * @return \Illuminate\Http\Response
      */
@@ -113,11 +124,6 @@ class MenuController extends Controller
         $menu_first = Menu::where('parent_id', 0)->orderBy('order', 'asc')->get();
 
         return view('system.menu_add', ['menu_first' => $menu_first]);
-    }
-
-    public function add_menus()
-    {
-
     }
 
     /**

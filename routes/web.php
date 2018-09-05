@@ -26,7 +26,7 @@ Route::get('/admin', 'IndexController@index')->name('index');
 Route::get('/test', 'IndexController@index')->name('test');
 
 
-Route::group([ 'prefix' => 'system','namespace' => 'System'], function () {
+Route::group([ 'prefix' => 'system','namespace' => 'System', 'middleware'=>['role:menu']], function () {
     // 定制菜单,资源路由
     Route::resource('menu', 'MenuController');
 

@@ -1,4 +1,4 @@
-
+@can('menu.add')
 <div class="portlet light bordered formBox" id="createBox">
     <div class="portlet-title">
         <div class="caption font-green">
@@ -96,3 +96,4 @@
 
     });
 </script>
+@endcan
