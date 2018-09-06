@@ -90,6 +90,8 @@ class MenuController extends Controller
         $menu_uri = $this->menu->getMenuUri($id);
         //更新权限名称
         MyPermission::updPmByName($menu_uri, $request->uri);
+        //清除缓存
+        MyPermission::clearCache();
         $responseData = $this->menu->updateMenu($id, $request);
         return response()->json($responseData);
     }

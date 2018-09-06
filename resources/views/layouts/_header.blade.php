@@ -26,7 +26,7 @@
                         <span class="label label-success">4</span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li class="header">You have 4 messages</li>
+                        <li class="header">你有4条消息</li>
                         <li>
                             <!-- inner menu: contains the messages -->
                             <ul class="menu">
@@ -121,7 +121,7 @@
                         <!-- The user image in the navbar-->
                         <img src="/AdminLTE/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
                         <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                        <span class="hidden-xs">Alexander Pierce</span>
+                        <span class="hidden-xs">{{Auth}}</span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- The user image in the menu -->

@@ -188,4 +188,35 @@ class Menu extends Model
         Cache::forever('admin.overall_menus', $menus);
         return true;
     }
+
+    /**
+     * 通路由uri获取父类uri
+     * @param string $uri
+     * @return string $parent_uri
+     */
+    public static function getParentUri($uri)
+    {
+        $m = self::where(['uri' => $uri])->get(['parent_id','uri'])->toarray();
+        $uri = $m[0]['uri'];
+        if ($m[0]['parent_id'] !== 0){
+            $uri = self::getParentUriById($m[0]['parent_id']);
+            return $uri;
+        }
+    }
+
+    /**
+     * (递归时获取顶级父类uri) 通过父id获取父类uri
+     * @param int  $parent_id 父类id, int $type 1:不递归，2：递归
+     * @return string $uri
+     */
+    public static function getParentUriById($parent_id,$type=1)
+    {
+        $parent = self::where(['id' => $parent_id])->get(['parent_id','uri'])->toarray();
+        if ($parent[0]['parent_id'] != 0 && $type==2){
+            return self::getParentUriById($parent[0]['parent_id'],2);
+        }
+        return $parent[0]['uri'];
+
+    }
+
 }

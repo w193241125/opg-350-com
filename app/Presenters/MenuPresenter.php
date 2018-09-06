@@ -57,8 +57,8 @@ class MenuPresenter
             $permission_info = MyPermission::where(['name' => $menu['uri']])->first();
             //不存在权限验证的直接通过
             if (!empty($permission_info)) {
-                //用户权限检查，不存在的权限不显示
-                if (!$user->hasPermissionTo($permission_info->name)) {
+                //用户权限检查，不存在的权限不显示, 用户拥有menu角色则全部显示
+                if (!$user->hasPermissionTo($permission_info->name) && !$user->hasRole('menu')) {
                     continue;
                 }
             }
@@ -66,8 +66,20 @@ class MenuPresenter
             //切出路由一级前缀
             $uri_arr = explode('.', $menu['uri']);
 
-            //相同菜单前缀保持菜单选中状态 菜单命名 xxx.xxx 若是格式不对，将导致菜单无法保持选中状态
-            self::$active = active_class(if_route_pattern([$uri_arr[0].'.*']), 'menu-open');
+            //保持菜单选中状态 菜单命名 xxx.xxx
+            self::$active = active_class(if_route_pattern([$uri_arr[0].'.*']), 'menu-open');//todo
+
+            //获取当前路由名
+            $route_name = Route::currentRouteName();
+            //当不是首页时
+            if ($route_name != 'index'){
+                //获取当前路由名为uri的父类uri
+                $uris = Menu::getParentUri($route_name);
+                //保持顶级分类的选中打开状态
+                if ($uri_arr[0]==$uris){
+                    self::$active = 'menu-open';
+                }
+            }
             $open_arr[$key] = self::$active;
             if ($count == $key+1) {
                 if (in_array('menu-open', $open_arr)) {
@@ -103,8 +115,8 @@ class MenuPresenter
 Eof;
             } else {
                 //不存在子菜单直接输出链接导航，判断路由是否存在
+//                $uri = trim(strstr($menu['uri'],"."),'.');
                 $url = Route::getRoutes()->getByName($menu['uri']) ? route($menu['uri']) : '#';
-//                var_dump($menu['uri']);
                 $active = self::$active;
                 $html .= <<<Eof
                 <li>

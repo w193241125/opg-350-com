@@ -23,7 +23,7 @@ Route::get('/', function () {
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/', 'IndexController@index')->name('index');
 Route::get('/admin', 'IndexController@index')->name('index');
-Route::get('/test', 'IndexController@index')->name('test');
+Route::get('/test', 'IndexController@index')->name('test.index');
 
 
 Route::group([ 'prefix' => 'system','namespace' => 'System', 'middleware'=>['role:menu']], function () {
@@ -35,4 +35,6 @@ Route::group([ 'prefix' => 'system','namespace' => 'System', 'middleware'=>['rol
     Route::get('getchildmenu', 'MenuController@ajaxGetChildMenu')->name('MenuController.ajaxGetChild');
     // 缓存保存菜单排序
     Route::post('savemenuorder', 'MenuController@saveOrder')->name('MenuController.saveMenuOrder');
+
+    Route::get('game', 'IndexController@index')->name('game.index');
 });
