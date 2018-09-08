@@ -46,4 +46,17 @@ class LoginController extends Controller
     {
         return 'username';
     }
+
+    /**
+     * The user has been authenticated.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return mixed
+     */
+    protected function authenticated(Request $request, $user)
+    {
+        // 存user到session
+        $request->session()->put('user', $user);
+    }
 }
