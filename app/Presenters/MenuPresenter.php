@@ -11,6 +11,7 @@ namespace App\Presenters;
 
 use App\Models\Menu;
 use App\Models\MyPermission;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Route;
@@ -33,7 +34,6 @@ class MenuPresenter
     public function __construct(Menu $menu)
     {
         $this->model_menu = $menu;
-
     }
 
     /**
@@ -44,7 +44,6 @@ class MenuPresenter
      * */
     public function sidebarMenuList($sidebarMenus, $parent_key = -1)
     {
-        Redis::set('name', 'Taylor');
         $user = Auth::user();
         //记录递归层数
         self::$layer++;
@@ -52,13 +51,15 @@ class MenuPresenter
         $sidebarMenus = array_merge($sidebarMenus);
         $html = '';
         $count = count($sidebarMenus);
+        //获取当前用户的所有权限（包括直接赋予的和继承角色的）
+        $pm_arr = MyPermission::getAllPmStr($user);
         foreach ($sidebarMenus as $key => $menu) {
             //权限验证匹配uri验证uri对应权限
             $permission_info = MyPermission::where(['name' => $menu['uri']])->first();
             //不存在权限验证的直接通过
             if (!empty($permission_info)) {
                 //用户权限检查，不存在的权限不显示, 用户拥有menu角色则全部显示
-                if (!$user->hasPermissionTo($permission_info->name) && !$user->hasRole('menu')) {
+                if (!in_array($permission_info->name,$pm_arr)) {
                     continue;
                 }
             }
@@ -105,7 +106,7 @@ class MenuPresenter
                 $html .= <<<Eof
                     <li class="treeview {$open}">
                         <a href="javascript:;">
-                            <i class="fa {$icon}"></i> <span>{$name}</span><!--栏目-->
+                            <i class="fa {$icon} text-aqua"></i> <span> {$name}</span><!--栏目-->
                             <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                         </a>
                         <ul class="treeview-menu" >
@@ -120,7 +121,7 @@ Eof;
                 $active = self::$active;
                 $html .= <<<Eof
                 <li>
-                    <a href="{$url}"><i class="fa {$icon}"></i>{$name}</a>
+                    <a href="{$url}"><i class="fa {$icon} text-aqua"></i> {$name}</a>
                 </li>
 Eof;
             }
