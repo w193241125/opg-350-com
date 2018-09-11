@@ -12,7 +12,6 @@ use Spatie\Permission\Models\Role;
 
 class MyPermission extends Permission
 {
-
     /**
      * 重写 permission 的 create 方法，添加了 display_name pm_description pm_type 三个字段
      * @param array $attributes
@@ -55,21 +54,24 @@ class MyPermission extends Permission
      */
     public static function delPmByName($name)
     {
+        $id_arr = [];
         //删除角色表的权限
         $ids = self::wherein('name', $name)->get(['id'])->toarray();
         foreach ($ids as $id) {
             $id_arr[] = $id['id'];
         }
-        //删除角色权限
-        $role_res = DB::table('role_has_permissions')->whereIn('permission_id',$id_arr)->delete();
-        //删除用户权限
-        $model_res = DB::table('model_has_permissions')->whereIn('permission_id',$id_arr)->delete();
-        //删除权限
-        $res  = self::wherein('name', $name)->delete();
-        //删除权限缓存
-        self::clearCache();
-
-        return $res;
+        if(!empty($id_arr)){
+            //删除角色权限
+            $role_res = DB::table('role_has_permissions')->whereIn('permission_id',$id_arr)->delete();
+            //删除用户权限
+            $model_res = DB::table('model_has_permissions')->whereIn('permission_id',$id_arr)->delete();
+            //删除权限
+            $res  = self::wherein('name', $name)->delete();
+            //删除权限缓存
+            self::clearCache();
+            return $res;
+        }
+        return false;
     }
 
     /**
@@ -83,5 +85,17 @@ class MyPermission extends Permission
         $re = self::findByName($name);
         $res  = self::where('id','=', $re->id)->update(['name'=>$new_name]);
         return $res;
+    }
+
+    /**
+     * 获取用户所有权限
+     */
+    public static function getAllPmStr(User $user)
+    {
+        $permissions = $user->getAllPermissions()->toarray();
+        foreach ($permissions as $p) {
+            $pm_arr[] = $p['name'];
+        }
+        return $pm_arr;
     }
 }

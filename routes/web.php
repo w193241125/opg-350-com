@@ -26,15 +26,17 @@ Route::get('/admin', 'IndexController@index')->name('index');
 Route::get('/test', 'IndexController@index')->name('test.index');
 
 
-Route::group([ 'prefix' => 'system','namespace' => 'System', 'middleware'=>['role:menu']], function () {
+
+Route::group([ 'prefix' => 'system','namespace' => 'System', 'middleware'=>['CheckPermission']], function () {
+    Route::get('/game', 'IndexController@index')->name('game.index');
     // 定制菜单,资源路由
     Route::resource('menu', 'MenuController');
-
-    Route::get('/createMenu', 'MenuController@createMenu')->name('createMenu');
     // ajax获取二级菜单
     Route::get('getchildmenu', 'MenuController@ajaxGetChildMenu')->name('MenuController.ajaxGetChild');
     // 缓存保存菜单排序
     Route::post('savemenuorder', 'MenuController@saveOrder')->name('MenuController.saveMenuOrder');
 
+    // 用户,资源路由
+    Route::resource('user', 'UserController');
     Route::get('game', 'IndexController@index')->name('game.index');
 });

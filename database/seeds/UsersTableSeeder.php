@@ -12,22 +12,24 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->insert([
-            0 =>[
-                'uid' => 1,
-                'trueName' => '刘冠生',
-                'sex' => '男',
-                'position' => 1,
-                'dept' => 1,
-                'username' => 'jishubu',
-                'password' => '123456',
-                'gid' => 1,
-                'loginTimes' => 0,
-                'lastLoginTime' => '2017-7-16 07:35:12',
-                'lastLoginIP' => '192.168.0.0.1',
-                'created_at' => '2017-7-16 07:35:12',
-                'updated_at' => '2016-7-16 07:35:12',
-            ],
-        ]);
+        for ($i=0;$i<20;$i++){
+            DB::table('users')->insert(
+                [
+                    'trueName' => 'PHP-开发工程师',
+                    'sex' => '男',
+                    'position' => random_int(1,13),
+                    'dept' => random_int(1,7),
+                    'username' => 'jishubu'.$i,
+                    'password' => bcrypt('123456'),
+                    'gid' => 1,
+                    'loginTimes' => 0,
+                    'lastLoginTime' => '2017-7-16 07:35:12',
+                    'lastLoginIP' => '192.168.0.0.1',
+                    'created_at' => '2017-7-16 07:35:12',
+                    'updated_at' => '2016-7-16 07:35:12',
+                ]
+            );
+        }
+
     }
 }

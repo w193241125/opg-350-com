@@ -33,4 +33,22 @@ class User extends Authenticatable
      * 设置主键为 uid
      */
     protected $primaryKey = 'uid';
+
+    /**
+     * 关联部门
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function dept() {
+        return $this->hasOne('App\Model\Dept');
+    }
+
+    /**
+     * 关联职务
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function position() {
+        return $this->hasOne('App\Model\Position');
+    }
+
+
 }

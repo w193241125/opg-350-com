@@ -58,7 +58,7 @@ class MenuPresenter
             $permission_info = MyPermission::where(['name' => $menu['uri']])->first();
             //不存在权限验证的直接通过
             if (!empty($permission_info)) {
-                //用户权限检查，不存在的权限不显示, 用户拥有menu角色则全部显示
+                //用户权限检查，不存在的权限不显示
                 if (!in_array($permission_info->name,$pm_arr)) {
                     continue;
                 }

@@ -7,8 +7,8 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                后台主页
-                <small>描述</small>
+                你没有权限哦。
+                <small></small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
@@ -23,7 +23,8 @@
               | Your Page Content Here |
               -------------------------->
 
+
         </section>
         <!-- /.content -->
     </div>
-    @stop
+@stop

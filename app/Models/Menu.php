@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Spatie\Permission\Models\Permission;
 
 class Menu extends Model
 {
@@ -32,7 +33,10 @@ class Menu extends Model
             $pm['pm_display_name'] = $request->name;
             $pm['guard_name'] = 'web';
             $pm['pm_description'] = $request->name;
-            $res = MyPermission::create($pm);
+            $res = Permission::create($pm);
+            //角色 menu 添加对应权限
+            $role = MyRole::findByName('menu');
+            $res->assignRole($role);
 
             $result = $this->setMenuAllCache();
         } else {

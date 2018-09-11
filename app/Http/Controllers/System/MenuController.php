@@ -106,6 +106,7 @@ class MenuController extends Controller
     {
         //获取此 id 下所有菜单 名
         $menuName = $this->menu->getAllMenuUri($id);
+
         //删除权限表对应菜单
         MyPermission::delPmByName($menuName);
 
@@ -122,7 +123,7 @@ class MenuController extends Controller
      */
     public function createMenu()
     {
-        //读取区父级分类
+        //读取父级分类
         $menu_first = Menu::where('parent_id', 0)->orderBy('order', 'asc')->get();
 
         return view('system.menu_add', ['menu_first' => $menu_first]);
