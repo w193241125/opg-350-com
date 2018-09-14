@@ -39,7 +39,7 @@ class User extends Authenticatable
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function dept() {
-        return $this->hasOne('App\Model\Dept');
+        return $this->belongsTo('App\Models\Dept','dept_id');
     }
 
     /**
@@ -47,7 +47,7 @@ class User extends Authenticatable
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function position() {
-        return $this->hasOne('App\Model\Position');
+        return $this->belongsTo('App\Models\Position','position_id');
     }
 
 

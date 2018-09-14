@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\System;
 
+use App\Models\Dept;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -13,9 +14,14 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(User $user)
+    public function index()
     {
-        $user_list = $user->all();
+        $user_list = User::with('dept')->get();
+        $d = Dept::with('user')->get();
+        dd($user_list);
+        foreach ($user_list as $user) {
+            dd($user->dept);
+        }
         $assign = [
             'user_list'=>$user_list
         ];

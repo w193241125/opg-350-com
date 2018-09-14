@@ -13,4 +13,12 @@ class Position extends Model
      */
     protected $table = 'position';
 
+    /**
+     * 获得此职位的用户
+     */
+    public function user()
+    {
+        return $this->hasMany('App\Models\User');
+    }
+
 }

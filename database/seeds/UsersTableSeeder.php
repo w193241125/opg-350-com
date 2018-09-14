@@ -17,8 +17,8 @@ class UsersTableSeeder extends Seeder
                 [
                     'trueName' => 'PHP-开发工程师',
                     'sex' => '男',
-                    'position' => random_int(1,13),
-                    'dept' => random_int(1,7),
+                    'position_id' => random_int(1,13),
+                    'dept_id' => random_int(1,7),
                     'username' => 'jishubu'.$i,
                     'password' => bcrypt('123456'),
                     'gid' => 1,

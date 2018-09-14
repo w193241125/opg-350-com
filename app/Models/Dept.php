@@ -12,4 +12,12 @@ class Dept extends Model
      * @var string
      */
     protected $table = 'dept';
+
+    /**
+     * 获得此部门的用户
+     */
+    public function user()
+    {
+        return $this->hasMany('App\Models\User');
+    }
 }

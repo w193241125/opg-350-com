@@ -52,8 +52,8 @@
                                     <td>{{$u->trueName}}</td>
                                     <td>{{$u->gid}}</td>
                                     <td>{{$u->sex}}</td>
-                                    <td>{{$u->dept}}</td>
-                                    <td>{{$u->position}}</td>
+                                    <td>{{$u->dept_name}}</td>
+                                    <td>{{$u->position_name}}</td>
                                     <td>{{$u->loginTimes}}</td>
                                     <td>{{$u->lastLoginTime}}</td>
                                     <td>{{$u->lastLoginIP}}</td>

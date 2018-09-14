@@ -19,8 +19,8 @@ class CreateUsersTable extends Migration
             $table->increments('uid');  //用户id，自增主键
             $table->string('trueName'); //真实姓名
             $table->string('sex');  //性别
-            $table->tinyInteger('position'); //职务
-            $table->tinyInteger('dept'); // 部门
+            $table->tinyInteger('position_id'); //职务
+            $table->tinyInteger('dept_id'); // 部门
             $table->string('username')->unique(); //用户名，唯一
             $table->string('password'); //密码
             $table->tinyInteger('gid'); //分组id，
