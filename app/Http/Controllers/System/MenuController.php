@@ -40,7 +40,7 @@ class MenuController extends Controller
     {
         //读取区父级分类
         $menu_first = Menu::where('parent_id', 0)->orderBy('order', 'asc')->get();
-        return view('admin.menu.menu_add', ['menu_first' => $menu_first]);
+        return view('system.menu_add', ['menu_first' => $menu_first]);
     }
 
     /**

@@ -1,26 +1,26 @@
 /**
- * menu 动态调用
+ * user 动态调用
  * Created by ADKi on 2017/4/1 0001.
  */
-var menu = function () {
+var user = function () {
 
-    var menu_select = {
-        box:'.add_menu_html',
-        createMenu:'.create_menu',
+    var user_select = {
+        box:'.add_user_html',
+        createUser:'.create_user',
         close:'.close-link',
         createForm:'#createBox',
         middleBox:'.middle-box',
         createButton:'.createButton',
     };
-    var menuInit = function () {
-        $(menu_select.box).on('click', menu_select.createMenu, function () {
+    var userInit = function () {
+        $(user_select.box).on('click', user_select.createUser, function () {
             $.ajax({
                 type: 'GET',
-                url:'/system/menu/create',
+                url:'/system/user/create',
                 dataType:'html',
                 success:function (htmlData) {
-                    $(menu_select.middleBox).hide();
-                    $(menu_select.box).append(htmlData);
+                    $(user_select.middleBox).hide();
+                    $(user_select.box).append(htmlData);
                 },
                 error: function (xhr,errorText,errorType) {
                     var result =$.parseJSON(xhr.responseText);
@@ -44,19 +44,19 @@ var menu = function () {
         });
 
         // 关闭表单
-        $(menu_select.box).on('click', menu_select.close, function () {
+        $(user_select.box).on('click', user_select.close, function () {
             $('.formBox').remove();
-            $(menu_select.middleBox).show();
+            $(user_select.middleBox).show();
         });
 
-        // 提交创建菜单
-        $(menu_select.box).on('click','.createButton',function () {
+        // 提交创建用户
+        $(user_select.box).on('click','.createButton',function () {
             var _item = $(this);
             var _form = $('#createForm');
             console.log(111);
             console.log(_form.serializeArray());
             $.ajax({
-                url:'/system/menu',
+                url:'/system/user',
                 type:'post',
                 dataType: 'json',
                 data:_form.serializeArray(),
@@ -69,7 +69,7 @@ var menu = function () {
                 success:function (response) {
                     sweetAlert(response.message);
                     setTimeout(function(){
-                        window.location.href = '/system/menu';
+                        window.location.href = '/system/user';
                     }, 1000);
                 }
             }).fail(function(response) {
@@ -91,15 +91,15 @@ var menu = function () {
         /*
         * 修改表单
         * */
-        $('#nestable_list_1').on('click', '.editMenu', function () {
+        $('#nestable_list_1').on('click', '.edituser', function () {
             var _item = $(this);
             $.ajax({
                 url:_item.attr('data-href'),
                 dataType:'html',
                 success:function (htmlData) {
-                    var box = $(menu_select.middleBox);
+                    var box = $(user_select.middleBox);
                     if (box.is(':visible')) {
-                        $(menu_select.middleBox).hide();
+                        $(user_select.middleBox).hide();
                     }else{
                         var _createForm = $('.formBox');
                         // 创建表单存在的情况下
@@ -107,7 +107,7 @@ var menu = function () {
                             _createForm.remove();
                         }
                     }
-                    $(menu_select.box).append(htmlData);
+                    $(user_select.box).append(htmlData);
                 },
                 error: function (xhr,errorText,errorType) {
                     var result =$.parseJSON(xhr.responseText);
@@ -133,7 +133,7 @@ var menu = function () {
         /*
         * 保存编辑
         * */
-        $(menu_select.box).on('click','.editButton',function () {
+        $(user_select.box).on('click','.editButton',function () {
             var _item = $(this);
             var _form = $('#editForm');
 
@@ -151,7 +151,7 @@ var menu = function () {
                 success:function (response) {
                     sweetAlert(response.message);
                     setTimeout(function(){
-                        window.location.href = '/system/menu';
+                        window.location.href = '/system/user';
                     }, 1000);
                 }
             }).fail(function(response) {
@@ -170,10 +170,10 @@ var menu = function () {
     };
 
     return {
-        init : menuInit
+        init : userInit
     }
 }();
 
 $(function () {
-    menu.init();
+    user.init();
 });

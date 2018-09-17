@@ -38,5 +38,6 @@ Route::group([ 'prefix' => 'system','namespace' => 'System', 'middleware'=>['Che
 
     // 用户,资源路由
     Route::resource('user', 'UserController');
+
     Route::get('game', 'IndexController@index')->name('game.index');
 });

@@ -14,16 +14,13 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $user)
     {
         $user_list = User::with('dept')->get();
-        $d = Dept::with('user')->get();
-        dd($user_list);
-        foreach ($user_list as $user) {
-            dd($user->dept);
-        }
+
         $assign = [
-            'user_list'=>$user_list
+            //预加载获取用户职位和部门和拥有的角色
+            'user_list'=>$user_list->load(['dept','position','roles'])
         ];
         return view('system.user',$assign);
     }

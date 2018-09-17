@@ -26,13 +26,15 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">Data Table With Full Features</h3>
+                            {{--<h3 class="box-title">用户列表</h3>--}}
+                            <a href="javascript:;" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-plus"></i> 新增用户</a>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
                             <table id="user_info" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
+                                    <th>序号</th>
                                     <th>用户名</th>
                                     <th>真实姓名</th>
                                     <th>角色</th>
@@ -42,38 +44,45 @@
                                     <th>登录次数</th>
                                     <th>上次登录时间</th>
                                     <th>上次登录IP</th>
+                                    <th>状态</th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($user_list as $u)
                                 <tr>
+                                    <td>{{$u->uid}}</td>
                                     <td>{{$u->username}}</td>
                                     <td>{{$u->trueName}}</td>
-                                    <td>{{$u->gid}}</td>
+                                    <td>
+                                        @foreach($u->roles as $r)
+                                            <span class="label label-success">{{$r->role_display_name}}</span>
+                                        @endforeach
+                                    </td>
                                     <td>{{$u->sex}}</td>
-                                    <td>{{$u->dept_name}}</td>
-                                    <td>{{$u->position_name}}</td>
+                                    <td>{{$u->dept['dept_name']}}</td>
+                                    <td>{{$u->position['position_name']}}</td>
                                     <td>{{$u->loginTimes}}</td>
                                     <td>{{$u->lastLoginTime}}</td>
                                     <td>{{$u->lastLoginIP}}</td>
-                                    <td>{{$u->sex}}</td>
+                                    <td>{{$u->state?'启用':'禁用'}}</td>
+                                    <td><a href="#edit-1" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> 编辑</a></td>
                                 </tr>
                                     @endforeach
                                 </tbody>
                                 <tfoot>
-                                <tr>
-                                    <th>用户名</th>
-                                    <th>真实姓名</th>
-                                    <th>角色</th>
-                                    <th>性别</th>
-                                    <th>部门</th>
-                                    <th>职位</th>
-                                    <th>登录次数</th>
-                                    <th>上次登录时间</th>
-                                    <th>上次登录IP</th>
-                                    <th>操作</th>
-                                </tr>
+                                {{--<tr>--}}
+                                    {{--<th>用户名</th>--}}
+                                    {{--<th>真实姓名</th>--}}
+                                    {{--<th>角色</th>--}}
+                                    {{--<th>性别</th>--}}
+                                    {{--<th>部门</th>--}}
+                                    {{--<th>职位</th>--}}
+                                    {{--<th>登录次数</th>--}}
+                                    {{--<th>上次登录时间</th>--}}
+                                    {{--<th>上次登录IP</th>--}}
+                                    {{--<th>操作</th>--}}
+                                {{--</tr>--}}
                                 </tfoot>
                             </table>
                         </div>
@@ -96,6 +105,7 @@
         $(document).ready(function(){
             $('#user_info').DataTable()
         });
+
         $('#user_info').DataTable({
             language: {
                 "sProcessing": "处理中...",
@@ -120,7 +130,33 @@
                     "sSortAscending": ": 以升序排列此列",
                     "sSortDescending": ": 以降序排列此列"
                 }
-            }
+            },
+            "buttons": [ //这个是她带给你的一些功能按键...
+                {
+                    "extend": "copy",
+                    "className": "btn-sm"
+                },
+                {
+                    "extend": "csv",
+                    "className": "btn-sm"
+                },
+                {
+                    "extend": "excel",
+                    "className": "btn-sm"
+                },
+                {
+                    "extend": "pdfHtml5",
+                    "className": "btn-sm"
+                },
+                {
+                    "extend": "print",
+                    "className": "btn-sm"
+                },
+                {
+                    "extend": "pdf",
+                    "className": "btn-sm"
+                }
+            ],
         });
     </script>
 @endsection
