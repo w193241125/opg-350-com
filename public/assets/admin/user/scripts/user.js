@@ -5,22 +5,26 @@
 var user = function () {
 
     var user_select = {
-        box:'.add_user_html',
+        headerBox:'.add_user_html',
         createUser:'.create_user',
         close:'.close-link',
         createForm:'#createBox',
-        middleBox:'.middle-box',
+        box:'.box',
+        editbox:'#editForm',
+        middleBox:'.box-body',
         createButton:'.createButton',
+        addButton:'.createButton',
     };
     var userInit = function () {
-        $(user_select.box).on('click', user_select.createUser, function () {
+        $(user_select.headerBox).on('click', user_select.createUser, function () {
             $.ajax({
                 type: 'GET',
                 url:'/system/user/create',
                 dataType:'html',
                 success:function (htmlData) {
                     $(user_select.middleBox).hide();
-                    $(user_select.box).append(htmlData);
+                    $(user_select.createUser).hide();
+                    $(user_select.headerBox).append(htmlData);
                 },
                 error: function (xhr,errorText,errorType) {
                     var result =$.parseJSON(xhr.responseText);
@@ -44,17 +48,20 @@ var user = function () {
         });
 
         // 关闭表单
-        $(user_select.box).on('click', user_select.close, function () {
+        $(user_select.headerBox).on('click', user_select.close, function () {
             $('.formBox').remove();
+            $(user_select.createUser).show();
             $(user_select.middleBox).show();
+            $(user_select.headerBox).show();
+            if ($('.create_user').is(':hidden')) {
+                $('.create_user').show();
+            }
         });
 
         // 提交创建用户
-        $(user_select.box).on('click','.createButton',function () {
+        $(user_select.headerBox).on('click','.createButton',function () {
             var _item = $(this);
             var _form = $('#createForm');
-            console.log(111);
-            console.log(_form.serializeArray());
             $.ajax({
                 url:'/system/user',
                 type:'post',
@@ -76,8 +83,8 @@ var user = function () {
                 if(response.status == 422){
                     var data = $.parseJSON(response.responseText);
                     var layerStr = "";
-                    for(var i in data){
-                        layerStr += data[i]+" ";
+                    for(var i in data.errors){
+                        layerStr += data.errors[i]+" ";
                     }
                     sweetAlert('错误', layerStr);
                 }else{
@@ -91,14 +98,15 @@ var user = function () {
         /*
         * 修改表单
         * */
-        $('#nestable_list_1').on('click', '.edituser', function () {
+        $('#user_info').on('click', '.edituser', function () {
             var _item = $(this);
             $.ajax({
                 url:_item.attr('data-href'),
                 dataType:'html',
                 success:function (htmlData) {
-                    var box = $(user_select.middleBox);
+                    var box = $(user_select.box);
                     if (box.is(':visible')) {
+                        $('.create_user').hide();
                         $(user_select.middleBox).hide();
                     }else{
                         var _createForm = $('.formBox');
@@ -107,7 +115,7 @@ var user = function () {
                             _createForm.remove();
                         }
                     }
-                    $(user_select.box).append(htmlData);
+                    $(user_select.headerBox).append(htmlData);
                 },
                 error: function (xhr,errorText,errorType) {
                     var result =$.parseJSON(xhr.responseText);
@@ -133,7 +141,8 @@ var user = function () {
         /*
         * 保存编辑
         * */
-        $(user_select.box).on('click','.editButton',function () {
+        $(user_select.headerBox).on('click','.editButton',function () {
+            console.log('edit')
             var _item = $(this);
             var _form = $('#editForm');
 
@@ -149,23 +158,26 @@ var user = function () {
                     _item.attr('disabled','true');
                 },
                 success:function (response) {
+                    console.log(response.message)
                     sweetAlert(response.message);
                     setTimeout(function(){
                         window.location.href = '/system/user';
                     }, 1000);
                 }
             }).fail(function(response) {
+                console.log(response.message)
                 if(response.status == 422){
                     var data = $.parseJSON(response.responseText);
                     var layerStr = "";
-                    for(var i in data){
-                        layerStr += data[i]+" ";
+                    for(var i in data.errors){
+                        layerStr += data.errors[i]+" ";
                     }
                     sweetAlert('错误', layerStr);
                 }
             }).always(function () {
+                console.log('always')
                 _item.removeAttr('disabled');
-            });;
+            });
         });
     };
 

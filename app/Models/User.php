@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'username', 'password','trueName'
+        'name', 'username', 'password','trueName','sex','position_id','dept_id'
     ];
 
     /**
@@ -50,5 +50,51 @@ class User extends Authenticatable
         return $this->belongsTo('App\Models\Position','position_id');
     }
 
+    /** 创建新用户
+     * @param $data
+     * @return bool
+     */
+    public function createUser($data)
+    {
+        // 处理data为空的情况
+        if (empty($data)) {
+            return false;
+        }
+        //添加数据
+        $result = $this->create($data);
+        if ($result) {
+            return $result->id;
+        }else{
+            return false;
+        }
+    }
 
+    /**
+     * 修改数据
+     *
+     * @param  array $map  where条件
+     * @param  array $data 需要修改的数据
+     * @return bool        是否成功
+     */
+    public function updateData($map, $data)
+    {
+        $model = $this
+            ->where($map)
+            ->get();
+        // 可能有查不到数据的情况
+        if ($model->isEmpty()) {
+            return false;
+        }
+        foreach ($model as $k => $v) {
+            $result = $v->forceFill($data)->save();
+        }
+        if ($result) {
+            return [
+                'status' => $result,
+                'message' => $result ? '更新成功':'更新失败',
+            ];
+        }else{
+            return false;
+        }
+    }
 }

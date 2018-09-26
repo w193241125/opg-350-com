@@ -21,4 +21,12 @@ class Position extends Model
         return $this->hasMany('App\Models\User');
     }
 
+    /**
+     * 获取此职位所属部门
+     */
+    public function dept()
+    {
+        return $this->belongsTo('App\Models\Dept');
+    }
+
 }

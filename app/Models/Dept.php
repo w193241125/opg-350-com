@@ -20,4 +20,13 @@ class Dept extends Model
     {
         return $this->hasMany('App\Models\User');
     }
+
+    /**
+     * 获得此部门的职位
+     */
+    public function position()
+    {
+        return $this->hasMany('App\Models\Position');
+    }
+
 }

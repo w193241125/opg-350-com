@@ -158,8 +158,8 @@ var menu = function () {
                 if(response.status == 422){
                     var data = $.parseJSON(response.responseText);
                     var layerStr = "";
-                    for(var i in data){
-                        layerStr += data[i]+" ";
+                    for(var i in data.errors){
+                        layerStr += data.errors[i]+" ";
                     }
                     sweetAlert('错误', layerStr);
                 }

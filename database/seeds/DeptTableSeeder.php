@@ -63,5 +63,12 @@ class DeptTableSeeder extends Seeder
                 'dept' => '0',
             ]
         );
+        Dept::create(
+            [
+                'id' => 8,
+                'dept_name' => 'boss',
+                'dept' => '0',
+            ]
+        );
     }
 }

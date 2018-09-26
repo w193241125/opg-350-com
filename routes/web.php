@@ -38,6 +38,10 @@ Route::group([ 'prefix' => 'system','namespace' => 'System', 'middleware'=>['Che
 
     // 用户,资源路由
     Route::resource('user', 'UserController');
+    // ajax获取职位
+    Route::get('getposition', 'UserController@ajaxGetPosition')->name('UserController.ajaxGetPosition');
+    // ajax 检查用户名是否存在
+    Route::get('ajaxCheckUsername', 'UserController@ajaxCheckUsername')->name('UserController.ajaxCheckUsername');
 
     Route::get('game', 'IndexController@index')->name('game.index');
 });

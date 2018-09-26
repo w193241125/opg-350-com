@@ -3,7 +3,14 @@
 @section('title', '用户管理')
 {{--顶部前端资源--}}
 @section('styles')
-
+    <style>
+        .imp{color: red}
+        .font_style{color: #999;font-size: 18px;}
+    </style>
+    <!-- 引入添加菜单的样式 -->
+    <link href="{{asset('assets/admin/layouts/css/components-md.min.css')}}" rel="stylesheet" id="style_components" type="text/css" />
+    <link href="{{asset('assets/admin/layouts/css/plugins-md.min.css')}}" rel="stylesheet" type="text/css" />
+    <!-- 引入添加菜单的样式结束 -->
 @endsection
 
 {{--页面内容--}}
@@ -25,9 +32,8 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="box">
-                        <div class="box-header">
-                            {{--<h3 class="box-title">用户列表</h3>--}}
-                            <a href="javascript:;" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-plus"></i> 新增用户</a>
+                        <div class="box-header add_user_html">
+                            <a href="javascript:;" class="btn btn-xs btn-primary create_user"><i class="glyphicon glyphicon-plus"></i> 新增用户</a>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
@@ -66,24 +72,10 @@
                                     <td>{{$u->lastLoginTime}}</td>
                                     <td>{{$u->lastLoginIP}}</td>
                                     <td>{{$u->state?'启用':'禁用'}}</td>
-                                    <td><a href="#edit-1" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> 编辑</a></td>
+                                    <td><a href="javascript:;" data-href="/system/user/{{$u->uid}}/edit" class="btn btn-xs btn-primary edituser"><i class="glyphicon glyphicon-edit"></i> 编辑</a></td>
                                 </tr>
                                     @endforeach
                                 </tbody>
-                                <tfoot>
-                                {{--<tr>--}}
-                                    {{--<th>用户名</th>--}}
-                                    {{--<th>真实姓名</th>--}}
-                                    {{--<th>角色</th>--}}
-                                    {{--<th>性别</th>--}}
-                                    {{--<th>部门</th>--}}
-                                    {{--<th>职位</th>--}}
-                                    {{--<th>登录次数</th>--}}
-                                    {{--<th>上次登录时间</th>--}}
-                                    {{--<th>上次登录IP</th>--}}
-                                    {{--<th>操作</th>--}}
-                                {{--</tr>--}}
-                                </tfoot>
                             </table>
                         </div>
                         <!-- /.box-body -->
@@ -101,6 +93,9 @@
 
 {{--尾部前端资源--}}
 @section('script')
+    <script src="{{ asset('assets/admin/user/scripts/user.js') }}" type="text/javascript"></script>
+    <!-- BEGIN THEME GLOBAL SCRIPTS 这个js控制 添加菜单 的 label 上移与下移 -->
+    <script src="{{asset('assets/admin/layouts/scripts/app.min.js')}}" type="text/javascript"></script>
     <script>
         $(document).ready(function(){
             $('#user_info').DataTable()

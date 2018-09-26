@@ -95,16 +95,14 @@
     {{--sweetalert弹窗--}}
     {{--<script src="/sweetalert2/dist/sweetalert2.min.js"></script>--}}
     {{--<link rel="stylesheet" href="/sweetalert2/dist/sweetalert2.min.css">--}}
-    {{--弹窗js--}}
-    <script src="{{ asset('vendor/bootstrap-sweetalert/sweetalert.min.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('assets/admin/layouts/scripts/sweetalert/sweetalert-ajax-delete.js') }}" type="text/javascript"></script>
+
 
     <!-- Include a polyfill for ES6 Promises (optional) for IE11 and Android browser -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
 
     <!-- END PAGE LEVEL PLUGINS -->
 
-    <!-- BEGIN THEME GLOBAL SCRIPTS 这个js控制添加菜单的label上移与下移 -->
+    <!-- BEGIN THEME GLOBAL SCRIPTS 这个js控制 添加菜单 的 label 上移与下移 -->
     <script src="{{asset('assets/admin/layouts/scripts/app.min.js')}}" type="text/javascript"></script>
     <!-- END THEME GLOBAL SCRIPTS -->
 

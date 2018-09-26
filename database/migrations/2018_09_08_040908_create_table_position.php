@@ -15,8 +15,8 @@ class CreateTablePosition extends Migration
     {
         Schema::create('position', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('position_name',20);
-            $table->integer('position');
+            $table->string('position_name',20)->comment('职位名');
+            $table->integer('dept_id')->comment('职位所属部门id');
             $table->timestamps();
         });
     }
