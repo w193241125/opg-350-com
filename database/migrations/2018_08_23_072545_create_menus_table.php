@@ -22,6 +22,9 @@ class CreateMenusTable extends Migration
             $table->string('icon', 50)->default('fa-circle-o')->comment('字体图标');
             $table->tinyInteger('state')->default(1)->comment('状态，1:正常，2:隐藏');
             $table->timestamps();
+            //建立索引
+            $table->unique('uri');
+            $table->index('parent_id');
         });
     }
 

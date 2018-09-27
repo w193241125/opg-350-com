@@ -45,3 +45,9 @@ Route::group([ 'prefix' => 'system','namespace' => 'System', 'middleware'=>['Che
 
     Route::get('game', 'IndexController@index')->name('game.index');
 });
+
+
+Route::group([ 'prefix' => 'operator','namespace' => 'Operator', 'middleware'=>['CheckPermission']], function () {
+    Route::get('queryFailedOrder','OperatorController@queryFailedOrder')->name('pay.queryFailedOrder');
+});
+
