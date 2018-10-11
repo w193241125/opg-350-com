@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', '用户管理')
+@section('title', '失败订单扫描')
 {{--顶部前端资源--}}
 @section('styles')
     <style>
@@ -19,7 +19,7 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                用户管理
+                运营管理
                 <small>Version 1.0</small>
             </h1>
             <ol class="breadcrumb">
@@ -36,45 +36,41 @@
                             <a href="javascript:;" class="btn btn-xs btn-primary create_user"><i class="glyphicon glyphicon-plus"></i> 新增用户</a>
                         </div>
                         <!-- /.box-header -->
-                        <div class="box-body table-responsive">
-                            <table id="user_info" class="table table-bordered table-striped table-hover dataTables">
+                        <div class="box-body">
+                            <table id="order_info" class="table table-bordered table-striped" width="100%">
                                 <thead>
                                 <tr>
-                                    <th>序号</th>
-                                    <th>用户名</th>
-                                    <th>真实姓名</th>
-                                    <th>角色</th>
-                                    <th>性别</th>
-                                    <th>部门</th>
-                                    <th>职位</th>
-                                    <th>登录次数</th>
-                                    <th>上次登录时间</th>
-                                    <th>上次登录IP</th>
-                                    <th>状态</th>
+                                    <th>充值帐号</th>
+                                    <th>充值方式</th>
+                                    <th>订单号</th>
+                                    <th>充值游戏</th>
+                                    <th>充值服</th>
+                                    <th>充值金额</th>
+                                    <th>游戏币</th>
+                                    <th>充值时间</th>
+                                    <th>充值IP</th>
+                                    <th>支付</th>
+                                    <th>游戏币发放状态</th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($user_list as $u)
-                                <tr>
-                                    <td>{{$u->uid}}</td>
-                                    <td>{{$u->username}}</td>
-                                    <td>{{$u->trueName}}</td>
-                                    <td>
-                                        @foreach($u->roles as $r)
-                                            <span class="label label-success">{{$r->role_display_name}}</span>
-                                        @endforeach
-                                    </td>
-                                    <td>{{$u->sex}}</td>
-                                    <td>{{$u->dept['dept_name']}}</td>
-                                    <td>{{$u->position['position_name']}}</td>
-                                    <td>{{$u->loginTimes}}</td>
-                                    <td>{{$u->lastLoginTime}}</td>
-                                    <td>{{$u->lastLoginIP}}</td>
-                                    <td>{{$u->state?'启用':'禁用'}}</td>
-                                    <td><a href="javascript:;" data-href="/system/user/{{$u->uid}}/edit" class="btn btn-xs btn-primary edituser"><i class="glyphicon glyphicon-edit"></i> 编辑</a></td>
-                                </tr>
-                                    @endforeach
+                                @foreach($failed_list as $u)
+                                    <tr>
+                                        <td>{{$u->user_name}}</td>
+                                        <td>{{$u->pay_channel}}</td>
+                                        <td>{{$u->orderid}}</td>
+                                        <td>{{$games_arr[$u->game_id]['name']}}</td>
+                                        <td>{{$u->server_id}}服</td>
+                                        <td>{{$u->money}}</td>
+                                        <td>{{$u->pay_gold}}</td>
+                                        <td>{{date('Y-m-d H:i:s',$u->pay_date)}}</td>
+                                        <td>{{long2ip($u->user_ip)}}</td>
+                                        <td>{{$u->succ==1?'成功':'失败'}}</td>
+                                        <td>{{$u->pay_result?'启用':'禁用'}}</td>
+                                        <td><a href="javascript:;" data-href="/system/user/{{$u->uid}}/edit" class="btn btn-xs btn-primary edituser"><i class="glyphicon glyphicon-edit"></i> 编辑</a></td>
+                                    </tr>
+                                @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -93,15 +89,12 @@
 
 {{--尾部前端资源--}}
 @section('script')
-    <script src="{{ asset('assets/admin/user/scripts/user.js') }}" type="text/javascript"></script>
-    <!-- BEGIN THEME GLOBAL SCRIPTS 这个js控制 添加菜单 的 label 上移与下移 -->
-    <script src="{{asset('assets/admin/layouts/scripts/app.min.js')}}" type="text/javascript"></script>
     <script>
         $(document).ready(function(){
-            $('#user_info').DataTable()
+            $('#order_info').DataTable();
         });
 
-        $('#user_info').DataTable({
+        $('#order_info').DataTable({
             language: {
                 "sProcessing": "处理中...",
                 "sLengthMenu": "显示 _MENU_ 项结果",
@@ -153,7 +146,7 @@
                 }
             ],
             "destroy": true,
-//            scrollX: true,
+            scrollX: true,
             scrollCollapse: true,
             bPaginate: true,
             bLengthChange: true,

@@ -63,9 +63,15 @@ class User extends Authenticatable
         //添加数据
         $result = $this->create($data);
         if ($result) {
-            return $result->id;
+            return [
+                'status' => $result->id,
+                'message' => $result ? '添加成功':'添加失败',
+            ];
         }else{
-            return false;
+            return [
+                'status' => 300,
+                'message' => '添加失败',
+            ];
         }
     }
 

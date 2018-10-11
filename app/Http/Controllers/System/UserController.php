@@ -57,11 +57,12 @@ class UserController extends Controller
         $data = [];
         $data['username'] = $userPost->username;
         $data['trueName'] = $userPost->trueName;
-        $data['password'] = $userPost->password?$userPost->password:bcrypt('123456');
+        $data['password'] = $userPost->password ? $userPost->password : bcrypt('123456');
         $data['position_id'] = $userPost->position_id;
         $data['dept_id'] = $userPost->dept_id;
         $data['sex'] = $userPost->sex;
-        return $user->createUser($data);
+        $responseData = $user->createUser($data);
+        return response()->json($responseData);
     }
 
     /**

@@ -32,12 +32,9 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="box">
-                        <div class="box-header add_user_html">
-                            <a href="javascript:;" class="btn btn-xs btn-primary create_user"><i class="glyphicon glyphicon-plus"></i> 新增用户</a>
-                        </div>
                         <!-- /.box-header -->
-                        <div class="box-body">
-                            <table id="user_info" class="table table-bordered table-striped">
+                        <div class="box-body table-responsive">
+                            <table id="order_info" class="table table-bordered table-striped table-hover" width="100%">
                                 <thead>
                                 <tr>
                                     <th>充值帐号</th>
@@ -55,26 +52,36 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {{--@foreach($user_list as $u)--}}
-                                    {{--<tr>--}}
-                                        {{--<td>{{$u->uid}}</td>--}}
-                                        {{--<td>{{$u->username}}</td>--}}
-                                        {{--<td>{{$u->trueName}}</td>--}}
-                                        {{--<td>--}}
-                                            {{--@foreach($u->roles as $r)--}}
-                                                {{--<span class="label label-success">{{$r->role_display_name}}</span>--}}
-                                            {{--@endforeach--}}
-                                        {{--</td>--}}
-                                        {{--<td>{{$u->sex}}</td>--}}
-                                        {{--<td>{{$u->dept['dept_name']}}</td>--}}
-                                        {{--<td>{{$u->position['position_name']}}</td>--}}
-                                        {{--<td>{{$u->loginTimes}}</td>--}}
-                                        {{--<td>{{$u->lastLoginTime}}</td>--}}
-                                        {{--<td>{{$u->lastLoginIP}}</td>--}}
-                                        {{--<td>{{$u->state?'启用':'禁用'}}</td>--}}
-                                        {{--<td><a href="javascript:;" data-href="/system/user/{{$u->uid}}/edit" class="btn btn-xs btn-primary edituser"><i class="glyphicon glyphicon-edit"></i> 编辑</a></td>--}}
-                                    {{--</tr>--}}
-                                {{--@endforeach--}}
+                                @foreach($failed_list as $u)
+                                    <tr>
+                                        <td>{{$u['user_name']}}</td>
+                                        <td>{{$u['pay_channel']}}</td>
+                                        <td>{{$u['orderid']}}</td>
+                                        <td>{{$games_arr[$u['game_id']]['name']}}</td>
+                                        <td>{{$u['server_id']}}服</td>
+                                        <td>{{$u['money']}}</td>
+                                        <td>{{$u['pay_gold']}}</td>
+                                        <td>{{$u['pay_date']}}</td>
+                                        <td>{{$u['user_ip']}}</td>
+                                        <td>{!! $u['succ']==1?'<span class="label label-success">成功</span>':'<span class="label label-danger">失败</span>' !!}</td>
+                                        <td>{!! '<span class="label label-danger">'.$u['pay_result'].'|'.$u['return_msg'].'('.$u['back_result'].')</span>' !!}</td>
+                                        <td>
+                                            <a href="javascript:;"
+                                               act='bf'
+                                               user_name='{{$u['user_name']}}'
+                                               plat_id='1'
+                                               game_id='{{$u['game_id']}}'
+                                               server_id='{{$u['server_id']}}'
+                                               money='{{$u['money']}}'
+                                               pay_gold='{{$u['pay_gold']}}'
+                                               orderid='{{$u['orderid']}}'
+                                               succ='{{$u['succ']}}'
+                                               game_byname='{{$u['game_byname']}}'
+                                               sign="{{$u['sign']}}"
+                                               class="btn btn-xs btn-primary bf"><i class="glyphicon glyphicon-edit"></i> 补发</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -95,10 +102,73 @@
 @section('script')
     <script>
         $(document).ready(function(){
-            $('#user_info').DataTable()
-        });
+//            SweetAlert.init();
 
-        $('#user_info').DataTable({
+            $('#order_info').DataTable();
+            
+            $('.bf').on('click',function () {
+                var _item = $(this);
+                swal({
+                        title: "确定补发吗？",
+                        text: "请谨慎操作！",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "确定补发！",
+                        closeOnConfirm: false
+                    },
+                    function(){
+                    var post_data = [];
+                        post_data.act = _item.attr('act');
+                        post_data.user_name = _item.attr('user_name');
+                        post_data.plat_id = _item.attr('plat_id');
+                        post_data.game_id = _item.attr('game_id');
+                        post_data.server_id = _item.attr('server_id');
+                        post_data.money = _item.attr('money');
+                        post_data.pay_gold = _item.attr('pay_gold');
+                        post_data.orderid = _item.attr('orderid');
+                        post_data.succ = _item.attr('succ');
+                        post_data.game_byname = _item.attr('game_byname');
+                        post_data.sign = _item.attr('sign');
+//                        触发补发ajax
+                        $.ajax({
+                            url:'/operator/bf',
+                            type:'get',
+                            data:post_data,
+                            success:function (res) {
+                                if(res.status==200){
+                                    swal("补发！", "补发成功。", "success");
+                                }else{
+                                    swal("补发！", "补发失败。", "error");
+                                }
+                            },
+                            error: function (xhr,errorText,errorType) {
+                                var result =$.parseJSON(xhr.responseText);
+                                if (result.error == "no_permissions") {
+                                    sweetAlert({
+                                        title:"您没有此权限",
+                                        text:"请联系管理员",
+                                        type:"error"
+                                    });
+                                    return false;
+                                } else {
+                                    sweetAlert({
+                                        title:"未知错误",
+                                        text:"请联系管理员",
+                                        type:"error"
+                                    });
+                                    return false;
+                                }
+                            }
+                        });
+
+                    });
+            })
+        });
+        
+        
+
+        $('#order_info').DataTable({
             language: {
                 "sProcessing": "处理中...",
                 "sLengthMenu": "显示 _MENU_ 项结果",
@@ -149,6 +219,14 @@
                     "className": "btn-sm"
                 }
             ],
+            "destroy": true,
+//            scrollX: true,
+            scrollCollapse: true,
+            bPaginate: true,
+            bLengthChange: true,
+            "bAutoWidth": true,
+            "aaSorting": [],
+            responsive: true
         });
     </script>
 @endsection

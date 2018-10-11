@@ -2,10 +2,10 @@
 /**
  * 帮助函数
  * Created by PhpStorm.
- * User: ADKi
- * Date: 2017/3/8 0008
- * Time: 15:06
- * @author DukeAnn
+ * User: Larwas
+ * Date: 2018年9月27日
+ * Time: 14:22:12
+ * @author Larwas
  */
 
 
@@ -68,7 +68,6 @@ if (!function_exists("editor_js_a")) {
     }
 }
 
-
 if (!function_exists('flash_error')){
     /**
      * 添加失败提示
@@ -95,3 +94,25 @@ if (!function_exists('flash_success')){
     }
 }
 
+function getPlatsGamesServers($type = 1, $plat_id = 0, $game_id = 0, $server_id = 0, $is_open = 0, $open_game = 0, $is_vip = 0, $is_vip_limit = 0){
+    \Illuminate\Support\Facades\DB::connection('db_opgroup')->table('db_center.wd_plat_list')->orderBy('id')->get();
+}
+
+
+function GetIP(){//获取IP
+    if ($_SERVER["HTTP_X_FORWARDED_FOR"])
+        $ip = $_SERVER["HTTP_X_FORWARDED_FOR"];
+    else if ($_SERVER["HTTP_CLIENT_IP"]) //PHP开源代码
+        $ip = $_SERVER["HTTP_CLIENT_IP"];
+    else if ($_SERVER["REMOTE_ADDR"])
+        $ip = $_SERVER["REMOTE_ADDR"];
+    else if (getenv("HTTP_X_FORWARDED_FOR")) //PHP开源代码
+        $ip = getenv("HTTP_X_FORWARDED_FOR");
+    else if (getenv("HTTP_CLIENT_IP"))
+        $ip = getenv("HTTP_CLIENT_IP");
+    else if (getenv("REMOTE_ADDR"))
+        $ip = getenv("REMOTE_ADDR");
+    else
+        $ip = "Unknown";
+    return $ip;
+}

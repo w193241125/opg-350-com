@@ -16,6 +16,8 @@ class AppServiceProvider extends ServiceProvider
     {
         //设置默认字符串生成长度，解决 utf8mb4 字符编码导致的问题。
         Schema::defaultStringLength(191);
+
+        error_reporting(E_ALL ^ E_NOTICE);
     }
 
     /**
