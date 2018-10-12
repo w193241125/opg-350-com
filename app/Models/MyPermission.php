@@ -12,6 +12,8 @@ use Spatie\Permission\Models\Role;
 
 class MyPermission extends Permission
 {
+    protected $table = 'permissions';
+
     /**
      * 重写 permission 的 create 方法，添加了 display_name pm_description pm_type 三个字段
      * @param array $attributes
