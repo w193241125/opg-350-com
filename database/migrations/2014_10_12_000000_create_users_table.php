@@ -24,7 +24,7 @@ class CreateUsersTable extends Migration
             $table->string('username')->unique()->comment('用户名，唯一');
             $table->string('password')->comment('密码');
             $table->tinyInteger('gid')->comment('分组id'); //分组id，2018年9月17日 觉得没用，暂时留着作为预留字段。
-            $table->tinyInteger('state')->comment('用户状态：1启用，0禁用');
+            $table->tinyInteger('state')->default(1)->comment('用户状态：1启用，0禁用');
             $table->integer('loginTimes')->comment('登录次数'); // 登录次数
             $table->dateTime('lastLoginTime')->comment('上次登录时间'); // 上次登录时间
             $table->string('lastLoginIP', 16)->comment('上次登录IP'); // 上次登录IP
