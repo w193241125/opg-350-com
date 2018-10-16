@@ -314,8 +314,10 @@ class OperatorController extends Controller
         $res = DB::connection('mysql_opgroup')->table($pay_table)->select(DB::raw($columns))->where($where)->groupBy(['tdate'])->orderBy('tdate')->get();
         $res = json_decode(json_encode($res),true);
         $ress = $this->datasum_do($res);
-        dd($ress);
-
+        $assign=[
+            'data'=>$ress
+        ];
+        return view('operator.data.data_statistics_day',$assign);
     }
 
     //数据处理 合并 求和 百分比
@@ -327,17 +329,14 @@ class OperatorController extends Controller
         }
 
         foreach($res as $k=>$v){
-            var_dump($k);
             $res[$k]['reg'] = $v['reg_total']+$v['old_login_total'];
             $res[$k]['login'] = $v['login_total']+$v['old_login_next'];
             $res[$k]['all_remain'] = $res[$k]['reg']>0 ? round($res[$k]['login']/$res[$k]['reg'],4) : 0; // todo 计算规则
             $res[$k]['pay'] = $v['pay_tdate'];
             $res[$k]['old_pay_total'] = $v['pay_tdate'] - $v['pay_total'];
-            //$res[$k]['amount'] = $v['pay_amount']+$v['old_pay_amount'];
             $res[$k]['amount'] = $v['pay_tdate'];
             $res[$k]['old_pay_amount'] = $v['pay_tdate'] - $v['pay_amount'];
             $res[$k]['pay_u'] = $v['pay_num']+$v['old_pay_num'];
-            //$res[$k]['old_pay_num'] = $v['pay_num'];
             $res[$k]['arpu'] = $res[$k]['pay_u']>0? round($res[$k]['pay']/$res[$k]['pay_u'],2) : 0;
             $res[$k]['pay_rate'] = $res[$k]['reg']>0? round($res[$k]['pay_u']/$res[$k]['reg'],4) : 0;
 
@@ -347,7 +346,7 @@ class OperatorController extends Controller
             $res[$k]['reg_arpus'] = $v['pay_total']>0 ? round($v['pay_total']/$v['reg_total'],2) : 0;
 
             //计算环比增长
-            $res[$k]['huan_pay_rate'] = round(($res[$k]['pay'] - $res_pay_arr[$k-1]['pay_tdate'])/$res_pay_arr[$k-1]['pay_tdate'],4);
+            $res[$k]['huan_pay_rate'] = $res_pay_arr[$k-1]['pay_tdate']>0?round(($res[$k]['pay'] - $res_pay_arr[$k-1]['pay_tdate'])/$res_pay_arr[$k-1]['pay_tdate'],4):0;
             $old_login_off = $v['old_login_total'] - $v['old_login_next'];
             // $res[$k]['old_off'] = $v['old_login_total']>0 && $old_login_off>0 ? round($old_login_off/$v['old_login_total'],2) : 0;  // 与合并部分计算方式统一
             $res[$k]['old_off'] = $v['old_login_total']>0 ? round($old_login_off/$v['old_login_total'],4) : 0;

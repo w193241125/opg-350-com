@@ -1,11 +1,14 @@
 @extends('layouts.app')
 
-@section('title', '失败订单扫描')
+@section('title', '数据按日统计')
 {{--顶部前端资源--}}
 @section('styles')
     <style>
         .imp{color: red}
         .font_style{color: #999;font-size: 18px;}
+        .table-bordered>thead>tr>th, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>tbody>tr>td, .table-bordered>tfoot>tr>td{
+            border: 1px solid #dddddd;
+        }
     </style>
     <!-- 引入添加菜单的样式 -->
     <link href="{{asset('assets/admin/layouts/css/components-md.min.css')}}" rel="stylesheet" id="style_components" type="text/css" />
@@ -32,45 +35,74 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="box">
-                        <div class="box-header add_user_html">
-                            <a href="javascript:;" class="btn btn-xs btn-primary create_user"><i class="glyphicon glyphicon-plus"></i> 新增用户</a>
-                        </div>
-                        <!-- /.box-header -->
                         <div class="box-body">
                             <table id="order_info" class="table table-bordered table-striped" width="100%">
                                 <thead>
                                 <tr>
-                                    <th>充值帐号</th>
-                                    <th>充值方式</th>
-                                    <th>订单号</th>
-                                    <th>充值游戏</th>
-                                    <th>充值服</th>
-                                    <th>充值金额</th>
-                                    <th>游戏币</th>
-                                    <th>充值时间</th>
-                                    <th>充值IP</th>
-                                    <th>支付</th>
-                                    <th>游戏币发放状态</th>
-                                    <th>操作</th>
+                                    <th rowspan="2" width="80" style="text-align: center; vertical-align:middle;">日期</th>
+                                    <th colspan="8"style="text-align: center; vertical-align:middle;">总用户</th>
+                                    <th colspan="8"style="text-align: center; vertical-align:middle;">新用户</th>
+                                    <th colspan="7"style="text-align: center; vertical-align:middle;">老用户</th>
+                                </tr>
+                                <tr>
+                                    <th>用户数</th>
+                                    <th>次日活跃率</th>
+                                    <th>收入</th>
+                                    <th>环比增长</th>
+                                    <th>分成</th>
+                                    <th>付费人数</th>
+                                    <th>ARPU</th>
+                                    <th>付费率</th>
+
+                                    <th>用户数</th>
+                                    <th>次日留存率</th>
+                                    <th>收入</th>
+                                    <th>分成</th>
+                                    <th>付费人数</th>
+                                    <th>ARPU</th>
+                                    <th>付费率</th>
+                                    <th>注册ARPU</th>
+
+                                    <th>用户数</th>
+                                    <th>次日流失率</th>
+                                    <th>收入</th>
+                                    <th>分成</th>
+                                    <th>付费人数</th>
+                                    <th>ARPU</th>
+                                    <th>付费率</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($failed_list as $u)
-                                    <tr>
-                                        <td>{{$u->user_name}}</td>
-                                        <td>{{$u->pay_channel}}</td>
-                                        <td>{{$u->orderid}}</td>
-                                        <td>{{$games_arr[$u->game_id]['name']}}</td>
-                                        <td>{{$u->server_id}}服</td>
-                                        <td>{{$u->money}}</td>
-                                        <td>{{$u->pay_gold}}</td>
-                                        <td>{{date('Y-m-d H:i:s',$u->pay_date)}}</td>
-                                        <td>{{long2ip($u->user_ip)}}</td>
-                                        <td>{{$u->succ==1?'成功':'失败'}}</td>
-                                        <td>{{$u->pay_result?'启用':'禁用'}}</td>
-                                        <td><a href="javascript:;" data-href="/system/user/{{$u->uid}}/edit" class="btn btn-xs btn-primary edituser"><i class="glyphicon glyphicon-edit"></i> 编辑</a></td>
-                                    </tr>
-                                @endforeach
+                                    @foreach($data as $key=>$v)
+                                        <tr class="sum_day_data" @if(intval($key)%2 == 0)bgcolor="#EAFDFF"@endif>
+                                        <th height="25" width="80">{{$v->tdate}}</th>
+                                        <th>{{$v->reg}}</th>
+                                        <th>{{sprintf("%.2f",$v->all_remain*100)}}%</th>
+                                        <th>{{(int)$v->pay}}</th>
+                                        <th>@if(!empty($v->huan_pay_rate)) {{sprintf("%.2f",$v->huan_pay_rate*100)}}@else - @endif</th>
+                                        <th>{{(int)$v->amount}}</th>
+                                        <th>{{$v->pay_u}}</th>
+                                        <th>{{$v->arpu}}</th>
+                                        <th>{{sprintf("%.2f",$v->pay_rate*100)}}%</th>
+
+                                        <th>{{$v->reg_total}}</th>
+                                        <th>{{sprintf("%.2f",$v->reg_remain*100)}}%</th>
+                                        <th>{{(int)$v->pay_total}}</th>
+                                        <th>{{(int)$v->pay_amount}}</th>
+                                        <th>{{$v->pay_num}}</th>
+                                        <th>{{$v->reg_arpu}}</th>
+                                        <th>{{sprintf("%.2f",$v->reg_pay_rate*100)}}%</th>
+                                        <th>{{$v->reg_arpus}}</th>
+
+                                        <th>{{$v->old_login_total}}</th>
+                                        <th>{{sprintf("%.2f",$v->old_off*100)}}%</th>
+                                        <th>{{(int)$v->old_pay_total}}</th>
+                                        <th>{{(int)$v->old_pay_amount}}</th>
+                                        <th>{{$v->old_pay_num}}</th>
+                                        <th>{{$v->old_arpu}}</th>
+                                        <th>{{sprintf("%.2f",$v->old_pay_rate*100)}}%</th>
+                                        </tr>
+                                        @endforeach
                                 </tbody>
                             </table>
                         </div>
