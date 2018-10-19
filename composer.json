@@ -31,7 +31,8 @@
         ],
         "psr-4": {
             "App\\": "app/"
-        }
+        },
+        "files":["app/helpers/helper.php"]  // 自动加载辅助函数
     },
     "autoload-dev": {
         "psr-4": {

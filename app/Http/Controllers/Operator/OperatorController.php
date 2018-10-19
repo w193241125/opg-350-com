@@ -302,21 +302,43 @@ class OperatorController extends Controller
 
     public function data_statistics_day(Request $request)
     {
+        $game_list = $this->getPlatsGamesServers(2, 1, 0, 0, 0, 0, 0, 0, 2);
+        $game_sort_list = $this->getGameSorts();
         $pay_table = 'sy_center.sy_game_total_day';
-        $sdate     =  $request->tdate ? $request->tdate : date("Y-m-d", time() - 86400 * 10);
-        $edate     =  $request->tdate2 ? $request->tdate2 : date("Y-m-d", time());
+        $sdate     =  $request->tdate ? substr($request->tdate,1,10) : date("Y-m-d", time() - 86400 * 6);
+        $edate     =  $request->tdate ? substr($request->tdate,11,10) : date("Y-m-d", time());
+        
+        $query = DB::connection('mysql_opgroup')->table($pay_table);
         $where = [
             ['tdate','>=',"$sdate"],
             ['tdate','<=',"$edate"],
         ];
+        if ($request->agent_id) array_push($where,['agent_id','=',$request->agent_id]);
+        if ($request->site_id) array_push($where,['site_id','=',$request->site_id]);
+        if($request->game_id){
+            $query->wherein('game_id',$request->game_id);
+        }
+
         $columns = ' tdate,sum(reg_total) as reg_total,sum(login_total) as login_total,sum(active_total) as active_total,sum(pay_total) as pay_total,sum(pay_total) as pay_amount,sum(pay_num) as pay_num,sum(old_tdate) as old_login_total,sum(old_login_next) as old_login_next,sum(old_pay_total) as old_pay_total,sum(old_pay_total) as old_pay_amount,sum(old_pay_num) as old_pay_num,sum(pay_tdate) as pay_tdate,sum(pay_num_tdate) as pay_num_tdate ';
 
-        $res = DB::connection('mysql_opgroup')->table($pay_table)->select(DB::raw($columns))->where($where)->groupBy(['tdate'])->orderBy('tdate')->get();
+        $res = $query->select(DB::raw($columns))->where($where)->groupBy(['tdate'])->orderBy('tdate')->get();
+
         $res = json_decode(json_encode($res),true);
         $ress = $this->datasum_do($res);
         $assign=[
-            'data'=>$ress
+            'data'=>$ress['res'],
+            'data_sum'=>$ress['sum'],
+            'data_user_pay'=>$ress['user_pay'],
+            'filters'=>[
+                'agent_id'=>$request->agent_id,
+                'site_id'=>$request->site_id,
+                'date'=>$request->date,
+                'game_id'=>$request->game_id?$request->game_id:array(),
+            ],
+            'game_list'=>$game_list,
+            'game_sort_list'=>$game_sort_list,
         ];
+
         return view('operator.data.data_statistics_day',$assign);
     }
 

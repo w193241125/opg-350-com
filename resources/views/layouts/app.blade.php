@@ -36,8 +36,11 @@
     <!-- jQuery 3 -->
     <script src="/AdminLTE/bower_components/jquery/dist/jquery.min.js"></script>
     <!-- Google Font -->
-    {{--<link rel="stylesheet"--}}
-          {{--href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">--}}
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+
+    {{--游戏多选--}}
+    <link href="{{ asset('select/select.css') }}" rel="stylesheet" type="text/css" />
     @yield('styles')
 </head>
 <body class="fixed hold-transition skin-blue sidebar-mini">
@@ -88,6 +91,9 @@
 <script src="{{ asset('vendor/bootstrap-sweetalert/sweetalert.min.js') }}" type="text/javascript"></script>
 {{--弹窗js--}}
 <script src="{{ asset('assets/admin/layouts/scripts/sweetalert/sweetalert-ajax-delete.js') }}" type="text/javascript"></script>
+{{--游戏多选js--}}
+<script src="{{ asset('select/select.js') }}" type="text/javascript"></script>
+
 
 {{--无权限弹窗_刷新页面--}}
 @if(session('error') == 'no_permissions')

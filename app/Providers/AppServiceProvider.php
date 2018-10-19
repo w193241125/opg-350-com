@@ -18,6 +18,13 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         error_reporting(E_ALL ^ E_NOTICE);
+
+        view()->composer('layouts/_game_list', function ($view) {
+            $game_list = getPlatsGamesServers(2, 1, 0, 0, 0, 0, 0, 0, 2);
+            $game_sort_list = getGameSorts();
+            $view->with('game_list',$game_list)
+            ->with('game_sort_list',$game_sort_list);
+        });
     }
 
     /**

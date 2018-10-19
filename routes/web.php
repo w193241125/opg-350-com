@@ -47,5 +47,6 @@ Route::group([ 'prefix' => 'operator','namespace' => 'Operator', 'middleware'=>[
     Route::get('queryFailedOrder','OperatorController@queryFailedOrder')->name('pay.queryFailedOrder');
     Route::get('bf','OperatorController@bf')->name('pay.bf');
     Route::get('data_statistics_day','OperatorController@data_statistics_day')->name('data.data_statistics_day');
+    Route::post('data_statistics_day','OperatorController@data_statistics_day')->name('data.data_statistics_day_post');
 });
 

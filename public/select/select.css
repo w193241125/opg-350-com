@@ -1,0 +1,18 @@
+.select-down{font-size:15px;float:left;position:relative;width:200px;border:1px solid #999;height: 34px;}
+.select-down label{cursor:pointer;line-height:20px}
+.select-down .trangle{position:absolute;right:4px;top:12px;width:0;height:0;border-top:6px solid #666;border-right:4px solid transparent;border-left:4px solid transparent}
+.select-down .title{display:block;user-select:none;height:30px;line-height:22px;width:100%}
+.select-down ul{width:100%;display:none;margin-left:20px}
+.select-down .first-con{position:absolute;margin-left:0;z-index:999}
+.select-down .first-con{height:200px;width:250px;background:#f6f6f6;overflow-y:scroll;display:none}
+.select-down li{list-style:none;text-overflow:ellipsis;overflow:hidden;white-space:nowrap}
+.third-con li{height:22px;line-height:22px}
+.select-down i{text-align:center;line-height:20px;display:block;width:22px;float:left;height:22px;font-style:normal}
+.select-down .first-span{background:#e5e5e5}
+.select-down .top-title{text-overflow:ellipsis;overflow:hidden;white-space:nowrap}
+.select-down .search-area{text-indent:10px;height:100%;outline:0;padding:0;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;width:100%;border:0}
+.select-down .search-result{display:none;background:#eee;position:absolute;margin-left:0;z-index:999}
+.select-down .search-result li{cursor:pointer;position:relative;height:22px;line-height:22px;text-indent:20px}
+.select-down .search-result li:hover{background:#dfdfdf}
+.select-down .search-result .circle{width:8px;height:8px;border-radius:50%;background:#fff;position:absolute;right:10px;top:10px}
+body,html,ul,li{margin:0;padding:0}
