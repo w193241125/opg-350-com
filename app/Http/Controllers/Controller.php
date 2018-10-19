@@ -183,7 +183,7 @@ class Controller extends BaseController
     public function getGameSorts($type=1)
     {
         $game_sort_list = Cache::get('game_sort_list');
-        if ($type==10){
+        if ($type==10 ||empty($game_sort_list)){
             $game_sort_list = DB::connection('mysql_opgroup')->table('db_center.`wd_game_sort`')->get();
             Cache::put('game_sort_list',toArray($game_sort_list),1800);
         }
