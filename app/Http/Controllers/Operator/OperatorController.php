@@ -27,8 +27,8 @@ class OperatorController extends Controller
         $plat_arr = $payOrders->getPlatsGamesServers();
         $games_arr = $payOrders->getGames2($plat_id);
 
-        //$sdate = $request->sdate ? $request->sdate : date("Y-m-d");
-        $sdate = $request->sdate ? $request->sdate : '2018-10-08';
+        $sdate = $request->sdate ? $request->sdate : date("Y-m-d");
+//        $sdate = $request->sdate ? $request->sdate : '2018-10-08';
         $edate = $request->edate ? $request->edate : $sdate;
 
         if ($request->do == 'bf'){
