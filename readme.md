@@ -17,3 +17,7 @@
 
 
 
+##数据查询条件语句
+
+文档：https://laravel-china.org/docs/laravel/5.5/queries/1327
+其中的 `条件语句` 中的 when 适用。

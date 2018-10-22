@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Operator;
 
 use App\Models\payOrders;
 use Curl\Curl;
+use function foo\func;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
@@ -52,9 +53,14 @@ class OperatorController extends Controller
 
             $result = $curl->post($pay_url,$post_arr);
             if($result == 'Permission101.132.57.161' || $result=='Permission119.23.91.168'){
-                dd($result);
+                $returns = [
+                    'status' => 300,
+                    'message' => '刷新重试',
+                ];
+//                return response()->json($returns);
             }
-            if ($result != '[]'){
+            if ($result != '[]' || $result != 'Permission101.132.57.161' || $result != 'Permission119.23.91.168'){
+                dd($result);
                 $res_arr = json_decode($result,true);
                 foreach ($res_arr as $key => $val) {
                     $returnMsg                     = unserialize($games_arr[ $val['game_id'] ]['result_code']);
@@ -75,7 +81,7 @@ class OperatorController extends Controller
                 'status' => 300,
                 'message' => '查无订单',
             ];
-            return response()->json($returns);
+//            return response()->json($returns);
         }
         $assign = [
             'plat_arr'=>$plat_arr,
@@ -305,23 +311,35 @@ class OperatorController extends Controller
         $game_list = $this->getPlatsGamesServers(2, 1, 0, 0, 0, 0, 0, 0, 2);
         $game_sort_list = $this->getGameSorts();
         $pay_table = 'sy_center.sy_game_total_day';
-        $sdate     =  $request->tdate ? substr($request->tdate,1,10) : date("Y-m-d", time() - 86400 * 6);
-        $edate     =  $request->tdate ? substr($request->tdate,11,10) : date("Y-m-d", time());
+        $sdate     =  $request->input('date') ? substr($request->input('date'),0,10) : date("Y-m-d", time() - 86400 * 6);
+        $edate     =  $request->input('date') ? substr($request->input('date'),11,10) : date("Y-m-d", time());
         
         $query = DB::connection('mysql_opgroup')->table($pay_table);
         $where = [
             ['tdate','>=',"$sdate"],
             ['tdate','<=',"$edate"],
         ];
-        if ($request->agent_id) array_push($where,['agent_id','=',$request->agent_id]);
-        if ($request->site_id) array_push($where,['site_id','=',$request->site_id]);
-        if($request->game_id){
-            $query->wherein('game_id',$request->game_id);
-        }
+        $agent_id = $request->input('agent_id');
+        $site_id = $request->input('site_id');
+        $game_id = $request->input('game_id');
+
 
         $columns = ' tdate,sum(reg_total) as reg_total,sum(login_total) as login_total,sum(active_total) as active_total,sum(pay_total) as pay_total,sum(pay_total) as pay_amount,sum(pay_num) as pay_num,sum(old_tdate) as old_login_total,sum(old_login_next) as old_login_next,sum(old_pay_total) as old_pay_total,sum(old_pay_total) as old_pay_amount,sum(old_pay_num) as old_pay_num,sum(pay_tdate) as pay_tdate,sum(pay_num_tdate) as pay_num_tdate ';
 
-        $res = $query->select(DB::raw($columns))->where($where)->groupBy(['tdate'])->orderBy('tdate')->get();
+        $res = $query
+            ->select(DB::raw($columns))
+            ->where($where)->groupBy(['tdate'])
+            ->when($agent_id,function ($query) use ($agent_id){
+                return $query->where('agent_id','=',$agent_id);
+            })
+            ->when($site_id,function ($query) use ($site_id){
+                return $query->where('site_id','=',$site_id);
+            })
+            ->when($game_id,function ($query) use ($game_id){
+                return $query->whereIn('game_id',$game_id);
+            })
+            ->orderBy('tdate')
+            ->get();
 
         $res = json_decode(json_encode($res),true);
         $ress = $this->datasum_do($res);
