@@ -10,11 +10,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 class OperatorController extends Controller
 {
-    PRIVATE $pay_url = 'http://sdkapi.350.com/api/pay_index.php';
-    private  $post_key = 'aVCxX2B3yswpxCMjaaSUHFXAzLYyuGhW';
-    private $payApiKey = array(
-        'sendGold' => '2918wuE73KBJzCc:5qLM0928h',
-    );
     /**
      * 充值失败订单扫描
      * @param Request $request
@@ -31,7 +26,6 @@ class OperatorController extends Controller
         $sdate = $request->sdate ? $request->sdate : date("Y-m-d");
 //        $sdate = $request->sdate ? $request->sdate : '2018-10-08';
         $edate = $request->edate ? $request->edate : $sdate;
-
         if ($request->do == 'bf'){
 
         }elseif ($request->do == 'orders'){
@@ -40,7 +34,7 @@ class OperatorController extends Controller
             $payChannel = Cache::get('payChannel'); //获取支付渠道数组
             $plat_arr    = $payOrders->getPlatsGamesServers(1);
             $games_arr   = $payOrders->getGames2($plat_id);
-            $pay_url = 'http://sdkapi.350.com/api/pay_index.php';
+            $pay_url = getenv('PAY_URL');
             //获取发放游戏币失败的订单
             $post_arr          = array();
             $post_arr['sdate'] = $sdate;
@@ -49,7 +43,7 @@ class OperatorController extends Controller
             $post_arr['opt'] = 'queryFailOrder';
             $post_arr['admin_username'] = 'jishubu';
             $post_arr['time'] = time();
-            $post_arr['flag'] = md5(md5($post_arr['time'].$this->post_key).$this->post_key);
+            $post_arr['flag'] = md5(md5($post_arr['time'].getenv('POST_KEY')).getenv('POST_KEY'));
 
             $result = $curl->post($pay_url,$post_arr);
             if($result == 'Permission101.132.57.161' || $result=='Permission119.23.91.168'){
@@ -91,6 +85,12 @@ class OperatorController extends Controller
         return view('operator.pay.queryFailedOrder',$assign);
     }
 
+    /**
+     * 补发元宝
+     * @param Request $request
+     * @param Curl $curl
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function bf(Request $request,Curl $curl)
     {
 
@@ -134,9 +134,9 @@ class OperatorController extends Controller
         $post_arr['opt'] = 'bf';
         $post_arr['admin_username'] = 'jishubu';
         $post_arr['time'] = time();
-        $post_arr['flag'] = md5(md5($post_arr['time'].$this->post_key).$this->post_key);
+        $post_arr['flag'] = md5(md5($post_arr['time'].getenv('POST_KEY')).getenv('POST_KEY'));
 
-        $pay_info = $curl->post($this->pay_url,$post_arr);
+        $pay_info = $curl->post(getenv('PAY_URL'),$post_arr);
 
         if (trim($pay_info[0]['succ']) != 1) {
             $returns = [
@@ -221,7 +221,7 @@ class OperatorController extends Controller
 
         //发放游戏币
         //获取加密key 加密
-        $Key_2918 = $this->payApiKey['sendGold'];
+        $Key_2918 = getenv('PAY_API_KEY_SENDGOLD');
         $time     = time();
         $pay_ip   = GetIP();
         $flag     = md5($time . $Key_2918 . $user_name . $game_id . $server_id . $pay_ip);
@@ -287,7 +287,7 @@ class OperatorController extends Controller
     }
 
     private function check_miss_serverid(Curl $curl, $user_name, $plat_id, $game_id, $server_id) {
-        $Key_2918 = $this->payApiKey['sendGold'];
+        $Key_2918 = getenv('PAY_API_KEY_SENDGOLD');
         $time     = time();
         $pay_ip   = GetIP();
         $flag     = md5($time . $Key_2918 . $user_name . $game_id . $server_id . $pay_ip);
@@ -299,13 +299,18 @@ class OperatorController extends Controller
         $post_arr['time']      = $time;
         $post_arr['pay_ip']    = $pay_ip;
         $post_arr['flat']      = $flag;
-        $url                   = "http://www.350.com/api/sync_pre_server.php";
+        $url                   = getenv('SYNC_PRE_SERVER');
         $result                = $curl->post($url, $post_arr);
 
         //$result = $this->postAPI($post_arr,$plat_id,$this->ApiPath['pay'],$this->ApiFileName['pre_server'],1,1);
         return $result;
     }
 
+    /**
+     * 数据按日统计
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function data_statistics_day(Request $request)
     {
         $game_list = $this->getPlatsGamesServers(2, 1, 0, 0, 0, 0, 0, 0, 2);
@@ -313,8 +318,6 @@ class OperatorController extends Controller
         $pay_table = 'sy_center.sy_game_total_day';
         $sdate     =  $request->input('date') ? substr($request->input('date'),0,10) : date("Y-m-d", time() - 86400 * 6);
         $edate     =  $request->input('date') ? substr($request->input('date'),11,10) : date("Y-m-d", time());
-        
-        $query = DB::connection('mysql_opgroup')->table($pay_table);
         $where = [
             ['tdate','>=',"$sdate"],
             ['tdate','<=',"$edate"],
@@ -323,7 +326,7 @@ class OperatorController extends Controller
         $site_id = $request->input('site_id');
         $game_id = $request->input('game_id');
 
-
+        $query = DB::connection('mysql_opgroup')->table($pay_table);
         $columns = ' tdate,sum(reg_total) as reg_total,sum(login_total) as login_total,sum(active_total) as active_total,sum(pay_total) as pay_total,sum(pay_total) as pay_amount,sum(pay_num) as pay_num,sum(old_tdate) as old_login_total,sum(old_login_next) as old_login_next,sum(old_pay_total) as old_pay_total,sum(old_pay_total) as old_pay_amount,sum(old_pay_num) as old_pay_num,sum(pay_tdate) as pay_tdate,sum(pay_num_tdate) as pay_num_tdate ';
 
         $res = $query

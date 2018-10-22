@@ -52,36 +52,38 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($failed_list as $u)
-                                    <tr>
-                                        <td>{{$u['user_name']}}</td>
-                                        <td>{{$u['pay_channel']}}</td>
-                                        <td>{{$u['orderid']}}</td>
-                                        <td>{{$games_arr[$u['game_id']]['name']}}</td>
-                                        <td>{{$u['server_id']}}服</td>
-                                        <td>{{$u['money']}}</td>
-                                        <td>{{$u['pay_gold']}}</td>
-                                        <td>{{$u['pay_date']}}</td>
-                                        <td>{{$u['user_ip']}}</td>
-                                        <td>{!! $u['succ']==1?'<span class="label label-success">成功</span>':'<span class="label label-danger">失败</span>' !!}</td>
-                                        <td>{!! '<span class="label label-danger">'.$u['pay_result'].'|'.$u['return_msg'].'('.$u['back_result'].')</span>' !!}</td>
-                                        <td>
-                                            <a href="javascript:;"
-                                               act='bf'
-                                               user_name='{{$u['user_name']}}'
-                                               plat_id='1'
-                                               game_id='{{$u['game_id']}}'
-                                               server_id='{{$u['server_id']}}'
-                                               money='{{$u['money']}}'
-                                               pay_gold='{{$u['pay_gold']}}'
-                                               orderid='{{$u['orderid']}}'
-                                               succ='{{$u['succ']}}'
-                                               game_byname='{{$u['game_byname']}}'
-                                               sign="{{$u['sign']}}"
-                                               class="btn btn-xs btn-primary bf"><i class="glyphicon glyphicon-edit"></i> 补发</a>
-                                        </td>
-                                    </tr>
-                                @endforeach
+                                @if(!empty($failed_list))
+                                    @foreach($failed_list as $u)
+                                        <tr>
+                                            <td>{{$u['user_name']}}</td>
+                                            <td>{{$u['pay_channel']}}</td>
+                                            <td>{{$u['orderid']}}</td>
+                                            <td>{{$games_arr[$u['game_id']]['name']}}</td>
+                                            <td>{{$u['server_id']}}服</td>
+                                            <td>{{$u['money']}}</td>
+                                            <td>{{$u['pay_gold']}}</td>
+                                            <td>{{$u['pay_date']}}</td>
+                                            <td>{{$u['user_ip']}}</td>
+                                            <td>{!! $u['succ']==1?'<span class="label label-success">成功</span>':'<span class="label label-danger">失败</span>' !!}</td>
+                                            <td>{!! '<span class="label label-danger">'.$u['pay_result'].'|'.$u['return_msg'].'('.$u['back_result'].')</span>' !!}</td>
+                                            <td>
+                                                <a href="javascript:;"
+                                                   act='bf'
+                                                   user_name='{{$u['user_name']}}'
+                                                   plat_id='1'
+                                                   game_id='{{$u['game_id']}}'
+                                                   server_id='{{$u['server_id']}}'
+                                                   money='{{$u['money']}}'
+                                                   pay_gold='{{$u['pay_gold']}}'
+                                                   orderid='{{$u['orderid']}}'
+                                                   succ='{{$u['succ']}}'
+                                                   game_byname='{{$u['game_byname']}}'
+                                                   sign="{{$u['sign']}}"
+                                                   class="btn btn-xs btn-primary bf"><i class="glyphicon glyphicon-edit"></i> 补发</a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
                                 </tbody>
                             </table>
                         </div>
