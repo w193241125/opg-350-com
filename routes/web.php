@@ -40,6 +40,13 @@ Route::group([ 'prefix' => 'system','namespace' => 'System', 'middleware'=>['Che
     Route::get('ajaxCheckUsername', 'UserController@ajaxCheckUsername')->name('UserController.ajaxCheckUsername');
 
     Route::get('game', 'IndexController@index')->name('game.index');
+
+    //角色管理资源路由
+    Route::resource('role', 'RoleController');
+    //权限管理资源路由
+    Route::resource('permission', 'PermissionController');
+    // ajax 权限名是否存在
+    Route::get('ajaxCheckPermission', 'PermissionController@ajaxCheckPermission')->name('PermissionController.ajaxCheckPermission');
 });
 
 

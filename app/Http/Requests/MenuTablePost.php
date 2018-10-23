@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class MenuTablePost extends FormRequest
 {
@@ -12,14 +13,15 @@ class MenuTablePost extends FormRequest
      *
      * @return bool
      */
-    public function authorize(User $user)
+    public function authorize()
     {
+        $user = Auth::user();
         if (request()->isMethod('POST')) {
             $result = $user->hasPermissionTo('menu.store');
         } else {
             $result = $user->hasPermissionTo('menu.update');
         }
-        return true;
+        return $results;
     }
 
     /**
