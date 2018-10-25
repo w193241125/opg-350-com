@@ -298,7 +298,11 @@ function toArray($item){
     return $arr;
 }
 
-
+/**
+ * 将二维数组按第二维的某个相同的键重组/分组
+ * @param array $arr string $str
+ * @return @arr
+ */
 if (!function_exists('array_sorts')) {
     function array_sorts($arr, $str){
         $result = [];
