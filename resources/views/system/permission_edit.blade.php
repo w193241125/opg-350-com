@@ -1,4 +1,4 @@
-
+@can('permission.edit')
 <div class="portlet light bordered formBox" id="editBox">
     <div class="portlet-title">
         <div class="caption font-green">
@@ -113,3 +113,4 @@
         );
     });
 </script>
+    @endcan

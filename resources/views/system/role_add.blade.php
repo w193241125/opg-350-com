@@ -1,9 +1,9 @@
-@can('permission.add')
+@can('role.add')
 <div class="portlet light bordered formBox" id="createBox">
     <div class="portlet-title">
         <div class="caption font-green">
             <i class="icon-pin font-green"></i>
-            <span class="caption-subject bold uppercase">添加权限</span>
+            <span class="caption-subject bold uppercase">添加角色</span>
         </div>
         <div class="actions">
             <a class="btn btn-circle btn-icon-only btn-default close-link">
@@ -27,30 +27,24 @@
                 <div class="form-group form-md-line-input form-md-floating-label
                 <?php if ($errors->has('name')) { echo "has-error"; } ?> ">
                     <input type="text" class="form-control" id="form_name" name="name" value="{{ old('name') }}">
-                    <label for="form_name"><span class="imp">*&nbsp;</span>权限标识名(绑定路由名)</label>
-                    <span class="help-block form_name">权限英文名</span>
+                    <label for="form_name"><span class="imp">*&nbsp;</span>角色标识名(绑定路由名)</label>
+                    <span class="help-block form_name">角色英文名</span>
                 </div>
                 <div class="form-group form-md-line-input form-md-floating-label
-                <?php if ($errors->has('pm_display_name')) { echo "has-error"; } ?> ">
-                    <input type="text" class="form-control" id="form_pm_display_name" name="pm_display_name" value="{{ old('pm_display_name') }}">
-                    <label for="form_pm_display_name"><span class="imp">*&nbsp;</span>权限展示名称</label>
-                    <span class="help-block form_pm_display_name">权限展示名称</span>
+                <?php if ($errors->has('role_display_name')) { echo "has-error"; } ?> ">
+                    <input type="text" class="form-control" id="form_role_display_name" name="role_display_name" value="{{ old('role_display_name') }}">
+                    <label for="form_role_display_name"><span class="imp">*&nbsp;</span>角色展示名称</label>
+                    <span class="help-block form_role_display_name">角色展示名称</span>
                 </div>
                 <div class="form-group form-md-line-input form-md-floating-label
-                <?php if ($errors->has('pm_description')) { echo "has-error"; } ?> ">
-                    <input type="text" class="form-control" id="form_pm_description" name="pm_description" value="{{ old('pm_description') }}">
-                    <label for="form_pm_description"><span class="imp">*&nbsp;</span>权限描述</label>
-                    <span class="help-block form_pm_description">权限功能的介绍</span>
-                </div>
-                <div class="form-group form-md-line-input form-md-floating-label
-                <?php if ($errors->has('pm_type')) { echo "has-error"; } ?> ">
-                    <input type="text" class="form-control" id="form_pm_type" name="pm_type" value="{{ old('pm_type') }}">
-                    <label for="form_pm_type"><span class="imp">*&nbsp;</span>权限类型</label>
-                    <span class="help-block form_pm_type">权限类型</span>
+                <?php if ($errors->has('role_description')) { echo "has-error"; } ?> ">
+                    <input type="text" class="form-control" id="form_role_description" name="role_description" value="{{ old('role_description') }}">
+                    <label for="form_role_description"><span class="imp">*&nbsp;</span>角色描述</label>
+                    <span class="help-block form_role_description">角色功能的介绍</span>
                 </div>
             </div>
             <div class="form-actions noborder">
-                <button type="submit" class="btn green createButton" >创建权限</button>
+                <button type="submit" class="btn green createButton" >创建角色</button>
             </div>
         </form>
     </div>
@@ -95,11 +89,11 @@
                 if (data.length != 0) {
                     console.log(data)
                     $("#form_name").parent('div').addClass('has-error');
-                    $(".form_name").html('权限已存在');
+                    $(".form_name").html('角色已存在');
                     $(".form_name").css('color','red');
                 }else{
                     $("#form_name").parent('div').removeClass('has-error');
-                    $(".form_name").html('权限英文名');
+                    $(".form_name").html('角色英文名');
                     $(".form_name").css('color','#36c6d3');
                 }
             }

@@ -28,7 +28,7 @@ class MyPermission extends Permission
         })->first();
 
         if ($permission) {
-            throw PermissionAlreadyExists::create($attributes['name'], $attributes['guard_name'], $attributes['display_name'], $attributes['pm_description'], $attributes['pm_type']);
+            throw PermissionAlreadyExists::create($attributes['name'], $attributes['guard_name'], $attributes['pm_display_name'], $attributes['pm_description'], $attributes['pm_type']);
         }
 
         if (isNotLumen() && app()::VERSION < '5.4') {

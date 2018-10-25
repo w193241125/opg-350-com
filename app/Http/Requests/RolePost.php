@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Entrust;
+use Illuminate\Support\Facades\Auth;
 
 class RolePost extends FormRequest
 {
@@ -14,10 +15,11 @@ class RolePost extends FormRequest
      */
     public function authorize()
     {
+        $user = Auth::user();
         if (request()->isMethod('POST')) {
-            $result = Entrust::can('role.store');
+            $result = $user->hasPermissionTo('role.store');
         } else {
-            $result = Entrust::can('role.update');
+            $result = $user->hasPermissionTo('role.update');
         }
         return $result;
     }
@@ -35,8 +37,8 @@ class RolePost extends FormRequest
             $rules['name'] = 'required|unique:roles,name,'.$this->id;
             $rules['id'] = 'numeric|required';
         }
-        $rules['display_name'] = 'required';
-        $rules['description'] = 'required';
+        $rules['role_display_name'] = 'required';
+        $rules['role_description'] = 'required';
         return $rules;
     }
 

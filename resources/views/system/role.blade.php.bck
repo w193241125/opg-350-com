@@ -51,20 +51,21 @@
                                 </thead>
                                 <tbody>
                                 @foreach($all_role as $u)
-                                    <tr>
-                                        <td>{{$u->id}}</td>
-                                        <td>{{$u->name}}</td>
-                                        <td>{{$u->role_display_name}}</td>
-                                        <td>{{$u->role_description}}</td>
-                                        <td>{{$u->created_at}}</td>
-                                        <td>{{$u->updated_at}}</td>
-                                        <td>
-                                            <a  href="/system/role/{{$u->id}}/edit" class="btn btn-xs btn-primary editrole"><i class="glyphicon glyphicon-edit"></i> 编辑</a>
-                                            <a href="javascript:;" onclick="getRoleInfo({{ $u->id }})" class="btn blue mt-ladda-btn ladda-button btn-circle btn-outline"><i class="fa fa-eye"></i>查看</a>
-                                        </td>
-
-                                    </tr>
-                                @endforeach
+                                <tr>
+                                    <td>{{$u->id}}</td>
+                                    <td>{{$u->name}}</td>
+                                    <td>{{$u->role_display_name}}</td>
+                                    <td>{{$u->role_description}}</td>
+                                    <td>{{$u->created_at}}</td>
+                                    <td>{{$u->updated_at}}</td>
+                                    <td>
+                                        <a href="javascript:;" data-href="/system/role/{{$u->id}}/edit" class="btn btn-xs btn-primary editrole"><i class="glyphicon glyphicon-edit"></i> 编辑</a></td>
+                                    <a href="javascript:;" onclick="getRoleInfo({{ $role->id }})" class="btn blue mt-ladda-btn ladda-button btn-circle btn-outline">
+                                        <i class="fa fa-eye"></i>
+                                        查看
+                                    </a>
+                                </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -78,70 +79,16 @@
         </section>
         <!-- /.content -->
     </div>
-    <div class="modal fade draggable-modal" id="role_infos" tabindex="-1" role="basic" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title">角色名</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="table-scrollable">
-                        <table class="table table-hover table-light">
-                            <tbody>
-                            <tr>
-                                <td class="text-right col-sm-3"><strong> 角色名 </strong></td>
-                                <td class="col-sm-8" id="role_display_name">  </td>
-                            </tr>
-                            <tr>
-                                <td class="text-right col-sm-3"><strong> 角色标识 </strong></td>
-                                <td class="col-sm-8" id="role_name">  </td>
-                            </tr>
-                            <tr>
-                                <td class="text-right col-sm-3"><strong> 角色描述 </strong></td>
-                                <td class="col-sm-8" id="role_description">  </td>
-                            </tr>
-                            <tr>
-                                <td class="text-right col-sm-3"><strong> 添加时间 </strong></td>
-                                <td class="col-sm-8" id="role_created_at">  </td>
-                            </tr>
-                            <tr>
-                                <td class="text-right col-sm-3"><strong> 修改时间 </strong></td>
-                                <td class="col-sm-8" id="role_updated_at">  </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="table-scrollable">
-                        <table class="table table-hover table-light">
-                            <thead>
-                            <tr>
-                                <th class="col-sm-2 text-center"> 模块 </th>
-                                <th class="col-sm-9 text-center"> 权限 </th>
-                            </tr>
-                            </thead>
-                            <tbody id="role_perms">
 
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn dark btn-outline" data-dismiss="modal">关闭</button>
-                    <a type="button" class="btn green" id="role_edit" href="">编辑</a>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
     </div>
 @endsection
 
 
 {{--尾部前端资源--}}
 @section('script')
-    <script src="{{ asset('vendor/jquery-ui/jquery-ui.min.js') }}" type="text/javascript"></script>
-    {{--<script src="{{ asset('assets/admin/role/scripts/role.js') }}" type="text/javascript"></script>--}}
+    <script src="{{ asset('assets/admin/role/scripts/role.js') }}" type="text/javascript"></script>
+    <!-- BEGIN THEME GLOBAL SCRIPTS 这个js控制 添加菜单 的 label 上移与下移 -->
+    <script src="{{asset('assets/admin/layouts/scripts/app.min.js')}}" type="text/javascript"></script>
     <script>
         $(document).ready(function(){
             $('#role_info').DataTable()
@@ -230,15 +177,14 @@
                     $('.modal-title').text(role.role_display_name);
                     $('#role_display_name').text(role.role_display_name);
                     $('#role_name').text(role.name);
-                    $('#role_description').text(role.role_description);
+                    $('#role_description').text(role.description);
                     $('#role_created_at').text(role.created_at);
                     $('#role_updated_at').text(role.updated_at);
-                    console.log(perms);
                     $.each(perms, function (index_1, perm_group) {
                         html += '<tr><td class="text-center"><strong> '+ index_1 +' </strong></td><td>';
                         $.each(perm_group, function (index_2, perm) {
                             html += '<div class="col-md-4">'+
-                                perm.pm_display_name+
+                                perm.display_name+
                                 '</div>';
                         });
                         html += '</td></tr>';
@@ -246,7 +192,7 @@
                     $('#role_perms').text('');
                     $('#role_perms').append(html);
                     $('#role_edit').attr('href', edit_url);
-                    $('#role_infos').modal();
+                    $('#role_info').modal();
                 },
                 error: function (HttpRequest) {
                     if (HttpRequest.responseJSON.error == "no_permissions") {

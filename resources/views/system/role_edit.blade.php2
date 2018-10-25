@@ -1,0 +1,85 @@
+@can('role.edit')
+<div class="portlet light bordered formBox" id="editBox">
+    <div class="portlet-title">
+        <div class="caption font-green">
+            <i class="icon-pin font-green"></i>
+            <span class="caption-subject bold uppercase">编辑用户</span>
+        </div>
+        <div class="actions">
+            <a class="btn btn-circle btn-icon-only btn-default close-link">
+                <i class="fa fa-times"></i>
+            </a>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        @if (count($errors) > 0)
+        <div class="alert alert-danger">
+            <strong>信息填写出错!</strong>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </div>
+        @endif
+            <form role="form" method="post" id="editForm" action="{{ route("role.update", $role_info->id) }}" >
+                <input type="hidden" name="_method" value="PUT">
+                {{ csrf_field() }}
+                <input type="hidden" name="id" value="{{ $role_info->id }}">
+                <div class="form-body">
+                    <div class="form-group form-md-line-input form-md-floating-label
+                <?php if ($errors->has('name')) { echo "has-error"; } ?> ">
+                        <input type="text" class="form-control  @if($role_info->name) edited @endif" id="form_name" name="name" value="{{ $role_info->name }}">
+                        <label for="form_name"><span class="imp">*&nbsp;</span>角色标识名(绑定路由名)</label>
+                        <span class="help-block form_name">角色标识名(绑定路由名)</span>
+                    </div>
+                    <div class="form-group form-md-line-input form-md-floating-label
+                <?php if ($errors->has('role_display_name')) { echo "has-error"; } ?> ">
+                        <input type="text" class="form-control  @if($role_info->role_display_name) edited @endif" id="form_role_display_name" name="role_display_name" value="{{ $role_info->role_display_name }}">
+                        <label for="form_role_display_name"><span class="imp">*&nbsp;</span>角色展示名称</label>
+                        <span class="help-block form_role_display_name">角色展示名称</span>
+                    </div>
+                    <div class="form-group form-md-line-input form-md-floating-label
+                <?php if ($errors->has('role_description')) { echo "has-error"; } ?> ">
+                        <input type="text" class="form-control  @if($role_info->role_description) edited @endif" id="form_role_description" name="role_description" value="{{ $role_info->role_description }}">
+                        <label for="form_role_description"><span class="imp">*&nbsp;</span>角色描述</label>
+                        <span class="help-block form_role_description">角色功能的介绍</span>
+                    </div>
+                </div>
+                <div class="form-actions noborder">
+                    <button type="submit" class="btn blue editButton" >更新用户</button>
+                </div>
+            </form>
+    </div>
+</div>
+<script type="text/javascript">
+
+    //单选框美化
+    $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+        checkboxClass: 'icheckbox_flat-green',
+        radioClass   : 'iradio_flat-green'
+    })
+
+    //实时判断用户名是否存在
+    $("#form_name").bind("input propertychange",function(event){
+        console.log($("#form_name").val())
+        name = $("#form_name").val();
+        id = $("input[name='id']").val();
+        console.log(id)
+        url =  "{{ route('RoleController.ajaxCheckRole') }}";
+        $.getJSON(
+            url,
+            {name:name,type:'edit',id:id},
+            function (data) {
+                if (data.length != 0) {
+                    $("#form_name").parent('div').addClass('has-error');
+                    $(".form_name").html('角色名已存在');
+                    $(".form_name").css('color','red');
+                }else{
+                    $("#form_name").parent('div').removeClass('has-error');
+                    $(".form_name").html('角色英文名');
+                    $(".form_name").css('color','#36c6d3');
+                }
+            }
+        );
+    });
+</script>
+    @endcan

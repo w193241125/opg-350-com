@@ -21,7 +21,7 @@ class MenuTablePost extends FormRequest
         } else {
             $result = $user->hasPermissionTo('menu.update');
         }
-        return $results;
+        return $result;
     }
 
     /**
