@@ -1,4 +1,4 @@
-.select-down{font-size:15px;float:left;position:relative;width:200px;border:1px solid #999;height: 34px;}
+.select-down{font-size:15px;float:left;position:relative;width:auto;border:1px solid #999;height: 34px;margin: 0px 10px 10px 0px;}
 .select-down label{cursor:pointer;line-height:20px}
 .select-down .trangle{position:absolute;right:4px;top:12px;width:0;height:0;border-top:6px solid #666;border-right:4px solid transparent;border-left:4px solid transparent}
 .select-down .title{display:block;user-select:none;height:30px;line-height:22px;width:100%}

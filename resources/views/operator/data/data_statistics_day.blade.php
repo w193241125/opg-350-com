@@ -45,7 +45,7 @@
                         <div class="box-body table-responsive">
                             <form action="{{route('data.data_statistics_day_post')}}" method="post" class="search-form">
                                 {{csrf_field()}}
-                                <div class="form-group col-xs-3">
+                                <div class="form-group  col-xs-12 col-sm-6 col-md-3 col-lg-2">
                                     <div class="input-group">
                                         <div class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
@@ -54,13 +54,13 @@
                                     </div>
                                     <!-- /.input group -->
                                 </div>
-                                <div class="col-xs-2">
+                                <div class="form-group col-xs-6 col-sm-6 col-md-4 col-lg-2">
                                     <input type="text" name="agent_id"  class="form-control" placeholder="渠道ID">
                                 </div>
-                                <div class="col-xs-2">
+                                <div class="form-group col-xs-6 col-sm-6 col-md-4 col-lg-2">
                                     <input type="text" name="site_id"  class="form-control" placeholder="广告位ID">
                                 </div>
-                                <div class="col-xs-2">
+                                <div class="form-group col-xs-6 col-sm-6 col-md-4 col-lg-2">
                                     <div class="select-down" id="selectForGame">
                                         <div class="trangle" ></div>
                                         <span class="title top-title" title="">
