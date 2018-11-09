@@ -1,34 +1,35 @@
 <?php
 /**
- * 用户组选权限html组件
+ * 用户权限html组件
  * Created by PhpStorm.
- * User: larwas
+ * User: Larwas
  * Date: 2018/11/1
- * Time: 21:00
+ * Time: 11:00
  */
 
 namespace App\Presenters;
 
-class rolePermissionsPresenter
+class userPermissionsPresenter
 {
     /**
      * 将用户权限分组排列
      * @param array $permissions 权限
-     * @param array $rolePer 用户组
+     * @param array $userPer 用户组
      * @return string
      * */
-    public function getPermissions($permissions, $rolePer = [])
+    public function getPermissions($permissions, $userPer = [])
     {
+        dd(111);
         $html = '';
         $permissions = $this->groupPermissionsByType($permissions);
-        $rolePer = $this->getRolePermissions($rolePer);
+        $userPer = $this->getUserPermissions($userPer);
         foreach ($permissions as $key => $permission) {
             $key = htmlspecialchars($key);
             $html .= "<tr><td><span class='label label-sm label-success'>".$key." </span></td><td>";
             if (is_array($permission)){
                 foreach ($permission as $value) {
                     $display_name = htmlspecialchars($value['pm_display_name']);
-                    $checked = in_array($value['id'], $rolePer) ? 'checked' : '';
+                    $checked = in_array($value['id'], $userPer) ? 'checked' : '';
                     $html .= <<<Eof
                 <div class="md-checkbox col-md-4">
                   <input type="checkbox" id="permission_{$value['id']}" class="md-check" value="{$value['id']}" name="permission[]" {$checked}>
@@ -42,7 +43,7 @@ Eof;
                 }
             }else{
                 $display_name = htmlspecialchars($permission->pm_display_name);
-                $checked = in_array($permission->id, $rolePer) ? 'checked' : '';
+                $checked = in_array($permission->id, $userPer) ? 'checked' : '';
                 $html .= <<<Eof
                 <div class="md-checkbox col-md-4">
                   <input type="checkbox" id="permission_{$permission->id}" class="md-check" value="{$permission->id}" name="permission[]" {$checked}>
@@ -68,6 +69,7 @@ Eof;
      * */
     public function groupPermissions($permissions)
     {
+        dd(111);
         $array = [];
         $array = array_sorts(toArray($permissions),'pm_type');
         return $array;
@@ -75,14 +77,15 @@ Eof;
 
     /**
      * 获取当前用户组权限ID数组
-     * @param object $rolePer
+     * @param object $userPer
      * @return array
      * */
-    public function getRolePermissions($rolePer)
+    public function getUserPermissions($userPer)
     {
+        dd(111);
         $array = [];
-        if (!empty($rolePer)) {
-            foreach ($rolePer as $permission) {
+        if (!empty($userPer)) {
+            foreach ($userPer as $permission) {
                 $array[] = $permission->id;
             }
         }
@@ -96,6 +99,7 @@ Eof;
      * */
     public function groupPermissionsByType($permissions)
     {
+        dd(111);
         $arr_sort = [];
         $pm = json_decode(json_encode($permissions),true);
         foreach ($pm as $k=>$permission) {

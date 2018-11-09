@@ -179,6 +179,91 @@ var user = function () {
                 _item.removeAttr('disabled');
             });
         });
+
+        /*
+        * 修改用户权限表单
+        * */
+        $('#user_info').on('click', '.edit_permission', function () {
+            console.log(111);
+            var _item = $(this);
+            $.ajax({
+                url:_item.attr('data-href'),
+                dataType:'html',
+                success:function (htmlData) {
+                    var box = $(user_select.box);
+                    if (box.is(':visible')) {
+                        $('.create_user').hide();
+                        $(user_select.middleBox).hide();
+                    }else{
+                        var _createForm = $('.formBox');
+                        // 创建表单存在的情况下
+                        if (_createForm.length > 0) {
+                            _createForm.remove();
+                        }
+                    }
+                    $(user_select.headerBox).append(htmlData);
+                },
+                error: function (xhr,errorText,errorType) {
+                    var result =$.parseJSON(xhr.responseText);
+                    if (result.error == "no_permissions") {
+                        sweetAlert({
+                            title:"您没有此权限",
+                            text:"请联系管理员",
+                            type:"error"
+                        });
+                        return false;
+                    } else {
+                        sweetAlert({
+                            title:"未知错误",
+                            text:"请联系管理员",
+                            type:"error"
+                        });
+                        return false;
+                    }
+                }
+            });
+        });
+        /*
+        * 保存权限编辑
+        * */
+        $(user_select.headerBox).on('click','.editPermissionButton',function () {
+            console.log('editpermission')
+            var _item = $(this);
+            var _form = $('#editPermissionForm');
+
+            $.ajax({
+                url:_form.attr('action'),
+                type:'post',
+                dataType: 'json',
+                data:_form.serializeArray(),
+                headers : {
+                    'X-CSRF-TOKEN': $("input[name='_token']").val()
+                },
+                beforeSend : function(){
+                    _item.attr('disabled','true');
+                },
+                success:function (response) {
+                    console.log(response.message)
+                    sweetAlert(response.message);
+                    setTimeout(function(){
+                        window.location.href = '/system/user';
+                    }, 1000);
+                }
+            }).fail(function(response) {
+                console.log(response.message)
+                if(response.status == 422){
+                    var data = $.parseJSON(response.responseText);
+                    var layerStr = "";
+                    for(var i in data.errors){
+                        layerStr += data.errors[i]+" ";
+                    }
+                    sweetAlert('错误', layerStr);
+                }
+            }).always(function () {
+                console.log('always')
+                _item.removeAttr('disabled');
+            });
+        });
     };
 
     return {

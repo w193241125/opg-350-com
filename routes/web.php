@@ -34,6 +34,14 @@ Route::group([ 'prefix' => 'system','namespace' => 'System', 'middleware'=>['Che
 
     // 用户,资源路由
     Route::resource('user', 'UserController');
+    //获取用户权限
+    Route::get('getUserPermission/{uid}','UserController@getUserPermission')->name('getUserPermission');
+    //更新用户权限
+    Route::post('updUserPermission','UserController@updUserPermission')->name('updUserPermission');
+    // 编辑用户角色
+    Route::post('editUserRole', 'UserController@userRoleEdit')->name('UserController.userRoleEdit');
+
+
     // ajax获取职位
     Route::get('getposition', 'UserController@ajaxGetPosition')->name('UserController.ajaxGetPosition');
     // ajax 检查用户名是否存在
@@ -50,6 +58,8 @@ Route::group([ 'prefix' => 'system','namespace' => 'System', 'middleware'=>['Che
     Route::resource('role', 'RoleController');
     // ajax 角色是否存在
     Route::get('ajaxCheckRole', 'RoleController@ajaxCheckRole')->name('RoleController.ajaxCheckRole');
+
+
 });
 
 

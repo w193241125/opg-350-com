@@ -60,9 +60,9 @@
                                     <td>{{$u->uid}}</td>
                                     <td>{{$u->username}}</td>
                                     <td>{{$u->trueName}}</td>
-                                    <td>
+                                    <td class="role_edit">
                                         @foreach($u->roles as $r)
-                                            <span class="label label-success">{{$r->role_display_name}}</span>
+                                            <span class="label label-success" role_id="{{$r->id}}">{{$r->role_display_name}}</span>
                                         @endforeach
                                     </td>
                                     <td>{{$u->sex}}</td>
@@ -72,7 +72,15 @@
                                     <td>{{$u->lastLoginTime}}</td>
                                     <td>{{$u->lastLoginIP}}</td>
                                     <td>{{$u->state?'启用':'禁用'}}</td>
-                                    <td><a href="javascript:;" data-href="/system/user/{{$u->uid}}/edit" class="btn btn-xs btn-primary edituser"><i class="glyphicon glyphicon-edit"></i> 编辑</a></td>
+                                    <td>
+                                        <a href="javascript:;" data-href="/system/user/{{$u->uid}}/edit" class="btn btn-xs btn-primary  edituser">
+                                            <i class="glyphicon glyphicon-edit"></i> 编辑
+                                        </a>
+                                        <a href="javascript:;" data-href="/system/getUserPermission/{{$u->uid}}" class="btn btn-xs btn-warning edit_permission">
+                                            <i class="glyphicon glyphicon-user">
+                                            </i> 权限
+                                        </a>
+                                    </td>
                                 </tr>
                                     @endforeach
                                 </tbody>
@@ -97,6 +105,46 @@
     <!-- BEGIN THEME GLOBAL SCRIPTS 这个js控制 添加菜单 的 label 上移与下移 -->
     <script src="{{asset('assets/admin/layouts/scripts/app.min.js')}}" type="text/javascript"></script>
     <script>
+        //行内编辑角色
+        $('.role_edit').on('click',function () {
+            var id_arr = new Array();
+            me = $(this);
+            me.children().each(function () {
+                id_arr.push($(this).attr('role_id'));
+            });
+            //请求所有角色，并显示为多选
+            $.ajax({
+                url: '/system/editUserRole',
+                type:'post',
+                dataType: 'json',
+                data: {
+                    role_id:id_arr
+                },
+                headers : {
+                    'X-CSRF-TOKEN': $("input[name='_token']").val()
+                },
+                success:function (response) {
+                    console.log(response)
+                    //生成多选框
+
+//                    setTimeout(function(){
+//                        window.location.href = '/system/user';
+//                    }, 1000);
+                }
+            }).fail(function(response) {
+                if(response.status == 422){
+                    var data = $.parseJSON(response.responseText);
+                    var layerStr = "";
+                    for(var i in data.errors){
+                        layerStr += data.errors[i]+" ";
+                    }
+                    sweetAlert('错误', layerStr);
+                }else{
+                    sweetAlert('未知错误', '请重试');
+                }
+            });
+        });
+
         $(document).ready(function(){
             $('#user_info').DataTable()
         });

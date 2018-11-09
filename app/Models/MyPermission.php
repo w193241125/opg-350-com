@@ -130,7 +130,8 @@ class MyPermission extends Permission
         }
     }
 
-    /** 创建新权限
+    /**
+     * 创建新权限
      * @param $data
      * @return bool
      */
@@ -153,5 +154,17 @@ class MyPermission extends Permission
                 'message' => '添加失败',
             ];
         }
+    }
+
+    /**
+     * 获取全部权限并按 pm_type 分类
+     * @return array
+     */
+    public static function getAllpermissionsGruopByType()
+    {
+        $permissions = self::all();
+        $arr = array_sorts(toArray($permissions),'pm_type');
+
+        return $arr;
     }
 }
