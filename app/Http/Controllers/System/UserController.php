@@ -295,11 +295,71 @@ Eof;
         ];
     }
 
-    public function userRoleEdit(MyRole $myRole)
+    public function getUserRoles($uid)
     {
-        $allRole = $myRole->all();
-
-        return $allRole;
-        dd(toArray($allRole));
+        $user = User::find($uid);
+        $user_roles = $user->roles;
+        $all_roles = Myrole::all();
+//        dd(toArray($user_roles));
+        $role_html = $this->getRolesHTML(toArray($all_roles),$user_roles);
+        $assign = [
+            'user_permission'=>$user_roles,
+            'all_permission'=>$all_roles,
+            'uid'=>$uid,
+            'role_html'=>$role_html,
+        ];
+        return view('system.user_edit_role',$assign);
     }
+
+    public function getRolesHTML($roles, $userRole = [])
+    {
+        $userRole = $this->getUserPermissions($userRole);
+        $html = '';
+        $html .= "<tr><td><span class='label label-sm label-success'>角色</span></td><td>";
+        foreach ($roles as $key => $role) {
+            if (is_array($role)){
+                    $display_name = htmlspecialchars($role['role_display_name']);
+                    $checked = in_array($role['id'], $userRole) ? 'checked' : '';
+                    $html .= <<<Eof
+                <div class="md-checkbox col-md-4">
+                  <input type="checkbox" id="role_{$role['id']}" class="md-check" value="{$role['name']}" name="role[]" {$checked}>
+                  <label for="role_{$role['id']}">
+                        <span></span>
+                        <span class="check"></span>
+                        <span class="box"></span> {$display_name}
+                  </label>
+                </div>
+Eof;
+            }
+        }
+        $html .= '</td></tr>';
+//        dd($html);
+        return $html;
+    }
+
+    public function updUserRole(Request $request)
+    {
+        $uid = $request->input('uid');
+        $role_arr = $request->input('role');
+        $user = User::find($uid);
+//        $user_roles = $user->roles;
+        $user_roles = $user->getRoleNames();
+        //移除用户所有权限
+        foreach ($user_roles as $v) {
+            $user->removeRole($v);
+        }
+        //增加用户权限
+        $res = $user->assignRole($role_arr);
+        if ($res){
+            $code = 200;
+        }else{
+            $code = 300;
+        }
+        $ret =  [
+            'status' => $code,
+            'message' => $res ? '更新成功':'更新失败',
+        ];
+        return response()->json($ret);
+    }
+
 }

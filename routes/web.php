@@ -38,9 +38,11 @@ Route::group([ 'prefix' => 'system','namespace' => 'System', 'middleware'=>['Che
     Route::get('getUserPermission/{uid}','UserController@getUserPermission')->name('getUserPermission');
     //更新用户权限
     Route::post('updUserPermission','UserController@updUserPermission')->name('updUserPermission');
-    // 编辑用户角色
-    Route::post('editUserRole', 'UserController@userRoleEdit')->name('UserController.userRoleEdit');
 
+    // 获取用户角色
+    Route::get('getUserRoles/{uid}','UserController@getUserRoles')->name('UserController.getUserRoles');
+    //更新用户角色
+    Route::post('updUserRole','UserController@updUserRole')->name('updUserRole');
 
     // ajax获取职位
     Route::get('getposition', 'UserController@ajaxGetPosition')->name('UserController.ajaxGetPosition');

@@ -19,7 +19,7 @@ class MyRole extends Role
 
     /**
      * 创建角色
-     * @param object $request
+     * @param array $request
      * @return array
      * */
     public function createRole($request)
@@ -32,10 +32,10 @@ class MyRole extends Role
         $this->role_display_name = $request['role_display_name'];
         $this->role_description = $request['role_description'];
 
-        $result =  $this->save();
+        $result =  $this->save();//true or false
         if ($result) {
             return [
-                'status' => $result->id,
+                'status' => 200,
                 'message' => $result ? '添加成功':'添加失败',
             ];
         }else{
@@ -92,8 +92,8 @@ class MyRole extends Role
         $result = $role->save();
 
         //清除以前的权限 todo
-        $role->clearPermissions($id,$request['permission']);
-        $res = $role->massAssignmentPermissions($id, $request['permission']);
+        $this->clearPermissions($id,$request['permission']);
+        $res = $this->massAssignmentPermissions($id, $request['permission']);
 
         if ($result){
             $back = ['message'=>'更新成功','code'=>$res];
@@ -111,7 +111,7 @@ class MyRole extends Role
      */
     public function clearPermissions($id)
     {
-        if ($id ==1 ) return false;
+//        if ($id ==1 ) return false;
         Role_Has_Permission::where(['role_id'=>$id])->delete();
     }
     /**
@@ -122,7 +122,7 @@ class MyRole extends Role
      */
     public function massAssignmentPermissions($id, $permission)
     {
-        if ($id ==1 ) return false;
+//        if ($id ==1 ) return false;
         foreach ($permission as $item) {
             $temp['role_id'] = $id;
             $temp['permission_id'] = $item;

@@ -141,7 +141,9 @@
 {{--尾部前端资源--}}
 @section('script')
     <script src="{{ asset('vendor/jquery-ui/jquery-ui.min.js') }}" type="text/javascript"></script>
-    {{--<script src="{{ asset('assets/admin/role/scripts/role.js') }}" type="text/javascript"></script>--}}
+    <script src="{{ asset('assets/admin/role/scripts/role.js') }}" type="text/javascript"></script>
+    <!-- BEGIN THEME GLOBAL SCRIPTS 这个js控制 添加菜单 的 label 上移与下移 -->
+    <script src="{{asset('assets/admin/layouts/scripts/app.min.js')}}" type="text/javascript"></script>
     <script>
         $(document).ready(function(){
             $('#role_info').DataTable()

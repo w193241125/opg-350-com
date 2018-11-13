@@ -11,6 +11,7 @@
     <link href="{{asset('assets/admin/layouts/css/components-md.min.css')}}" rel="stylesheet" id="style_components" type="text/css" />
     <link href="{{asset('assets/admin/layouts/css/plugins-md.min.css')}}" rel="stylesheet" type="text/css" />
     <!-- 引入添加菜单的样式结束 -->
+    <link href="{{asset('x-edittable/bootstrap3-editable/css/bootstrap-editable.css')}}" rel="stylesheet" type="text/css" />
 @endsection
 
 {{--页面内容--}}
@@ -60,7 +61,7 @@
                                     <td>{{$u->uid}}</td>
                                     <td>{{$u->username}}</td>
                                     <td>{{$u->trueName}}</td>
-                                    <td class="role_edit">
+                                    <td class="role_edit" data-type="checklist" id="role_edit_{{$u->uid}}">
                                         @foreach($u->roles as $r)
                                             <span class="label label-success" role_id="{{$r->id}}">{{$r->role_display_name}}</span>
                                         @endforeach
@@ -79,6 +80,10 @@
                                         <a href="javascript:;" data-href="/system/getUserPermission/{{$u->uid}}" class="btn btn-xs btn-warning edit_permission">
                                             <i class="glyphicon glyphicon-user">
                                             </i> 权限
+                                        </a>
+                                        <a href="javascript:;" data-href="/system/getUserRoles/{{$u->uid}}" class="btn btn-xs btn-danger edit_role">
+                                            <i class="glyphicon glyphicon-user">
+                                            </i> 角色
                                         </a>
                                     </td>
                                 </tr>
@@ -104,51 +109,10 @@
     <script src="{{ asset('assets/admin/user/scripts/user.js') }}" type="text/javascript"></script>
     <!-- BEGIN THEME GLOBAL SCRIPTS 这个js控制 添加菜单 的 label 上移与下移 -->
     <script src="{{asset('assets/admin/layouts/scripts/app.min.js')}}" type="text/javascript"></script>
+    {{--引入x-edittable的js--}}
+    <script src="{{asset('x-edittable/bootstrap3-editable/js/bootstrap-editable.min.js')}}" type="text/javascript"></script>
+
     <script>
-        //行内编辑角色
-        $('.role_edit').on('click',function () {
-            var id_arr = new Array();
-            me = $(this);
-            me.children().each(function () {
-                id_arr.push($(this).attr('role_id'));
-            });
-            //请求所有角色，并显示为多选
-            $.ajax({
-                url: '/system/editUserRole',
-                type:'post',
-                dataType: 'json',
-                data: {
-                    role_id:id_arr
-                },
-                headers : {
-                    'X-CSRF-TOKEN': $("input[name='_token']").val()
-                },
-                success:function (response) {
-                    console.log(response)
-                    //生成多选框
-
-//                    setTimeout(function(){
-//                        window.location.href = '/system/user';
-//                    }, 1000);
-                }
-            }).fail(function(response) {
-                if(response.status == 422){
-                    var data = $.parseJSON(response.responseText);
-                    var layerStr = "";
-                    for(var i in data.errors){
-                        layerStr += data.errors[i]+" ";
-                    }
-                    sweetAlert('错误', layerStr);
-                }else{
-                    sweetAlert('未知错误', '请重试');
-                }
-            });
-        });
-
-        $(document).ready(function(){
-            $('#user_info').DataTable()
-        });
-
         $('#user_info').DataTable({
             language: {
                 "sProcessing": "处理中...",
