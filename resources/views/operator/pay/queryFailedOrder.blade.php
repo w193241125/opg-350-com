@@ -120,32 +120,35 @@
                         closeOnConfirm: false
                     },
                     function(){
-                    var post_data = [];
-                        post_data.act = _item.attr('act');
-                        post_data.user_name = _item.attr('user_name');
-                        post_data.plat_id = _item.attr('plat_id');
-                        post_data.game_id = _item.attr('game_id');
-                        post_data.server_id = _item.attr('server_id');
-                        post_data.money = _item.attr('money');
-                        post_data.pay_gold = _item.attr('pay_gold');
-                        post_data.orderid = _item.attr('orderid');
-                        post_data.succ = _item.attr('succ');
-                        post_data.game_byname = _item.attr('game_byname');
-                        post_data.sign = _item.attr('sign');
+                       var act = _item.attr('act');
+                       var user_name = _item.attr('user_name');
+                       var plat_id = _item.attr('plat_id');
+                       var game_id = _item.attr('game_id');
+                       var server_id = _item.attr('server_id');
+                       var money = _item.attr('money');
+                       var pay_gold = _item.attr('pay_gold');
+                       var orderid = _item.attr('orderid');
+                       var succ = _item.attr('succ');
+                       var game_byname = _item.attr('game_byname');
+                       var sign = _item.attr('sign');
 //                        触发补发ajax
                         $.ajax({
                             url:'/operator/bf',
-                            type:'get',
-                            data:post_data,
+                            type:'post',
+                            data:{act:act,user_name:user_name,plat_id:plat_id,game_id:game_id,server_id:server_id,money:money,pay_gold:pay_gold,orderid:orderid,succ:succ,game_byname:game_byname,sign:sign},
+                            headers : {
+                                'X-CSRF-TOKEN': $("input[name='_token']").val()
+                            },
                             success:function (res) {
                                 if(res.status==200){
                                     swal("补发！", "补发成功。", "success");
                                 }else{
-                                    swal("补发！", "补发失败。", "error");
+                                    swal("补发！", res.message, "error");
                                 }
                             },
                             error: function (xhr,errorText,errorType) {
                                 var result =$.parseJSON(xhr.responseText);
+                                console.log(result);
                                 if (result.error == "no_permissions") {
                                     sweetAlert({
                                         title:"您没有此权限",

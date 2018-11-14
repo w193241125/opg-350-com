@@ -243,4 +243,57 @@ class Controller extends BaseController
         }
         return $PlatsGamesOnline;
     }
+
+    /**
+     * 记录系统操作日志
+     * @param string $memo 日志操作内容
+     * @return  null
+     **/
+    public function setLog($memo) {
+        $log_table = 'db_opgroup.opgroup_logs_'.date('Ym', time());
+        $query = DB::connection('mysql_opgroup')->table($log_table);
+        $getData = $_GET;
+//        $data = Cache::get('sys_menu_act_opt');
+        $menu    = '失败订单扫描--补发元宝';
+        $acid    = '100';
+        if (!$_SESSION['uName'] ) {
+            $uName = urldecode($_COOKIE['uName']);
+            $memo  .= ',SESSION已过期';
+        } else {
+            $uName = $_SESSION['uName'];
+        }
+        $ctime = time();
+        $tb    = "opgroup_logs_" . date('Ym', $ctime);
+        $data = [
+            'uName'=>$uName,
+            'ip'=>GetIP(),
+            'logtime'=>time(),
+            'action'=>'phone',
+            'opt'=>'phone',
+            'act'=>'phone',
+            'acid'=>$acid,
+            'menu'=>$menu,
+            'memo'=>$memo,
+        ];
+        $sql   = "insert into $tb(uName,ip,logtime,action,opt,act,acid,menu,memo) values('" . $uName . "','" . GetIP() . "','" . time() . "','" . $getData['action'] . "','" . $getData['opt'] . "','" . $getData['act'] . "','" . $acid . "','" . $menu . "','" . $memo . "');";
+        if (!$query->insert($data)) {
+            $csSql = 'CREATE TABLE IF NOT EXISTS `' . $tb . '` (
+					  `id` int(11) NOT NULL AUTO_INCREMENT,
+					  `uName` varchar(20) NOT NULL,
+					  `ip` varchar(15) NOT NULL,
+					  `logtime` int(11) NOT NULL,
+					  `action` varchar(20) NOT NULL,
+					  `opt` varchar(20) NOT NULL,
+                      `act` varchar(20) NULL,
+                      `acid` int(11) NOT NULL,
+					  `menu` varchar(100) NOT NULL,
+					  `memo` text NOT NULL,
+					  PRIMARY KEY (`id`),
+					  KEY `uName` (`uName`),
+					  KEY `ip` (`ip`)
+					) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;';
+            $query->raw($csSql);
+            $query->raw($sql);
+        }
+    }
 }

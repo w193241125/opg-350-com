@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 class OperatorController extends Controller
 {
+    public  $payGoldType = array(
+        "100" => "测试充值", "101" => "人工充值", "110" => "苹果官方丢单补发", "102" => "帐号充错补发", "103" => "帐号充错游戏补发",
+        "104" => "帐号充错服务器补发", "105" => "充值成功,游戏币未发", "106" => "充值成功,但是游戏币发放查询没记录", "107" => "充值成功,帐号游戏服全都出错,游戏币发放查询没记录",
+        "108" => "游戏活动奖励发放游戏币（算收入）", "109" => "支付成功,订单状态显示支付失败(需截图证明)",
+    );
+
     /**
      * 充值失败订单扫描
      * @param Request $request
@@ -97,7 +103,6 @@ class OperatorController extends Controller
 
         $game_byname = $request->game_byname;
         $sign        = $request->sign;
-
         if ($succ != 1) {
             $returns = [
                 'status' => 300,
@@ -127,7 +132,7 @@ class OperatorController extends Controller
         $post_arr['flag'] = md5(md5($post_arr['time'].getenv('POST_KEY')).getenv('POST_KEY'));
 
         $pay_info = $curl->post(getenv('PAY_URL'),$post_arr);
-
+        $pay_info = json_decode($pay_info,true);
         if (trim($pay_info[0]['succ']) != 1) {
             $returns = [
                 'status' => 300,
@@ -154,6 +159,7 @@ class OperatorController extends Controller
      * @params bank_date/bank_name 人工充值时必须传充值时间和充值银行
      */
     private function sendGold($user_name, $plat_id, $game_id, $server_id, $b_num, $money, $pay_type, $remark, $orderid = '', $bank_date = '', $bank_name = '', $id = '', $role_id = '', $role_name = '') {
+        $curl = new Curl();
         if ($plat_id == 2) $plat_id = 1;
         $money = (float)$money;
         if (in_array($pay_type, array(100, 101, 108)) && $id) {//人工充值没订单号时，禁止连续多次提交
@@ -166,9 +172,9 @@ class OperatorController extends Controller
             } else {
                 $_SESSION[ 'sendGold_' . $pay_type ][ $id ] = time();
                 if ($pay_type == 101) {
-                    $table = $this->payTable['goldReissue'];
+                    $table = getenv('GOLDREISSUE');
                 } else {
-                    $table = $this->payTable['test'];
+                    $table = getenv('GOLDTEST');
                 }
                 $orderInfo = DB::table($table)->where([id,'=',$id])->get()->toArray();//todo
                 if ($orderInfo[0]->state == 2) {
@@ -182,25 +188,37 @@ class OperatorController extends Controller
         }
 
         if ($pay_type == 100 && $money > 1) {
-            ajaxReturn("测试游戏金额不能大于1RMB！", 300);
+            $returns = [
+                'status' => 300,
+                'message' => '测试游戏金额不能大于1RMB!',
+            ];
+            return response()->json($returns);
         }
 
         if ($pay_type == 108 && $money > 10000) {
-            ajaxReturn("活动奖励金额不能大于10000RMB！", 300);
+            $returns = [
+                'status' => 300,
+                'message' => '活动奖励金额不能大于10000RMB!',
+            ];
+            return response()->json($returns);
         }
 
-        if ($b_num > 5000000 && !in_array($_SESSION['uGid'], $this->massGoldSend) && $_GET['opt'] != 'queryFailOrder') {
-            //$gameInfo = $this->getPlatsGamesServers(2,$plat_id,$game_id);
-            //if($gameInfo['exchange_rate']==100 && $b_num>500000){
-            ajaxReturn("您补发的游戏币数量过大，最高限额为500w，请再次联系技术部为您发放！", 300);
-            //}else{
-            //  ajaxReturn("您补发的游戏币数量过大，最高限额为5w，请再次联系技术部为您发放！",300);
-            //}
-
-        }
+//        if ($b_num > 5000000 && !in_array($_SESSION['uGid'], $this->massGoldSend) && $_GET['opt'] != 'queryFailOrder') {
+//            //$gameInfo = $this->getPlatsGamesServers(2,$plat_id,$game_id);
+//            //if($gameInfo['exchange_rate']==100 && $b_num>500000){
+//            ajaxReturn("您补发的游戏币数量过大，最高限额为500w，请再次联系技术部为您发放！", 300);
+//            //}else{
+//            //  ajaxReturn("您补发的游戏币数量过大，最高限额为5w，请再次联系技术部为您发放！",300);
+//            //}
+//
+//        }
 
         if (!$plat_id || !$game_id || $user_name == '' || $b_num < 1 || $money == '' || !$pay_type || $remark == '') {
-            ajaxReturn("充值帐号，游戏币数量，订单金额，充值说明，游戏，服务器不能为空！", 300);
+            $returns = [
+                'status' => 300,
+                'message' => '充值帐号，游戏币数量，订单金额，充值说明，游戏，服务器不能为空!',
+            ];
+            return response()->json($returns);
         }
 
         $all         = $this->getPlatsGamesServers(0);
@@ -234,12 +252,11 @@ class OperatorController extends Controller
         $post_arr['bank_name']      = $bank_name;//
         $post_arr['role_id']        = $role_id;//
         $post_arr['role_name']      = $role_name;//
-
         $commMsg = "游戏币补发：{$user_name}|{$plat_name}|{$game_name}|{$server_id}服|{$money} RMB|{$b_num} 游戏币|{$type_name}|";
-        //postAPI($post_arr,$plat_id=1,$post_api='',$file_name='',$sign_type=0,$back_type=0,$action='',$opt='')
-        $contents = $this->postAPI($post_arr, $plat_id, $this->ApiPath['pay'], $this->ApiFileName['sendGold'], 1, 1);
-        //ajaxReturn($contents,300);
-        //$contents = "1";
+
+        $url = getenv('SEND_GOLD_URL');
+        $contents = $curl->post($url,$post_arr);
+        dd($contents);
         $status = 300;
         $state  = 3;
 
@@ -263,16 +280,20 @@ class OperatorController extends Controller
             $showtip = '充值失败';
         }
         if ($_REQUEST['opt'] == 'goldReissueDo') { //游戏币补发 需要更新表
-            $sql = "update " . $this->payTable['goldReissue'] . " set state=$state,edit_author='" . $_SESSION['uName'] . "',edit_time=now() where id='$id'";
-            $this->db->query($sql);
+            $sql = "update " . getenv('GOLDREISSUE') . " set state=$state,edit_author='" . $_SESSION['uName'] . "',edit_time=now() where id='$id'";
+            DB::table(getenv('GOLDREISSUE'))->where(id,'=',$id)->update(['state'=>$state,"edit_author"=>$_SESSION['uName'],'edit_time'=>time()]);
         }
         if ($_REQUEST['opt'] == 'ActivityPrizeList' || $_REQUEST['opt'] == 'payTest' || $_REQUEST['opt'] == 'payTestCheck') { //游戏币 测试 活动奖励申请审核 需要更新表
-            $sql = "update " . $this->payTable['test'] . " set state=$state,edit_author='" . $_SESSION['uName'] . "',edit_time=now() where id='$id'";
-            $this->db->query($sql);
+            $sql = "update " . getenv('GOLDTEST') . " set state=$state,edit_author='" . $_SESSION['uName'] . "',edit_time=now() where id='$id'";
+            DB::table(getenv('GOLDTEST'))->where(id,'=',$id)->update(['state'=>$state,"edit_author"=>$_SESSION['uName'],'edit_time'=>time()]);
         }
         $this->setLog($log_msg);//记录操作日志
         if ($_REQUEST['act'] != 'orders' && $_REQUEST['do'] != 'signAll') {//批量补发时不需要提示那么快
-            ajaxReturn($showtip . $contents, $status);
+            $returns = [
+                'status' => $status,
+                'message' => $showtip . $contents,
+            ];
+            return response()->json($returns);
         }
     }
 
