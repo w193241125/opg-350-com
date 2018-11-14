@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller
 {
@@ -58,6 +60,15 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request,User $user)
     {
+
+        //更新用户
+        $data = [
+            'loginTimes'=>$user->loginTimes+1,
+            'lastLoginTime'=>date('Y-m-d H:i:s',time()),
+            'lastLoginIp'=>$request->getClientIp(),
+        ];
+        //更新用户信息
+        $user->where(['uid'=>$user->uid])->update($data);
         // 存user到session
         $request->session()->put('user', $user);
     }
