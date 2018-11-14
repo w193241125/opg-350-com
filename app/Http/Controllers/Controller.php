@@ -57,7 +57,7 @@ class Controller extends BaseController
             foreach ($re4 as $k4 => $v4) {
                 $PlatsGamesServers['company'][ $v4['id'] ] = $v4;
             }
-            Cache::put('PlatsGamesServers', $PlatsGamesServers, 1800);
+            Cache::put('PlatsGamesServers', $PlatsGamesServers, 86400);
 
             //充值渠道
             $re5 = $db_opgroup->table('db_center.wd_pay_channel')->where(['state'=>1])->orderBy('order_id','asc')->get()->toArray();
@@ -185,7 +185,8 @@ class Controller extends BaseController
         $game_sort_list = Cache::get('game_sort_list');
         if ($type==10 ||empty($game_sort_list)){
             $game_sort_list = DB::connection('mysql_opgroup')->table('db_center.wd_game_sort')->get();
-            Cache::put('game_sort_list',toArray($game_sort_list),1800);
+            $game_sort_list = toArray($game_sort_list);
+            Cache::put('game_sort_list',$game_sort_list,86400);
         }
         return $game_sort_list;
     }
@@ -212,7 +213,7 @@ class Controller extends BaseController
             foreach ($re as $item) {
                 $PlatsGamesOnline[$item['id']] = $item;
             }
-            $this->makeCache('PlatsGamesOnline', $PlatsGamesOnline, 1800);
+            $this->makeCache('PlatsGamesOnline', $PlatsGamesOnline, 86400);
         }
         if ($type==2){
             $re = $this->db->find("select g.*, s.game_sort_name from db_center.wd_game_list as g LEFT JOIN db_center.wd_game_sort as s ON g.sort_id = s.sort_id WHERE `owner`=1 order by id asc");
@@ -238,7 +239,7 @@ class Controller extends BaseController
             foreach ($PlatsGamesOnlineClassified as $k=>$item) {
                 $PlatsGamesOnlineClassified[$k]['game_id_str'] = trim($item['game_id_str'],',');
             }
-            $this->makeCache('PlatsGamesOnlineClassified', $PlatsGamesOnlineClassified, 1800);
+            $this->makeCache('PlatsGamesOnlineClassified', $PlatsGamesOnlineClassified, 86400);
         }
         return $PlatsGamesOnline;
     }
