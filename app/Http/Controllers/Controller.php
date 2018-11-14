@@ -8,6 +8,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class Controller extends BaseController
 {
@@ -81,7 +82,7 @@ class Controller extends BaseController
                     $vip_gameid = $re['games'][ $plat_id ];
                 }
                 foreach ($games as $key => $val) {
-                    //这里还将 区分某人是否有 某个游戏的权限
+                    //这里还将 区分某人是否有 某个游戏的权限 todo
                     if ($_SESSION['gamelist'] != 'all' && is_array($_SESSION['gamelist'][ $plat_id ]) && $_SESSION['gamelist'][ $plat_id ] != 'all' && !in_array($key, $_SESSION['gamelist'][ $plat_id ])) {
                         unset($games[ $key ]);
                         continue;
@@ -101,7 +102,7 @@ class Controller extends BaseController
                     //大客户部门人员 游戏权限
                     if ($_SESSION['dept'] == 7 && $is_vip_limit == 1) {
                         $result   = Cache::get('vip_admin');
-                        $userData = $result['user'][ $_SESSION['uName'] ];
+                        $userData = $result['user'][ session('user')->username ];
                         if (is_array($userData['games'][ $plat_id ]) && !in_array($val['id'], $userData['games'][ $plat_id ]) && $userData['is_admin'] != 1) {
                             unset($games[ $key ]);
                             continue;
@@ -138,7 +139,7 @@ class Controller extends BaseController
                         //大客户部门人员 游戏权限
                         if ($_SESSION['dept'] == 7 && $is_vip_limit == 1) {
                             $result   = Cache::get('vip_admin');
-                            $userData = $result['user'][ $_SESSION['uName'] ];
+                            $userData = $result['user'][ session('user')->username ];
                             if (is_array($userData['games'][ $pk ]) && !in_array($val['id'], $userData['games'][ $pk ]) && $userData['is_admin'] != 1) {
                                 unset($PlatsGamesServers['games'][ $pk ][ $key ]);
                                 continue;
@@ -251,18 +252,17 @@ class Controller extends BaseController
      **/
     public function setLog($memo) {
         $log_table = 'db_opgroup.opgroup_logs_'.date('Ym', time());
-        $query = DB::connection('mysql_opgroup')->table($log_table);
-        $getData = $_GET;
-//        $data = Cache::get('sys_menu_act_opt');
+        $query = DB::connection('mysql_opgroup');
         $menu    = '失败订单扫描--补发元宝';
         $acid    = '100';
-        if (!$_SESSION['uName'] ) {
+        if (!session('user')->username ) {
             $uName = urldecode($_COOKIE['uName']);
             $memo  .= ',SESSION已过期';
         } else {
-            $uName = $_SESSION['uName'];
+            $uName = session('user')->username;
         }
         $ctime = time();
+        $phone = 'phone';
         $tb    = "opgroup_logs_" . date('Ym', $ctime);
         $data = [
             'uName'=>$uName,
@@ -275,8 +275,11 @@ class Controller extends BaseController
             'menu'=>$menu,
             'memo'=>$memo,
         ];
-        $sql   = "insert into $tb(uName,ip,logtime,action,opt,act,acid,menu,memo) values('" . $uName . "','" . GetIP() . "','" . time() . "','" . $getData['action'] . "','" . $getData['opt'] . "','" . $getData['act'] . "','" . $acid . "','" . $menu . "','" . $memo . "');";
-        if (!$query->insert($data)) {
+        $sql   = "insert into $tb(uName,ip,logtime,action,opt,act,acid,menu,memo) values('" . $uName . "','" . GetIP() . "','" . time() . "','" . $phone . "','" . $phone . "','" . $phone . "','" . $acid . "','" . $menu . "','" . $memo . "');";
+        if (Schema::hasTable('table_name')){
+
+            $query->table($log_table)->insert($data);
+        }else{
             $csSql = 'CREATE TABLE IF NOT EXISTS `' . $tb . '` (
 					  `id` int(11) NOT NULL AUTO_INCREMENT,
 					  `uName` varchar(20) NOT NULL,
@@ -292,8 +295,8 @@ class Controller extends BaseController
 					  KEY `uName` (`uName`),
 					  KEY `ip` (`ip`)
 					) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;';
-            $query->raw($csSql);
-            $query->raw($sql);
+            $res = $query->statement($csSql);
+            $query->table($log_table)->insert($data);
         }
     }
 }

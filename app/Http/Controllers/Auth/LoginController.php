@@ -50,7 +50,7 @@ class LoginController extends Controller
     }
 
     /**
-     * The user has been authenticated.
+     * The user has been authenticated.登陆后的操作；
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  mixed  $user

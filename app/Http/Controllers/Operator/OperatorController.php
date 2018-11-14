@@ -203,15 +203,6 @@ class OperatorController extends Controller
             return response()->json($returns);
         }
 
-//        if ($b_num > 5000000 && !in_array($_SESSION['uGid'], $this->massGoldSend) && $_GET['opt'] != 'queryFailOrder') {
-//            //$gameInfo = $this->getPlatsGamesServers(2,$plat_id,$game_id);
-//            //if($gameInfo['exchange_rate']==100 && $b_num>500000){
-//            ajaxReturn("您补发的游戏币数量过大，最高限额为500w，请再次联系技术部为您发放！", 300);
-//            //}else{
-//            //  ajaxReturn("您补发的游戏币数量过大，最高限额为5w，请再次联系技术部为您发放！",300);
-//            //}
-//
-//        }
 
         if (!$plat_id || !$game_id || $user_name == '' || $b_num < 1 || $money == '' || !$pay_type || $remark == '') {
             $returns = [
@@ -234,7 +225,6 @@ class OperatorController extends Controller
         $pay_ip   = GetIP();
         $flag     = md5($time . $Key_2918 . $user_name . $game_id . $server_id . $pay_ip);
 
-        //$remark = nl2br($remark);
         $post_arr                   = array();
         $post_arr['admin_username'] = $_SESSION['uName'];
         $post_arr['user_name']      = trim($user_name);//
@@ -256,13 +246,9 @@ class OperatorController extends Controller
 
         $url = getenv('SEND_GOLD_URL');
         $contents = $curl->post($url,$post_arr);
-        dd($contents);
         $status = 300;
-        $state  = 3;
 
-        //.$contents."---".$time.$Key_2918.$user_name.$game_id.$server_id.$pay_ip."---".http_build_query($post_arr)
         if ($contents == "1") {
-            $state   = 2;
             $status  = 200;
             $log_msg = "{$commMsg}成功({$contents})|{$remark}";
             $showtip = '充值成功';
@@ -279,22 +265,15 @@ class OperatorController extends Controller
             $log_msg = "{$commMsg}失败({$contents})|{$remark}";
             $showtip = '充值失败';
         }
-        if ($_REQUEST['opt'] == 'goldReissueDo') { //游戏币补发 需要更新表
-            $sql = "update " . getenv('GOLDREISSUE') . " set state=$state,edit_author='" . $_SESSION['uName'] . "',edit_time=now() where id='$id'";
-            DB::table(getenv('GOLDREISSUE'))->where(id,'=',$id)->update(['state'=>$state,"edit_author"=>$_SESSION['uName'],'edit_time'=>time()]);
-        }
-        if ($_REQUEST['opt'] == 'ActivityPrizeList' || $_REQUEST['opt'] == 'payTest' || $_REQUEST['opt'] == 'payTestCheck') { //游戏币 测试 活动奖励申请审核 需要更新表
-            $sql = "update " . getenv('GOLDTEST') . " set state=$state,edit_author='" . $_SESSION['uName'] . "',edit_time=now() where id='$id'";
-            DB::table(getenv('GOLDTEST'))->where(id,'=',$id)->update(['state'=>$state,"edit_author"=>$_SESSION['uName'],'edit_time'=>time()]);
-        }
+
         $this->setLog($log_msg);//记录操作日志
-        if ($_REQUEST['act'] != 'orders' && $_REQUEST['do'] != 'signAll') {//批量补发时不需要提示那么快
-            $returns = [
-                'status' => $status,
-                'message' => $showtip . $contents,
-            ];
-            return response()->json($returns);
-        }
+
+        $returns = [
+            'status' => $status,
+            'message' => $showtip . $contents,
+        ];
+        return response()->json($returns);
+
     }
 
     private function check_miss_serverid(Curl $curl, $user_name, $plat_id, $game_id, $server_id) {
@@ -312,8 +291,6 @@ class OperatorController extends Controller
         $post_arr['flat']      = $flag;
         $url                   = getenv('SYNC_PRE_SERVER');
         $result                = $curl->post($url, $post_arr);
-
-        //$result = $this->postAPI($post_arr,$plat_id,$this->ApiPath['pay'],$this->ApiFileName['pre_server'],1,1);
         return $result;
     }
 
