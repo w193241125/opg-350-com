@@ -46,6 +46,7 @@ class OperatorController extends Controller
             $post_arr['flag'] = md5(md5($post_arr['time'].getenv('POST_KEY')).getenv('POST_KEY'));
 
             $result = $curl->post($pay_url,$post_arr);
+
             if($result == 'Permission101.132.57.161' || $result=='Permission119.23.91.168'){
                 $returns = [
                     'status' => 300,
@@ -53,8 +54,8 @@ class OperatorController extends Controller
                 ];
 //                return response()->json($returns);
             }
-            if ($result != '[]' || $result != 'Permission101.132.57.161' || $result != 'Permission119.23.91.168'){
-                dd($result);
+            if (is_array($result)){
+
                 $res_arr = json_decode($result,true);
                 foreach ($res_arr as $key => $val) {
                     $returnMsg                     = unserialize($games_arr[ $val['game_id'] ]['result_code']);
@@ -68,8 +69,6 @@ class OperatorController extends Controller
                 }
             }
         }
-//        $oid = $request->orderid?$request->orderid:'201708291219277218830';
-//        $result = $payOrders->where(['orderid'=>$oid])->get();
         if (!$res_arr){
             $returns = [
                 'status' => 300,
@@ -434,6 +433,5 @@ class OperatorController extends Controller
 
         return array('sum'=>$result_sum,'res'=>$res,'user_pay'=>$user_pay);
     }
-
 
 }
