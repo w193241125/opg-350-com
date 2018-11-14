@@ -46,16 +46,7 @@ class OperatorController extends Controller
             $post_arr['flag'] = md5(md5($post_arr['time'].getenv('POST_KEY')).getenv('POST_KEY'));
 
             $result = $curl->post($pay_url,$post_arr);
-
-            if($result == 'Permission101.132.57.161' || $result=='Permission119.23.91.168'){
-                $returns = [
-                    'status' => 300,
-                    'message' => '刷新重试',
-                ];
-//                return response()->json($returns);
-            }
-            if (is_array($result)){
-
+            if ($result){
                 $res_arr = json_decode($result,true);
                 foreach ($res_arr as $key => $val) {
                     $returnMsg                     = unserialize($games_arr[ $val['game_id'] ]['result_code']);
