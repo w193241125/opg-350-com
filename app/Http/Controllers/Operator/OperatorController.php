@@ -423,4 +423,82 @@ class OperatorController extends Controller
         return array('sum'=>$result_sum,'res'=>$res,'user_pay'=>$user_pay);
     }
 
+    public function incomeBABG(Request $request,Curl $curl)
+    {
+        $game_list = $this->getPlatsGamesServers(2, 1);
+        $game_sort_list = $this->getGameSorts();
+        $payChannel = $this->getPayChannel();
+
+        $sdate     =  $request->input('date') ? substr($request->input('date'),0,10) : date("Y-m-d", time() - 86400 * 6);
+        $edate     =  $request->input('date') ? substr($request->input('date'),11,10) : date("Y-m-d", time() - 86400);
+        $moneytype = intval($request->input('moneytype')); //充值类型
+        $game_id = $request->input('game_id');
+        $plat_id = $request->input('plat_id');
+
+        $post_arr              = array();
+        $post_arr['game_id']   = $game_id;
+        $post_arr['moneytype'] = $moneytype;
+        $post_arr['sdate']     = $sdate;
+        $post_arr['edate']     = $edate;
+        $post_arr['plat_id']   = 1;
+
+        $post_arr['action'] = 'PayMoneyList';
+        $post_arr['opt'] = 'IncomeBABG';
+        $post_arr['admin_username'] = 'jishubu';
+        $post_arr['time'] = time();
+        $post_arr['flag'] = md5(md5($post_arr['time'].getenv('POST_KEY')).getenv('POST_KEY'));
+        $url = getenv('PAY_URL');
+        $data = $curl->post($url,$post_arr);
+        $data = json_decode($data,true);
+
+        //记录表头 渠道的顺序
+        $tablehead = '';
+        $i        = $j = 1;
+        $remember = $result = $channelTotal = array();
+        foreach ($payChannel as $k => $v) {
+            $tablehead      .= '<td><b>' . $v['remark'] . '</b></td>';
+            $remember[ $i ] = $v['id'];
+            $i++;
+        }
+        //将数据按照表头的支付渠道的顺序 调整为对应的
+        foreach ($data as $k2 => $v2) {
+            $j = 1;
+            for ($j = 1; $j < $i; $j++) {
+                $result[ $k2 ][ $remember[ $j ] ] = intval($v2[ $remember[ $j ] ]);
+            }
+        }
+
+        //统计各个游戏在各个支付渠道 的充值总数
+        foreach ($result as $k3 => $v3) {
+            $result[ $k3 ] = array_merge(array('total'=>array_sum($v3)),$result[ $k3 ]);//将各渠道充值总数放入数组开头
+        }
+        //统计各个支付渠道在各个游戏 的充值总数
+        foreach ($result as $ck => $cv) {
+            foreach ($cv as $ckk => $cvv) {
+                $channelTotal[ $ckk ] += $cvv;
+            }
+        }
+
+
+        $where = [
+            ['tdate','>=',"$sdate"],
+            ['tdate','<=',"$edate"],
+        ];
+
+        $assign=[
+            'payChannel'=>$payChannel,
+            'result'=>$result,
+            'channelTotal'=>$channelTotal,
+            'filters'=>[
+                'agent_id'=>$request->agent_id,
+                'site_id'=>$request->site_id,
+                'date'=>$request->date,
+                'game_id'=>$request->game_id?$request->game_id:array(),
+            ],
+            'game_list'=>$game_list,
+            'game_sort_list'=>$game_sort_list,
+        ];
+
+        return view('operator.data.incomeBABG',$assign);
+    }
 }

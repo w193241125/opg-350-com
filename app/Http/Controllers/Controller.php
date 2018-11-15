@@ -246,6 +246,24 @@ class Controller extends BaseController
     }
 
     /**
+     * 获取支付方式
+     * @return array
+     */
+    public function getPayChannel() {
+        $payChannel = Cache::get('payChannel');
+        if (!$payChannel) {
+            $payChannel = array();
+            $re = DB::table('db_center.wd_pay_channel')->where(['state'=>1])->orderBy('order_id')->get();
+            foreach (toArray($re) as $k => $v) {
+                $payChannel[ $v['id'] ] = $v;
+            }
+            Cache::put('payChannel', $payChannel,86400);
+        }
+
+        return $payChannel;
+    }
+
+    /**
      * 记录系统操作日志
      * @param string $memo 日志操作内容
      * @return  null
