@@ -300,7 +300,6 @@ Eof;
         $user = User::find($uid);
         $user_roles = $user->roles;
         $all_roles = Myrole::all();
-//        dd(toArray($user_roles));
         $role_html = $this->getRolesHTML(toArray($all_roles),$user_roles);
         $assign = [
             'user_permission'=>$user_roles,
@@ -333,7 +332,6 @@ Eof;
             }
         }
         $html .= '</td></tr>';
-//        dd($html);
         return $html;
     }
 
@@ -344,11 +342,11 @@ Eof;
         $user = User::find($uid);
 //        $user_roles = $user->roles;
         $user_roles = $user->getRoleNames();
-        //移除用户所有权限
+        //移除用户所有角色
         foreach ($user_roles as $v) {
             $user->removeRole($v);
         }
-        //增加用户权限
+        //增加用户角色
         $res = $user->assignRole($role_arr);
         if ($res){
             $code = 200;

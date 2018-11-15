@@ -212,10 +212,10 @@ class OperatorController extends Controller
             return response()->json($returns);
         }
 
-        $all         = $this->getPlatsGamesServers(0);
-        $plat_name   = $all['plats'][ $plat_id ]['plat_name'];
-        $game_name   = $all['games'][ $plat_id ][ $game_id ]['name'];
-        $server_name = $all['servers'][ $plat_id ][ $game_id ][ $server_id ]['name'];
+        $all_game         = $this->getPlatsGamesServers(0);
+        $plat_name   = $all_game['plats'][ $plat_id ]['plat_name'];
+        $game_name   = $all_game['games'][ $plat_id ][ $game_id ]['name'];
+        $server_name = $all_game['servers'][ $plat_id ][ $game_id ][ $server_id ]['name'];
         $type_name   = $this->payGoldType[ $pay_type ];
 
         //发放游戏币

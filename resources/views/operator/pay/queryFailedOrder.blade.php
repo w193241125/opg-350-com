@@ -140,8 +140,9 @@
                                 'X-CSRF-TOKEN': $("input[name='_token']").val()
                             },
                             success:function (res) {
+                                console.log(res);
                                 if(res.status==200){
-                                    swal("补发！", "补发成功。", "success");
+                                    swal("补发成功！", res.message, "success");
                                 }else{
                                     swal("补发！", res.message, "error");
                                 }
