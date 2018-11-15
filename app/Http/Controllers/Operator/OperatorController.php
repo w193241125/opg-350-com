@@ -429,12 +429,15 @@ class OperatorController extends Controller
         $game_sort_list = $this->getGameSorts();
         $payChannel = $this->getPayChannel();
 
-        $sdate     =  $request->input('date') ? substr($request->input('date'),0,10) : date("Y-m-d", time() - 86400 * 6);
+        $sdate     =  $request->input('date') ? substr($request->input('date'),0,10) : date("Y-m-d", time() - 86400 * 7);
         $edate     =  $request->input('date') ? substr($request->input('date'),11,10) : date("Y-m-d", time() - 86400);
         $moneytype = intval($request->input('moneytype')); //充值类型
         $game_id = $request->input('game_id');
         $plat_id = $request->input('plat_id');
-
+        //处理game_id 为字串形式（如：1,2,3）
+        if (!empty($game_id)){
+            $game_id = implode(',', $game_id);
+        }
         $post_arr              = array();
         $post_arr['game_id']   = $game_id;
         $post_arr['moneytype'] = $moneytype;
@@ -490,8 +493,8 @@ class OperatorController extends Controller
             'result'=>$result,
             'channelTotal'=>$channelTotal,
             'filters'=>[
-                'agent_id'=>$request->agent_id,
-                'site_id'=>$request->site_id,
+                'plant_id'=>$request->plant_id,
+                'moneytype'=>$request->moneytype,
                 'date'=>$request->date,
                 'game_id'=>$request->game_id?$request->game_id:array(),
             ],

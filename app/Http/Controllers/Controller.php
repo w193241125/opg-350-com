@@ -253,7 +253,7 @@ class Controller extends BaseController
         $payChannel = Cache::get('payChannel');
         if (!$payChannel) {
             $payChannel = array();
-            $re = DB::table('db_center.wd_pay_channel')->where(['state'=>1])->orderBy('order_id')->get();
+            $re = DB::connection('mysql_opgroup')->table('db_center.wd_pay_channel')->where(['state'=>1])->orderBy('order_id')->get();
             foreach (toArray($re) as $k => $v) {
                 $payChannel[ $v['id'] ] = $v;
             }

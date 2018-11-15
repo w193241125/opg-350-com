@@ -43,7 +43,7 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-body table-responsive">
-                            <form action="{{route('data.data_statistics_day_post')}}" method="post" class="search-form">
+                            <form action="{{route('data.incomeBABGPost')}}" method="post" class="search-form">
                                 {{csrf_field()}}
                                 <div class="form-group  col-xs-12 col-sm-6 col-md-3 col-lg-2">
                                     <div class="input-group">
@@ -55,10 +55,16 @@
                                     <!-- /.input group -->
                                 </div>
                                 <div class="form-group col-xs-6 col-sm-6 col-md-4 col-lg-2">
-                                    <input type="text" name="agent_id"  class="form-control" placeholder="渠道ID">
+                                    <select name="moneytype" class="form-control" id="moneytype">
+                                        <option value="1">充值面额</option>
+                                        <option value="2">充值净额</option>
+                                    </select>
                                 </div>
                                 <div class="form-group col-xs-6 col-sm-6 col-md-4 col-lg-2">
-                                    <input type="text" name="site_id"  class="form-control" placeholder="广告位ID">
+                                    <select name="plant_id" class="form-control" id="plant_id">
+                                        <option value="1">350</option>
+                                        <option value="0">全部</option>
+                                    </select>
                                 </div>
                                 <div class="form-group col-xs-6 col-sm-6 col-md-4 col-lg-2">
                                     <div class="select-down" id="selectForGame">
@@ -291,8 +297,8 @@
                     daysOfWeek: ["日", "一", "二", "三", "四", "五", "六"],
                     monthNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
                 },
-                "startDate": moment().subtract(6, 'days'),
-                "endDate": moment()
+                "startDate": moment().subtract(7, 'days'),
+                "endDate": moment().subtract(1, 'days')
             });
         });
         var filters = {!! json_encode($filters) !!};
@@ -301,8 +307,12 @@
             if(filters.date != null ){
                 $('.search-form input[name=date]').val(filters.date);
             }
-            $('.search-form input[name=agent_id]').val(filters.agent_id);
-            $('.search-form input[name=site_id]').val(filters.site_id);
+            if (filters.plant_id != null ) {
+                $('#plant_id').val(filters.plant_id);
+            }
+            if(filters.moneytype != null ){
+                $('#moneytype').val(filters.moneytype);
+            }
         });
     </script>
 @endsection
