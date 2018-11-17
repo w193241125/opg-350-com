@@ -51,7 +51,7 @@ class BaseModel extends Model
             //充值渠道
             $re5 = DB::connection('mysql_opgroup')->table('db_center.wd_pay_channel')->where(['state'=>1])->orderBy('id')->get()->toArray();
             foreach ($re5 as $k5 => $v5) {
-                $channel[ $v5['id'] ] = json_decode(json_encode($v5), true);
+                $channel[ $v5->id ] = json_decode(json_encode($v5), true);
             }
             Cache::put('payChannel', $channel, 0);
         }
