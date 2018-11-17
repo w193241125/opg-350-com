@@ -504,4 +504,103 @@ class OperatorController extends Controller
 
         return view('operator.data.incomeBABG',$assign);
     }
+    
+    //充值支付列表
+    public function payListQuery(Request $request)
+    {
+//        dd($request->input());
+        $game_list = $this->getPlatsGamesServers(2, 1, 0, 0, 0, 0, 0, 0, 2);
+        $game_sort_list = $this->getGameSorts();
+        $game_sort = array();
+        foreach ($game_sort_list as $ke =>$va){
+            $game_sort[$va['sort_id']] = $va['game_sort_name'];
+        }
+        $game_sort_names = array();
+        foreach ($game_list as $key => $val){
+            $game_sort_names[$val['id']]['app_name'] = $val['app_name'];
+            $game_sort_names[$val['id']]['pack_name'] = $game_sort[$val['sort_id']];
+        }
+        $sdate     =  $request->input('date') ? strtotime(substr($request->input('date'),0,10).'00:00:00'): strtotime(date("Y-m-d 00:00:00", time()));
+        $edate     =  $request->input('date') ? strtotime(substr($request->input('date'),11,10).' 23:59:59 ') : strtotime(date("Y-m-d 23:59:59", time()));
+
+        $user_name = $request->input('user_name');
+        $orderid = $request->input('orderid');
+        $game_id = $request->input('game_id');
+        $trade_orderid = $request->input('trade_orderid');
+        $server_id = $request->input('server_id');
+        $pay_channel = $request->input('pay_channel');
+        $pay_money = $request->input('pay_money');
+        $pay_succ = $request->input('pay_succ');
+
+        //datatables 服务器模式
+        $order_column  = $request->input('order');
+        $end = $request->input('length')?$request->input('length'):20;
+
+        $where = [
+            ['pay_date','>=',"$sdate"],
+            ['pay_date','<=',"$edate"],
+        ];
+        $db_pay = DB::connection('mysql_pay');
+        $res = $db_pay->table('db_pay.pay_orders')
+            ->where($where)
+            ->when($user_name,function ($query) use ($user_name){
+                return $query->where('user_name','=',$user_name);
+            })
+            ->when($orderid,function ($query) use ($orderid){
+                return $query->where('orderid','=',$orderid);
+            })
+            ->when($trade_orderid,function ($query) use ($trade_orderid){
+                return $query->where('trade_orderid','=',$trade_orderid);
+            })
+            ->when($server_id,function ($query) use ($server_id){
+                return $query->where('server_id','=',$server_id);
+            })
+            ->when($pay_channel,function ($query) use ($pay_channel){
+                return $query->where('pay_channel','=',$pay_channel);
+            })
+            ->when($game_id,function ($query) use ($game_id){
+                return $query->whereIn('game_id',$game_id);
+            })
+            ->when($order_column,function ($query) use ($order_column){
+                $i = intval($order_column[0]['column']);
+                $order_arr = ['user_name','role_name','user_ip','orderid','trade_orderid','pay_date','money','pay_gold',11=>'succ',12=>'stat'];
+                return $query->orderBy($order_arr[$i],$order_column[0]['dir']);
+            })
+            ->paginate($end);
+        $payChannel = Cache::get('payChannel');
+        $total_sum = 0;
+        foreach ($res as $k=>$v) {
+            //统计累计充值
+            if($v->succ) $total_sum  += intval($v->money);
+            $game_id                    = $v->game_id;
+            $orderid                    = $v->orderid;
+            $game_row                   = $db_pay->table('db_pay.game_list')->select('game_byname')->where(['id'=>$game_id])->get();
+            $game_table                 = "pay_" . trim($game_row[0]->game_byname) . "_log";
+            $pay_row                    = $db_pay->table($game_table)->select(['stat','pay_gold','back_result'])->where(['orderid'=>$orderid])->get();
+            $result[$orderid]['area'] = $v->user_ip?geoip()->getLocation(long2ip(intval($v->user_ip)))->getDisplayNameAttribute():'';
+            $result[$orderid]['stat'] = $pay_row['stat'];
+        }
+        $assign=[
+            'payChannel'=>$payChannel,
+            'data'=>$res,
+            'result'=>$result,
+            'filters'=>[
+                'server_id'=>$request->server_id,
+                'pay_succ'=>$request->pay_succ,
+                'orderid'=>$request->orderid,
+                'trade_orderid'=>$request->trade_orderid,
+                'pay_channel'=>$request->pay_channel,
+                'pay_money'=>$request->pay_money,
+                'user_name'=>$request->user_name,
+                'date'=>$request->date,
+                'game_id'=>$request->game_id?$request->game_id:array(),
+            ],
+            'game_sort_names'=>$game_sort_names,
+            'game_list'=>$game_list,
+            'game_sort_list'=>$game_sort_list,
+        ];
+
+        return view('operator.data.payListQuery',$assign);
+    }
+
 }

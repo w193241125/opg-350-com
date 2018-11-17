@@ -74,5 +74,8 @@ Route::group([ 'prefix' => 'operator','namespace' => 'Operator', 'middleware'=>[
     //收入按渠道按游戏统计
     Route::get('incomeBABG','OperatorController@incomeBABG')->name('data.incomeBABG');
     Route::post('incomeBABG','OperatorController@incomeBABG')->name('data.incomeBABGPost');
+    //收入按渠道按游戏统计
+    Route::get('payListQuery','OperatorController@payListQuery')->name('data.payListQuery');
+    Route::post('payListQuery','OperatorController@payListQuery')->name('data.payListQueryPost');
 });
 
