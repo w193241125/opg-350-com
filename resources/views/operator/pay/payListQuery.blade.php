@@ -256,11 +256,13 @@
                                         </td>
 
                                         <td class="center">
+                                            @can('bfsq')
                                             @if( $p->succ!=1&& $result[$p->orderid]['stat'] !=1 || $p->succ==1 &&  $result[$p->orderid]['stat'] !=1 )
                                                 <div><a href="javascript:;" orderid='{{$p->orderid}}' class="btn btn-warning btn-xs bf" >
                                                         <i class="fa fa-edit">补发</i>
                                                     </a></div>
                                             @endif
+                                                @endcan
                                         </td>
                                         </tr>
 
@@ -413,6 +415,7 @@
                         headers : {
                             'X-CSRF-TOKEN': $("input[name='_token']").val()
                         },
+                        beforeSend: function(data){console.log(data);},
                         success:function (res) {
                             console.log(res);
                             if(res.status==200){
