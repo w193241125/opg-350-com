@@ -29,9 +29,11 @@ class OperatorController extends Controller
         $plat_arr = $payOrders->getPlatsGamesServers();
         $games_arr = $payOrders->getGames2($plat_id);
 
-        $sdate = $request->sdate ? $request->sdate : date("Y-m-d");
+//        $sdate = $request->sdate ? $request->sdate : date("Y-m-d");
 //        $sdate = $request->sdate ? $request->sdate : '2018-10-08';
-        $edate = $request->edate ? $request->edate : $sdate;
+//        $edate = $request->edate ? $request->edate : $sdate;
+        $sdate     =  $request->input('date') ? substr($request->input('date'),0,10) : date("Y-m-d", time());
+        $edate     =  $request->input('date') ? substr($request->input('date'),11,10) : date("Y-m-d", time());
         if ($request->do == 'bf'){
 
         }elseif ($request->do == 'orders'){
@@ -56,7 +58,7 @@ class OperatorController extends Controller
                 $res_arr = json_decode($result,true);
                 foreach ($res_arr as $key => $val) {
                     $returnMsg                     = unserialize($games_arr[ $val['game_id'] ]['result_code']);
-                    $res_arr[ $key ]['user_ip']     = long2ip($val['user_ip']);
+                    $res_arr[ $key ]['user_ip']     = long2ip(intval($val['user_ip']));
                     $res_arr[ $key ]['return_msg']  = $returnMsg[ $val['back_result'] ];
                     $res_arr[ $key ]['game_byname'] = $games_arr[ $val['game_id'] ]['game_byname'];
                     //$result[ $key ]['pay_channel'] = $payChannel[ $val['pay_channel'] ]['remark'];
@@ -77,6 +79,10 @@ class OperatorController extends Controller
             'plat_arr'=>$plat_arr,
             'games_arr'=>$games_arr,
             'failed_list'=>$res_arr,
+            'filters'=>[
+                'date'=>$request->date,
+                'user_name'=>$request->user_name,
+            ],
         ];
         return view('operator.pay.queryFailedOrder',$assign);
     }
@@ -508,7 +514,6 @@ class OperatorController extends Controller
     //充值支付列表
     public function payListQuery(Request $request)
     {
-//        dd($request->input());
         $game_list = $this->getPlatsGamesServers(2, 1, 0, 0, 0, 0, 0, 0, 2);
         $game_sort_list = $this->getGameSorts();
         $game_sort = array();
@@ -600,7 +605,49 @@ class OperatorController extends Controller
             'game_sort_list'=>$game_sort_list,
         ];
 
-        return view('operator.data.payListQuery',$assign);
+        return view('operator.pay.payListQuery',$assign);
+    }
+
+    //支付成功 支付状态失败无法补发订单入库
+    public function failOrderInsert(Request $request){
+        $orderid = $request->orderid;
+        //检测该订单,如果支付状态为成功则禁止操作
+        $db_pay = DB::connection('mysql_pay');
+        $result = $db_pay->table('db_pay.pay_orders')->select(['orderid','succ'])->where(['orderid'=>$orderid])->get();
+        if(empty($result)){
+            $returns = [
+                'status' => 300,
+                'message' => '该订单不存在!',
+            ];
+            return response()->json($returns);
+        }
+        /*if($result['succ'] == 1){
+            ajaxReturn("请勿提交支付成功订单！",300);
+        }*/
+        //如果该订单已存在，禁止提交
+        $res = $db_pay->table('db_pay.game_orders')->select(['id'])->where(['orderid'=>$orderid])->get()->toArray();
+        if($res){
+            $returns = [
+                'status' => 300,
+                'message' => '该订单已存在，请勿重复提交!',
+            ];
+            return response()->json($returns);
+        }
+        //入库操作
+        $r = $db_pay->table('db_pay.game_orders')->insert(['orderid'=>$orderid,'add_time'=>time(),'status'=>0]);
+        if($r){
+            $returns = [
+                'status' => 200,
+                'message' => '提交成功!',
+            ];
+            return response()->json($returns);
+        }else{
+            $returns = [
+                'status' => 300,
+                'message' => '提交失败!',
+            ];
+            return response()->json($returns);
+        }
     }
 
 }

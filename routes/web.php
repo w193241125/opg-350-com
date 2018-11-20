@@ -66,16 +66,19 @@ Route::group([ 'prefix' => 'system','namespace' => 'System', 'middleware'=>['Che
 
 
 Route::group([ 'prefix' => 'operator','namespace' => 'Operator', 'middleware'=>['CheckPermission','auth']], function () {
+    //失败订单扫描
     Route::get('queryFailedOrder','OperatorController@queryFailedOrder')->name('pay.queryFailedOrder');
+    Route::post('queryFailedOrder','OperatorController@queryFailedOrder')->name('pay.queryFailedOrderPost');
     Route::post('bf','OperatorController@bf')->name('pay.bf');
+    //充值支付列表
+    Route::get('payListQuery','OperatorController@payListQuery')->name('pay.payListQuery');
+    Route::post('payListQuery','OperatorController@payListQuery')->name('pay.payListQueryPost');
+    Route::post('failOrderInsert','OperatorController@failOrderInsert')->name('pay.failOrderInsert');
     //数据按日统计
     Route::get('data_statistics_day','OperatorController@data_statistics_day')->name('data.data_statistics_day');
     Route::post('data_statistics_day','OperatorController@data_statistics_day')->name('data.data_statistics_day_post');
     //收入按渠道按游戏统计
     Route::get('incomeBABG','OperatorController@incomeBABG')->name('data.incomeBABG');
     Route::post('incomeBABG','OperatorController@incomeBABG')->name('data.incomeBABGPost');
-    //收入按渠道按游戏统计
-    Route::get('payListQuery','OperatorController@payListQuery')->name('data.payListQuery');
-    Route::post('payListQuery','OperatorController@payListQuery')->name('data.payListQueryPost');
 });
 

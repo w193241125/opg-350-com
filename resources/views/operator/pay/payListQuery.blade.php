@@ -51,7 +51,7 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-body table-responsive">
-                            <form action="{{route('data.payListQuery')}}" method="post" class="search-form">
+                            <form action="{{route('pay.payListQuery')}}" method="post" class="search-form">
                                 {{csrf_field()}}
                                 <div class="form-group  col-xs-12 col-sm-6 col-md-3 col-lg-2">
                                     <div class="input-group">
@@ -257,7 +257,9 @@
 
                                         <td class="center">
                                             @if( $p->succ!=1&& $result[$p->orderid]['stat'] !=1 || $p->succ==1 &&  $result[$p->orderid]['stat'] !=1 )
-                                                <div><a class="btn btn-warning btn-xs"><i class="fa fa-edit">补发</i></a></div>
+                                                <div><a href="javascript:;" orderid='{{$p->orderid}}' class="btn btn-warning btn-xs bf" >
+                                                        <i class="fa fa-edit">补发</i>
+                                                    </a></div>
                                             @endif
                                         </td>
                                         </tr>
@@ -350,7 +352,7 @@
             scrollCollapse: true,
             bPaginate: false,
             info: false,//不显示每页多少项
-            searching:false,
+            searching:false, //不显示搜索框
             bAutoWidth: true,
             aaSorting: [],
             responsive: true,
@@ -389,5 +391,58 @@
                 $('#pay_channel').val(filters.pay_channel);
             }
         });
+        //补发申请
+        $('.bf').on('click',function () {
+            var _item = $(this);
+            swal({
+                    title: "确定申请补发吗？",
+                    text: "请谨慎操作！",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "确定申请！",
+                    closeOnConfirm: false
+                },
+                function(){
+                    var orderid = _item.attr('orderid');
+//                        触发补发ajax
+                    $.ajax({
+                        url:'/operator/failOrderInsert',
+                        type:'post',
+                        data:{orderid:orderid},
+                        headers : {
+                            'X-CSRF-TOKEN': $("input[name='_token']").val()
+                        },
+                        success:function (res) {
+                            console.log(res);
+                            if(res.status==200){
+                                swal("申请成功！", res.message, "success");
+                            }else{
+                                swal("申请！", res.message, "error");
+                            }
+                        },
+                        error: function (xhr,errorText,errorType) {
+                            var result =$.parseJSON(xhr.responseText);
+                            console.log(result);
+                            if (result.error == "no_permissions") {
+                                sweetAlert({
+                                    title:"您没有此权限",
+                                    text:"请联系管理员",
+                                    type:"error"
+                                });
+                                return false;
+                            } else {
+                                sweetAlert({
+                                    title:"未知错误",
+                                    text:"请联系管理员",
+                                    type:"error"
+                                });
+                                return false;
+                            }
+                        }
+                    });
+
+                });
+        })
     </script>
 @endsection

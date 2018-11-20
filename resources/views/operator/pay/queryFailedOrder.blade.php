@@ -34,6 +34,23 @@
                     <div class="box">
                         <!-- /.box-header -->
                         <div class="box-body table-responsive">
+                            <form action="{{route('pay.queryFailedOrderPost')}}" method="post" class="search-form">
+                                {{csrf_field()}}
+                                <div class="form-group  col-xs-12 col-sm-6 col-md-3 col-lg-2">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </div>
+                                        <input type="text" name="date" class="form-control pull-right" id="reservation">
+                                    </div>
+                                    <!-- /.input group -->
+                                </div>
+                                <div class="form-group col-xs-6 col-sm-6 col-md-4 col-lg-2">
+                                    <input type="text" name="user_name" class="form-control" placeholder="账号">
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">提交</button>
+                            </form>
                             <table id="order_info" class="table table-bordered table-striped table-hover" width="100%">
                                 <thead>
                                 <tr>
@@ -79,7 +96,7 @@
                                                    succ='{{$u['succ']}}'
                                                    game_byname='{{$u['game_byname']}}'
                                                    sign="{{$u['sign']}}"
-                                                   class="btn btn-xs btn-primary bf"><i class="glyphicon glyphicon-edit"></i> 补发</a>
+                                                   class="btn btn-xs btn-primary bf"><i class="glyphicon glyphicon-edit"></i>补发</a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -102,6 +119,9 @@
 
 {{--尾部前端资源--}}
 @section('script')
+    <!-- date-range-picker -->
+    <script src="/AdminLTE/bower_components/moment/min/moment.min.js"></script>
+    <script src="/AdminLTE/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
     <script>
         $(document).ready(function(){
 //            SweetAlert.init();
@@ -171,8 +191,6 @@
                     });
             })
         });
-        
-        
 
         $('#order_info').DataTable({
             language: {
@@ -229,10 +247,37 @@
 //            scrollX: true,
             scrollCollapse: true,
             bPaginate: true,
+            info: false,//不显示每页多少项
+            searching:false, //不显示搜索框
+            paging: false,// 禁止分页
             bLengthChange: true,
             "bAutoWidth": true,
             "aaSorting": [],
             responsive: true
+        });
+        $(function () {
+            //Date range picker
+            $('#reservation').daterangepicker({
+                "locale": {
+                    format: 'YYYY-MM-DD',
+                    separator: '~',
+                    applyLabel: "应用",
+                    cancelLabel: "取消",
+                    resetLabel: "重置",
+                    daysOfWeek: ["日", "一", "二", "三", "四", "五", "六"],
+                    monthNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+                },
+                "startDate": moment(),
+                "endDate": moment()
+            });
+        });
+        var filters = {!! json_encode($filters) !!};
+        $(document).ready(function () {
+            SelectForGame.init($('.select-down'));
+            if (filters.date != null) {
+                $('.search-form input[name=date]').val(filters.date);
+            }
+            $('.search-form input[name=user_name]').val(filters.user_name);
         });
     </script>
 @endsection
