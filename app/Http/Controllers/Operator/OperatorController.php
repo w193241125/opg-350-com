@@ -54,6 +54,7 @@ class OperatorController extends Controller
             $post_arr['flag'] = md5(md5($post_arr['time'].getenv('POST_KEY')).getenv('POST_KEY'));
 
             $result = $curl->post($pay_url,$post_arr);
+
             if ($result){
                 $res_arr = json_decode($result,true);
                 foreach ($res_arr as $key => $val) {
@@ -157,6 +158,8 @@ class OperatorController extends Controller
 
         //游戏币补发
         $result = $this->sendGold($user_name, $plat_id, $game_id, $server_id, $gold, $money, $pay_type, $remark, $orderid);
+
+        return response()->json($result);
     }
 
     /**
@@ -274,11 +277,12 @@ class OperatorController extends Controller
 
         $this->setLog($log_msg);//记录操作日志
 
+
         $returns = [
             'status' => $status,
             'message' => $showtip . $contents,
         ];
-        return response()->json($returns);
+        return $returns;
 
     }
 
