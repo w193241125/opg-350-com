@@ -77,6 +77,9 @@ Route::group([ 'prefix' => 'operator','namespace' => 'Operator', 'middleware'=>[
     //数据按日统计
     Route::get('data_statistics_day','OperatorController@data_statistics_day')->name('data.data_statistics_day');
     Route::post('data_statistics_day','OperatorController@data_statistics_day')->name('data.data_statistics_day_post');
+    //数据按日统计
+    Route::get('ltv','OperatorController@ltv')->name('data.ltv');
+    Route::post('ltv','OperatorController@ltv')->name('data.ltv');
     //收入按渠道按游戏统计
     Route::get('incomeBABG','OperatorController@incomeBABG')->name('data.incomeBABG');
     Route::post('incomeBABG','OperatorController@incomeBABG')->name('data.incomeBABGPost');

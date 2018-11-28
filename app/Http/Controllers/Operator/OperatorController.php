@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Operator;
 
 use App\Models\payOrders;
+use Baijunyao\Ip\Ip;
 use Curl\Curl;
 use function foo\func;
 use Illuminate\Http\Request;
@@ -514,7 +515,7 @@ class OperatorController extends Controller
 
         return view('operator.data.incomeBABG',$assign);
     }
-    
+
     //充值支付列表
     public function payListQuery(Request $request)
     {
@@ -586,7 +587,9 @@ class OperatorController extends Controller
             $game_row                   = $db_pay->table('db_pay.game_list')->select('game_byname')->where(['id'=>$game_id])->get();
             $game_table                 = "pay_" . trim($game_row[0]->game_byname) . "_log";
             $pay_row                    = $db_pay->table($game_table)->select(['stat','pay_gold','back_result'])->where(['orderid'=>$orderid])->get();
-            $result[$orderid]['area'] = $v->user_ip?geoip()->getLocation(long2ip(intval($v->user_ip)))->getDisplayNameAttribute():'';
+//            $result[$orderid]['area'] = $v->user_ip?geoip()->getLocation(long2ip(intval($v->user_ip)))->getDisplayNameAttribute():'';
+            $address = Ip::find(long2ip(intval($v->user_ip)));
+            $result[$orderid]['area'] = $v->user_ip?$address['country'].$address['region'].$address['city']:'';
             $result[$orderid]['stat'] = $pay_row[0]->stat;
         }
         $assign=[
@@ -654,4 +657,150 @@ class OperatorController extends Controller
         }
     }
 
+
+    public function ltv(Request $request)
+    {
+        $game_list = $this->getPlatsGamesServers(2, 1, 0, 0, 0, 0, 0, 0, 2);
+        $game_sort_list = $this->getGameSorts();
+        $extend_list = $this->getExtendList();
+
+        $sdate     =  $request->input('date') ? substr($request->input('date'),0,10) : date("Y-m-d", time() - 86400 * 6);
+        $edate     =  $request->input('date') ? substr($request->input('date'),11,10) : date("Y-m-d", time());
+        $agent_type = $request->input('agent_type');
+        $extend_id = $request->input('extend_id');
+        $agent_id = $request->input('agent_id');
+        $site_id = $request->input('site_id');
+        $site_id_excluded = $request->input('site_id_excluded');
+        $game_id = $request->input('game_id');
+
+        $day_arr = array('reg', 1, 2, 3, 4, 5, 6, 7, 10, 15, 30, 45, 60, 90, 120, 150, 180);
+
+        if($agent_id && $extend_id ){
+            $returns = [
+                'status' => 300,
+                'message' => '请勿同时选择渠道id和推广列表',
+            ];
+            return response()->json($returns);
+        }
+
+        $data_tmp = $total = array();
+        if ($game_id){
+            $query = DB::connection('mysql_opgroup');
+            if ($extend_id){
+                $extend_agent = $query->table('sy_unions.agent')->select(['agent_id'])->where(['extend_id'=>$extend_id])->get();
+                $extend_ids = [];
+                foreach ($extend_agent as $v) {
+                    $extend_ids[] = $v->agent_id;
+                }
+            }
+
+            //查询注册
+            $table = 'sy_center.sy_game_total_day';
+            $columns = ' sum(reg_total) as reg,tdate ';
+            $where = [
+                ['tdate','>=',"$sdate"],
+                ['tdate','<=',"$edate"],
+            ];
+            $result = $query->table($table)
+                ->select(DB::raw($columns))
+                ->where($where)->groupBy(['tdate'])
+                ->when($agent_id,function ($query) use ($agent_id){
+                    return $query->where('agent_id','=',$agent_id);
+                })
+                ->when($extend_ids,function ($query) use ($extend_ids){
+                    return $query->whereIN('agent_id',$extend_ids);
+                })
+                ->when($game_id,function ($query) use ($game_id){
+                    return $query->whereIn('game_id',$game_id);
+                })
+                ->when($site_id,function ($query) use ($site_id){
+                    return $query->where('site_id','=',$site_id);
+                })
+                ->orderBy('tdate')
+                ->get();
+            $result = toArray($result);
+            foreach ($result as $val) {
+                $data_reg[$val['tdate']] = $val['reg'];
+                $total['reg'] += $data_reg[$val['tdate']];
+            }
+
+            //查询支付
+            $pay_tdate_table = 'sy_center.sy_pay_tdate';
+            $columns = ' sum(pay_bet) as mo,reg_time as tdate,days ';
+            $where = [
+                ['reg_time','>=',$sdate],
+                ['reg_time','<=',$edate],
+                ['days','<=',180],
+            ];
+            $res = $query->table($pay_tdate_table)
+                ->select(DB::raw($columns))
+                ->where($where)->groupBy(['reg_time','days'])
+                ->when($agent_id,function ($query) use ($agent_id){
+                    return $query->where('agent_id','=',$agent_id);
+                })
+                ->when($extend_ids,function ($query) use ($extend_ids){
+                    return $query->whereIN('agent_id',$extend_ids);
+                })
+                ->when($game_id,function ($query) use ($game_id){
+                    return $query->whereIn('game_id',$game_id);
+                })
+                ->when($site_id,function ($query) use ($site_id){
+                    return $query->where('site_id','=',$site_id);
+                })
+                ->orderBy('reg_time')
+                ->orderBy('days')
+                ->get();
+            $res = toArray($res);
+            foreach ($res as $val) {
+                @$ltv = round($val['mo'] / $data_reg[$val['tdate']], 2);
+                $data_tmp[$val['tdate']] += $ltv;
+                $data[$val['tdate']]['reg'] = $data_reg[$val['tdate']];
+                $data[$val['tdate']][$val['days']] = $data_tmp[$val['tdate']];
+                $total[$val['days']]['dn']++;
+
+            }
+
+            //总LTV：每个日期的首天充值累加/总注册数
+            $ress = $query->table($pay_tdate_table)
+                ->select(DB::raw($columns))
+                ->where($where)->groupBy(['days'])
+                ->when($agent_id,function ($query) use ($agent_id){
+                    return $query->where('agent_id','=',$agent_id);
+                })
+                ->when($extend_ids,function ($query) use ($extend_ids){
+                    return $query->whereIN('agent_id',$extend_ids);
+                })
+                ->when($game_id,function ($query) use ($game_id){
+                    return $query->whereIn('game_id',$game_id);
+                })
+                ->when($site_id,function ($query) use ($site_id){
+                    return $query->where('site_id','=',$site_id);
+                })
+                ->orderBy('days')
+                ->get();
+            $ress = toArray($ress);
+            $tmp_money = 0;
+            foreach ($ress as $r) {
+                $total[$r['days']]['ltv'] = ($r['mo']+$tmp_money)/$total['reg'];
+                $tmp_money += $r['mo'];
+            }
+        }
+
+        $assign=[
+            'data'=>$data,
+            '$total'=>$total,
+            'filters'=>[
+                'agent_id'=>$request->agent_id,
+                'site_id'=>$request->site_id,
+                'date'=>$request->date,
+                'game_id'=>$request->game_id?$request->game_id:array(),
+            ],
+            'extend_list'=>$extend_list,
+            'day_arr'=>$day_arr,
+            'game_list'=>$game_list,
+            'game_sort_list'=>$game_sort_list,
+        ];
+
+        return view('operator.data.ltv',$assign);
+    }
 }
