@@ -264,6 +264,44 @@ class Controller extends BaseController
     }
 
     /**
+     * 获取类型
+     * @param string $type 类型
+     * 例：渠道类型(agent_type)、广告类型(ad_type)、支付类型(pay_type)、网站类型(website_type)
+     * @param int $id 类型ID
+     * @param int $plat_type 平台类型 1-web 2-手游
+     * +----------------------------------------------------------------------------------
+     * @return result 请求得到结果
+     * +----------------------------------------------------------------------------------
+     */
+    public function getMobileType($type, $id)
+    {
+
+        $Type =  Cache::get('mobile' . $type . '_type');
+        if (!$Type) {
+            $table = "db_center.wd_" . $type;
+            $data = DB::connection('mysql_opgroup')->table($table)->where(['plat_type'=>2])->get();
+            foreach ($data as $val) {
+                $Type[$val['id']] = $val['name'];
+            }
+            Cache::put('mobile' . $type . '_type', $Type, 86400);
+        }
+
+        if ($id > 0) {
+            return $Type[$id];
+        } else {
+            return $Type;
+        }
+    }
+
+    //推广列表
+    public function getExtendList(){
+        //获取所有代理列表
+        $extend_obj = DB::connection('mysql_opgroup')->table('sy_unions.extend_list')->get();
+        $extend_arr = toArray($extend_obj);
+        return $extend_arr;
+    }
+
+    /**
      * 记录系统操作日志
      * @param string $memo 日志操作内容
      * @return  null
