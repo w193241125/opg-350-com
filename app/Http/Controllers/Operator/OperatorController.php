@@ -683,7 +683,7 @@ class OperatorController extends Controller
             return response()->json($returns);
         }
 
-        $data_tmp = $total = array();
+        $data = $data_tmp = $total = array();
         if ($game_id){
             $query = DB::connection('mysql_opgroup');
             if ($extend_id){
@@ -723,7 +723,6 @@ class OperatorController extends Controller
                 $data_reg[$val['tdate']] = $val['reg'];
                 $total['reg'] += $data_reg[$val['tdate']];
             }
-
             //查询支付
             $pay_tdate_table = 'sy_center.sy_pay_tdate';
             $columns = ' sum(pay_bet) as mo,reg_time as tdate,days ';
@@ -747,19 +746,19 @@ class OperatorController extends Controller
                 ->when($site_id,function ($query) use ($site_id){
                     return $query->where('site_id','=',$site_id);
                 })
-                ->orderBy('reg_time')
+                ->orderBy('tdate')
                 ->orderBy('days')
                 ->get();
             $res = toArray($res);
+
             foreach ($res as $val) {
-                @$ltv = round($val['mo'] / $data_reg[$val['tdate']], 2);
+                $ltv = round($val['mo'] / $data_reg[$val['tdate']], 2);
                 $data_tmp[$val['tdate']] += $ltv;
                 $data[$val['tdate']]['reg'] = $data_reg[$val['tdate']];
                 $data[$val['tdate']][$val['days']] = $data_tmp[$val['tdate']];
                 $total[$val['days']]['dn']++;
 
             }
-
             //总LTV：每个日期的首天充值累加/总注册数
             $ress = $query->table($pay_tdate_table)
                 ->select(DB::raw($columns))
@@ -785,10 +784,10 @@ class OperatorController extends Controller
                 $tmp_money += $r['mo'];
             }
         }
-
+//        dd($data);
         $assign=[
             'data'=>$data,
-            '$total'=>$total,
+            'total'=>$total,
             'filters'=>[
                 'agent_id'=>$request->agent_id,
                 'site_id'=>$request->site_id,

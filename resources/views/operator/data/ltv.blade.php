@@ -194,22 +194,22 @@
                                         @if($day=='reg')
                                     <td>{{$total['reg']}}</td>
                                         @else
-                                    <td>{{($total[$day]['ltv'])}}</td>
+                                    <td>{{round($total[$day]['ltv'],2)}}</td>
                                         @endif
                                     @endforeach
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @if(!empty($data))
-                                @foreach($data as $tdate=>$day)
-                                <tr>
-                                    <td>{{$tdate}}</td>
-                                    @foreach($day_arr as $day)
-                                    <td>{{$item[$day]+0}}</td>
+                                    @foreach($data as $tdate=>$item)
+                                    <tr>
+                                        <td>{{$tdate}}</td>
+                                        @foreach($day_arr as $day)
+                                        <td>{{$item[$day]+0}}</td>
+                                        @endforeach
+                                    </tr>
                                     @endforeach
-                                </tr>
-                                @endforeach
-                                    @endif
+                                @endif
                                 </tbody>
                             </table>
                         </div>
