@@ -657,7 +657,7 @@ class OperatorController extends Controller
         }
     }
 
-
+    //玩家LTV
     public function ltv(Request $request)
     {
         $game_list = $this->getPlatsGamesServers(2, 1, 0, 0, 0, 0, 0, 0, 2);
@@ -710,6 +710,9 @@ class OperatorController extends Controller
                 ->when($extend_ids,function ($query) use ($extend_ids){
                     return $query->whereIN('agent_id',$extend_ids);
                 })
+                ->when($site_id_excluded,function ($query) use ($site_id_excluded){
+                    return $query->whereNotIN('site_id',$site_id_excluded);
+                })
                 ->when($game_id,function ($query) use ($game_id){
                     return $query->whereIn('game_id',$game_id);
                 })
@@ -740,6 +743,9 @@ class OperatorController extends Controller
                 ->when($extend_ids,function ($query) use ($extend_ids){
                     return $query->whereIN('agent_id',$extend_ids);
                 })
+                ->when($site_id_excluded,function ($query) use ($site_id_excluded){
+                    return $query->whereNotIN('site_id',$site_id_excluded);
+                })
                 ->when($game_id,function ($query) use ($game_id){
                     return $query->whereIn('game_id',$game_id);
                 })
@@ -769,6 +775,9 @@ class OperatorController extends Controller
                 ->when($extend_ids,function ($query) use ($extend_ids){
                     return $query->whereIN('agent_id',$extend_ids);
                 })
+                ->when($site_id_excluded,function ($query) use ($site_id_excluded){
+                    return $query->whereNotIN('site_id',$site_id_excluded);
+                })
                 ->when($game_id,function ($query) use ($game_id){
                     return $query->whereIn('game_id',$game_id);
                 })
@@ -791,6 +800,7 @@ class OperatorController extends Controller
             'filters'=>[
                 'agent_id'=>$request->agent_id,
                 'site_id'=>$request->site_id,
+                'site_id_excluded'=>$request->site_id_excluded,
                 'date'=>$request->date,
                 'game_id'=>$request->game_id?$request->game_id:array(),
             ],

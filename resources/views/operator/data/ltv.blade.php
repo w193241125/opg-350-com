@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', '数据按日统计')
+@section('title','玩家LTV')
 {{--顶部前端资源--}}
 @section('styles')
     <style>
@@ -62,7 +62,7 @@
                                     <input type="text" name="site_id"  class="form-control" placeholder="广告位ID">
                                 </div>
                                 <div class="form-group col-xs-6 col-sm-6 col-md-4 col-lg-2">
-                                    <input type="text" name="site_id"  class="form-control" placeholder="排除的渠道ID">
+                                    <input type="text" name="site_id_excluded"  class="form-control" placeholder="排除的渠道ID">
                                 </div>
                                 {{--推广平台--}}
                                 <div class="form-group col-xs-5 col-sm-5 col-md-3 col-lg-2">
@@ -323,6 +323,7 @@
             }
             $('.search-form input[name=agent_id]').val(filters.agent_id);
             $('.search-form input[name=site_id]').val(filters.site_id);
+            $('.search-form input[name=site_id_excluded]').val(filters.site_id_excluded);
         });
     </script>
 @endsection
