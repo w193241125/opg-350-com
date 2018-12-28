@@ -812,4 +812,86 @@ class OperatorController extends Controller
 
         return view('operator.data.ltv',$assign);
     }
+
+    public function total(Request $request)
+    {
+        $game_list = $this->getPlatsGamesServers(2, 1, 0, 0, 0, 0, 0, 0, 2);
+        $game_sort_list = $this->getGameSorts();
+        $extend_list = $this->getExtendList();
+
+        $sdate     =  $request->input('date') ? substr($request->input('date'),0,10) : date("Y-m-d", time() - 86400 * 6);
+        $edate     =  $request->input('date') ? substr($request->input('date'),11,10) : date("Y-m-d", time());
+        $agent_type = $request->input('agent_type');
+        $extend_id = $request->input('extend_id');
+        $agent_id = $request->input('agent_id');
+        $site_id = $request->input('site_id');
+        $site_id_excluded = $request->input('site_id_excluded');
+        $game_id = $request->input('game_id');
+
+        $table = 'sy_center.sy_game_total_day';
+
+        $query = DB::connection('mysql_opgroup')->table($table);
+        $columns = ' tdate,sum(reg_total) as reg_total,sum(login_total) as login_total,sum(active_total) as active_total,sum(pay_total) as pay_total,sum(pay_total) as pay_amount,sum(pay_num) as pay_num,sum(old_tdate) as old_login_total,sum(old_login_next) as old_login_next,sum(old_pay_total) as old_pay_total,sum(old_pay_total) as old_pay_amount,sum(old_pay_num) as old_pay_num,sum(pay_tdate) as pay_tdate,sum(pay_num_tdate) as pay_num_tdate ';
+
+        $res = $query
+            ->select(DB::raw($columns))
+            ->where($where)->groupBy(['tdate'])
+            ->when($agent_id,function ($query) use ($agent_id){
+                return $query->where('agent_id','=',$agent_id);
+            })
+            ->when($site_id,function ($query) use ($site_id){
+                return $query->where('site_id','=',$site_id);
+            })
+            ->when($game_id,function ($query) use ($game_id){
+                return $query->whereIn('game_id',$game_id);
+            })
+            ->orderBy('tdate')
+            ->get();
+
+        $db_pay = DB::connection('mysql_pay');
+        $res = $db_pay->table('db_pay.pay_orders')
+            ->where($where)
+            ->when($user_name,function ($query) use ($user_name){
+                return $query->where('user_name','=',$user_name);
+            })
+            ->when($orderid,function ($query) use ($orderid){
+                return $query->where('orderid','=',$orderid);
+            })
+            ->when($trade_orderid,function ($query) use ($trade_orderid){
+                return $query->where('trade_orderid','=',$trade_orderid);
+            })
+            ->when($server_id,function ($query) use ($server_id){
+                return $query->where('server_id','=',$server_id);
+            })
+            ->when($pay_channel,function ($query) use ($pay_channel){
+                return $query->where('pay_channel','=',$pay_channel);
+            })
+            ->when($game_id,function ($query) use ($game_id){
+                return $query->whereIn('game_id',$game_id);
+            })
+            ->when($order_column,function ($query) use ($order_column){
+                $i = intval($order_column[0]['column']);
+                $order_arr = ['user_name','role_name','user_ip','orderid','trade_orderid','pay_date','money','pay_gold',11=>'succ',12=>'stat'];
+                return $query->orderBy($order_arr[$i],$order_column[0]['dir']);
+            })
+            ->paginate($end);
+
+        $assign=[
+            'data'=>$data,
+            'total'=>$total,
+            'filters'=>[
+                'agent_id'=>$request->agent_id,
+                'site_id'=>$request->site_id,
+                'site_id_excluded'=>$request->site_id_excluded,
+                'date'=>$request->date,
+                'game_id'=>$request->game_id?$request->game_id:array(),
+            ],
+            'extend_list'=>$extend_list,
+            'day_arr'=>$day_arr,
+            'game_list'=>$game_list,
+            'game_sort_list'=>$game_sort_list,
+        ];
+
+        return view('operator.hm_channel.total',$assign);
+    }
 }

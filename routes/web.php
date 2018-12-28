@@ -61,7 +61,16 @@ Route::group([ 'prefix' => 'system','namespace' => 'System', 'middleware'=>['Che
     // ajax 角色是否存在
     Route::get('ajaxCheckRole', 'RoleController@ajaxCheckRole')->name('RoleController.ajaxCheckRole');
 
-
+    //抽奖配置信息表
+    Route::get('lotteryuser', 'LotteryController@user')->name('lotteryuser.index');
+    Route::get('lottery', 'LotteryController@index')->name('lottery.index');
+    Route::post('lotteryone', 'LotteryController@lotteryone')->name('lotteryone');
+    Route::post('lotterytwo', 'LotteryController@lotterytwo')->name('lotterytwo');
+    Route::post('lotterythree', 'LotteryController@lotterythree')->name('lotterythree');
+    Route::get('ajaxcheckUid', 'LotteryController@ajaxcheckUid')->name('ajaxcheckUid');
+    Route::get('ajaxGetTurn', 'LotteryController@ajaxGetTurn')->name('ajaxGetTurn');
+    Route::get('ajaxGetTurns', 'LotteryController@ajaxGetTurns')->name('ajaxGetTurns');
+    Route::get('ajaxGetMarkIfExist', 'LotteryController@ajaxGetMarkIfExist')->name('ajaxGetMarkIfExist');
 });
 
 
@@ -83,5 +92,8 @@ Route::group([ 'prefix' => 'operator','namespace' => 'Operator', 'middleware'=>[
     //收入按渠道按游戏统计
     Route::get('incomeBABG','OperatorController@incomeBABG')->name('data.incomeBABG');
     Route::post('incomeBABG','OperatorController@incomeBABG')->name('data.incomeBABGPost');
+    //渠道数据总览
+    Route::get('total','OperatorController@total')->name('hm_channel.total');
+    Route::post('total','OperatorController@total')->name('hm_channel.total');
 });
 

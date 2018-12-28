@@ -83,6 +83,21 @@ return [
             'engine' => null,
         ],
 
+        'mysql_lucky' => [
+            'driver' => 'mysql',
+            'host' => env('LUCKY_HOST', '127.0.0.1'),
+            'port' => env('LUCKY_PORT', '3306'),
+            'database' => env('LUCKY_DATABASE', 'forge'),
+            'username' => env('LUCKY_USERNAME', 'forge'),
+            'password' => env('LUCKY_PASSWORD', ''),
+            'unix_socket' => env('LUCKY_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => FALSE,
+            'engine' => null,
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', '127.0.0.1'),
