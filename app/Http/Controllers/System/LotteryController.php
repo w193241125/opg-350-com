@@ -233,7 +233,7 @@ class LotteryController extends Controller
     //一键清空
     public function oneKeyFlush(Curl $curl)
     {
-        $key = ' yW3HbG58mxoToBIN';
+        $key = 'yW3HbG58mxoToBIN';
         $data['time'] = time();
         $data['sign'] = md5($key.$data['time']);
 
@@ -258,7 +258,7 @@ class LotteryController extends Controller
     //生成奖池
     public function setPool(Curl $curl)
     {
-        $key = ' yW3HbG58mxoToBIN';
+        $key = 'oKMuiE8aAiqzeWpl';
         $data['time'] = time();
         $data['sign'] = md5($key.$data['time']);
 
