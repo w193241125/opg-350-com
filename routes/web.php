@@ -71,6 +71,7 @@ Route::group([ 'prefix' => 'system','namespace' => 'System', 'middleware'=>['Che
     Route::get('ajaxGetTurn', 'LotteryController@ajaxGetTurn')->name('ajaxGetTurn');
     Route::get('ajaxGetTurns', 'LotteryController@ajaxGetTurns')->name('ajaxGetTurns');
     Route::get('ajaxGetMarkIfExist', 'LotteryController@ajaxGetMarkIfExist')->name('ajaxGetMarkIfExist');
+    Route::get('oneKeyFlush', 'LotteryController@oneKeyFlush')->name('oneKeyFlush');
 });
 
 

@@ -40,7 +40,49 @@
                                     <div class="caption font-green">
                                         <i class="icon-pin font-green"></i>
                                         <span class="caption-subject bold uppercase">抽奖配置</span>
+                                        <button type="submit" class="btn red flush" >一键清空</button>
                                     </div>
+                                    <script>
+                                        $('.flush').on('click',function () {
+                                            swal({
+                                                title: '确定清空吗？',
+                                                text: '请谨慎操作！！！',
+                                                type: 'warning',
+                                                showCancelButton: true,
+                                                confirmButtonColor: '#3085d6',
+                                                cancelButtonColor: '#d33',
+                                                confirmButtonText: '确定清空！',
+                                                cancelButtonText: '取消清空！',
+                                                confirmButtonClass: 'btn btn-success',
+                                                cancelButtonClass: 'btn btn-danger',
+                                                buttonsStyling: false
+                                            },function () {
+                                                var _item = $(this);
+                                                    $.ajax({
+                                                        url: '/system/oneKeyFlush/',
+                                                        type: 'get',
+                                                        dataType: 'json',
+                                                        beforeSend: function () {
+                                                            _item.attr('disabled', 'true');
+                                                        },
+                                                        success: function (response) {
+                                                            sweetAlert(response.message);
+                                                        }
+                                                    }).fail(function (response) {
+                                                        if (response.status == 422) {
+                                                            var data = $.parseJSON(response.responseText);
+                                                            var layerStr = "";
+                                                            for (var i in data.errors) {
+                                                                layerStr += data.errors[i] + " ";
+                                                            }
+                                                            sweetAlert('错误', layerStr);
+                                                        }
+                                                    }).always(function () {
+                                                        _item.removeAttr('disabled');
+                                                    });
+                                                });
+                                            });
+                                    </script>
                                     <div class="actions">
                                         <a class="btn btn-circle btn-icon-only btn-default close-link">
                                             <i class="fa fa-times"></i>
@@ -229,7 +271,6 @@
                                                     $('#all_3').attr('disabled','true');
                                                     $('#all_4').attr('disabled','true');
                                                     $('input:checkbox').each(function() {
-                                                        console.log(111)
                                                         $(this).attr('checked', false);
                                                     });
                                                 }else{

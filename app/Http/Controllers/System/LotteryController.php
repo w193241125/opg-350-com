@@ -5,6 +5,7 @@ namespace App\Http\Controllers\System;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 
 class LotteryController extends Controller
 {
@@ -99,7 +100,6 @@ class LotteryController extends Controller
         $turn_total_number = $request->input('totals');
         $man = $request->input('man');
         $woman = $request->input('peoples');
-
         if (!$turn_id ||!$turn_pre_num || !$turn_total_number ||!$man){
             $ret =  [
                 'status' => 300,
@@ -107,12 +107,28 @@ class LotteryController extends Controller
             ];
             return response()->json($ret);
         }
-
+        $query = DB::connection('mysql_lucky');
+        //验证标识是否已经存在
+        $tid = $query->table('lucky_turn')->where(['turn_id'=>$turn_id])->get();
+        if (!empty(toArray($tid))){
+            $ret =  [
+                'status' => 300,
+                'message' => '标识已存在',
+            ];
+            return response()->json($ret);
+        }
         //添加奖池
-        if ($man==100){
-
-        }elseif($man==200){
-
+        if ($man==100){//所有
+            $res = $query->table('lucky_user')->select(['id','level'])->get();
+        }elseif($man==200){//部分
+            if (empty($woman)){
+                $ret =  [
+                    'status' => 300,
+                    'message' => '请选择参抽人员',
+                ];
+                return response()->json($ret);
+            }
+            $res = $query->table('lucky_user')->select(['id','level'])->whereIn('level',$woman)->get();
         }else{
             $ret =  [
                 'status' => 300,
@@ -121,7 +137,30 @@ class LotteryController extends Controller
             return response()->json($ret);
         }
 
-        $query = DB::connection('mysql_lucky');
+        foreach ($res as $re) {
+            $tmp[] = $re->id;
+            $all_user[$re->id] = $re->level;
+        }
+        if (count($tmp)<$turn_total_number){
+            $ret =  [
+                'status' => 300,
+                'message' => '参加抽奖的人员数量少于抽奖总数',
+            ];
+            return response()->json($ret);
+        }
+        $pool = array_rand($tmp,$turn_total_number);
+        foreach ($pool as $p) {
+            $arr[] = $tmp[$p];
+            $data['user_id'] = $tmp[$p];
+            $data['level'] = $all_user[$tmp[$p]];
+            $data['turn_id'] = $turn_id;
+            $data['rank'] = $turn_id;
+            $data['rank_mark'] = '额外奖'.$turn_id;
+            $query->table('lucky_record')->insert($data);
+        }
+        $redis = Redis::connection();
+        $redis->sadd('turn_'.$turn_id,$arr);
+
         //更新当前抽奖配置
         $data = [
             'turn_id'=>$turn_id,
@@ -135,8 +174,6 @@ class LotteryController extends Controller
             'turn_total_number'=>$turn_total_number
         ];
         $re =  $query->table('lucky_turn')->insert($lucky_turn);
-
-
 
         $ret =  [
             'status' => 200,
@@ -191,5 +228,24 @@ class LotteryController extends Controller
         $user = $query->table('lucky_user')->get();
         return view('system.lotteryuser',['user'=>$user]);
     }
+    
+    //一键清空
+    public function oneKeyFlush()
+    {
+        $query = DB::connection('mysql_lucky');
+        $res = $query->table('lucky_turn')->select('turn_id')->get();
+        $redis = Redis::connection();
+        foreach ($res as $re) {
+            $redis_keys[] = 'turn_'.$re->turn_id;
+        }
+        $res = $redis->del($redis_keys);
+        $query->table('lucky_turn')->where('turn_id','>',3)->delete();
 
+        $query->table('lucky_record')->where('turn_id','>',3)->delete();
+        $ret =  [
+            'status' => 200,
+            'message' => $res ? '清空成功':'清空失败',
+        ];
+        return response()->json($ret);
+    }
 }
