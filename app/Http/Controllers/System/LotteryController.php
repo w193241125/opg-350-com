@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\System;
 
+use Curl\Curl;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -230,21 +231,42 @@ class LotteryController extends Controller
     }
     
     //一键清空
-    public function oneKeyFlush()
+    public function oneKeyFlush(Curl $curl)
     {
-        $query = DB::connection('mysql_lucky');
-        $res = $query->table('lucky_turn')->select('turn_id')->get();
-        $redis = Redis::connection();
-        foreach ($res as $re) {
-            $redis_keys[] = 'turn_'.$re->turn_id;
-        }
-        $res = $redis->del($redis_keys);
-        $query->table('lucky_turn')->where('turn_id','>',3)->delete();
+        $key = ' yW3HbG58mxoToBIN';
+        $data['time'] = time();
+        $data['sign'] = md5($key.$data['time']);
 
-        $query->table('lucky_record')->where('turn_id','>',3)->delete();
+        $res = $curl->post('http://lucky.350.com/api/flush_all.php',$data);
+
+//        $query = DB::connection('mysql_lucky');
+//        $res = $query->table('lucky_turn')->select('turn_id')->get();
+//        $redis = Redis::connection();
+//        foreach ($res as $re) {
+//            $redis_keys[] = 'turn_'.$re->turn_id;
+//        }
+//        $res = $redis->del($redis_keys);
+//        $query->table('lucky_turn')->where('turn_id','>',3)->delete();
+//        $query->table('lucky_record')->where('turn_id','>',3)->delete();
         $ret =  [
             'status' => 200,
-            'message' => $res ? '清空成功':'清空失败',
+            'message' => $res ? '清空成功'.$res:'清空失败'.$res,
+        ];
+        return response()->json($ret);
+    }
+    
+    //生成奖池
+    public function setPool(Curl $curl)
+    {
+        $key = ' yW3HbG58mxoToBIN';
+        $data['time'] = time();
+        $data['sign'] = md5($key.$data['time']);
+
+        $res = $curl->post('http://lucky.350.com/api/generate_rank.php',$data);
+
+        $ret =  [
+            'status' => 200,
+            'message' => $res ? '成功'.$res:'失败'.$res,
         ];
         return response()->json($ret);
     }
