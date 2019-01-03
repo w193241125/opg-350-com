@@ -66,8 +66,7 @@ class LotteryController extends Controller
         $turn_id = $request->input('turn');
         $turn_pre_num = $request->input('pre_num');
         $turn_total_number = $request->input('total');
-
-        if (!$turn_id ||!$turn_pre_num || !$turn_pre_num){
+        if (!$turn_id ||!$turn_pre_num || !$turn_total_number){
             $ret =  [
                 'status' => 300,
                 'message' => '请选择抽奖等级,填写每次抽奖人数与总数',
