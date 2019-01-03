@@ -11,7 +11,6 @@
     <link href="{{asset('assets/admin/layouts/css/components-md.min.css')}}" rel="stylesheet" id="style_components" type="text/css" />
     <link href="{{asset('assets/admin/layouts/css/plugins-md.min.css')}}" rel="stylesheet" type="text/css" />
     <!-- 引入添加菜单的样式结束 -->
-    <link href="{{asset('x-edittable/bootstrap3-editable/css/bootstrap-editable.css')}}" rel="stylesheet" type="text/css" />
 @endsection
 
 {{--页面内容--}}
@@ -74,8 +73,6 @@
     <!-- BEGIN THEME GLOBAL SCRIPTS 这个js控制 添加菜单 的 label 上移与下移 -->
     <script src="{{asset('assets/admin/layouts/scripts/app.min.js')}}" type="text/javascript"></script>
     {{--引入x-edittable的js--}}
-    <script src="{{asset('x-edittable/bootstrap3-editable/js/bootstrap-editable.min.js')}}" type="text/javascript"></script>
-
     <script>
         $('#user_info').DataTable({
             language: {

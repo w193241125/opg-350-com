@@ -11,7 +11,6 @@
     <link href="{{asset('assets/admin/layouts/css/components-md.min.css')}}" rel="stylesheet" id="style_components" type="text/css" />
     <link href="{{asset('assets/admin/layouts/css/plugins-md.min.css')}}" rel="stylesheet" type="text/css" />
     <!-- 引入添加菜单的样式结束 -->
-    <link href="{{asset('x-edittable/bootstrap3-editable/css/bootstrap-editable.css')}}" rel="stylesheet" type="text/css" />
 @endsection
 
 {{--页面内容--}}
@@ -212,7 +211,7 @@
                         var _form = $('#lottery_one_Form');
                         console.log(_form.serializeArray());
                         $.ajax({
-                            url: '/system/lotteryone/',
+                            url: '/system/lotteryone',
                             type:'post',
                             dataType: 'json',
                             data:_form.serializeArray(),
