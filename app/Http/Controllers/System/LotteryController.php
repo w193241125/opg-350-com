@@ -43,9 +43,9 @@ class LotteryController extends Controller
     //检查额外轮数标识是否已经存在
     public function ajaxGetMarkIfExist(Request $request)
     {
-        $turn_id = $request->input('mark');
+        $turn_name = $request->input('turn_name');
         $query = DB::connection('mysql_lucky');
-        $res = $query->table('lucky_turn')->where(['turn_id'=>$turn_id])->get();
+        $res = $query->table('lucky_turn')->where(['turn_name'=>$turn_name])->get();
         $turns = toArray($res);
         return $turns;
     }
@@ -95,12 +95,12 @@ class LotteryController extends Controller
     //加抽2
     public function lotterytwo(Request $request)
     {
-        $turn_id = $request->input('mark');
+        $turn_name = $request->input('turn_name');
         $turn_pre_num = $request->input('pre_nums');
         $turn_total_number = $request->input('totals');
         $man = $request->input('man');
         $woman = $request->input('peoples');
-        if (!$turn_id ||!$turn_pre_num || !$turn_total_number ||!$man){
+        if (!$turn_name ||!$turn_pre_num || !$turn_total_number ||!$man){
             $ret =  [
                 'status' => 300,
                 'message' => '请填写标识,每轮抽奖数，总数',
@@ -109,7 +109,7 @@ class LotteryController extends Controller
         }
         $query = DB::connection('mysql_lucky');
         //验证标识是否已经存在
-        $tid = $query->table('lucky_turn')->where(['turn_id'=>$turn_id])->get();
+        $tid = $query->table('lucky_turn')->where(['turn_name'=>$turn_name])->get();
         if (!empty(toArray($tid))){
             $ret =  [
                 'status' => 300,
@@ -149,28 +149,29 @@ class LotteryController extends Controller
             return response()->json($ret);
         }
         $pool = array_rand($tmp,$turn_total_number);
+        $res = $query->table('lucky_turn')->select(['id'])->get()->toArray();
         foreach ($pool as $p) {
             $arr[] = $tmp[$p];
             $data['user_id'] = $tmp[$p];
             $data['level'] = $all_user[$tmp[$p]];
-            $data['turn_id'] = $turn_id;
-            $data['rank'] = $turn_id;
-            $data['rank_mark'] = '额外奖'.$turn_id;
+            $data['turn_name'] = $turn_name;
+            $data['rank'] = $res[0]->id;
+            $data['rank_mark'] = $turn_name;
             $query->table('lucky_record')->insert($data);
         }
         $redis = Redis::connection();
-        $redis->sadd('turn_'.$turn_id,$arr);
+        $redis->sadd('turn_'.$res[0]->id,$arr);
 
         //更新当前抽奖配置
         $data = [
-            'turn_id'=>$turn_id,
+            'turn_id'=>$res[0]->id,
             'turn_pre_num'=>$turn_pre_num,
         ];
         $res =$query->table('lucky_config')->update($data);
         //添加抽奖奖项
         $lucky_turn = [
-            'turn_id'=>$turn_id,
-            'turn_name'=>'额外加抽'.$turn_id,
+            'turn_id'=>$res[0]->id,
+            'turn_name'=>$turn_name,
             'turn_total_number'=>$turn_total_number
         ];
         $re =  $query->table('lucky_turn')->insert($lucky_turn);

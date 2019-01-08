@@ -269,9 +269,9 @@
                                         <div class="row ">
                                             <div class="col-md-12">
                                                 <div class="form-group form-md-line-input form-md-floating-label ">
-                                                    <input type="text" class="form-control" id="form_mark" name="mark" value="{{ old('mark') }}">
-                                                    <label for="form_mark"><span class="imp">*&nbsp;</span>加抽标识</label>
-                                                    <span class="help-block form_mark">使用：4,5,6，以此类推...</span>
+                                                    <input type="text" class="form-control" id="form_mark" name="turn_name" value="{{ old('turn_name') }}">
+                                                    <label for="form_mark"><span class="imp">*&nbsp;</span>加抽标识名称</label>
+                                                    <span class="help-block form_mark">例如：五等奖，以此类推...</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -296,11 +296,11 @@
                                             <input type="checkbox" id="all_1" name="peoples[]" class="flat-red" value="1" disabled="true">
                                             <label for="all_1" class="font_style">管理</label>
                                             <input type="checkbox" id="all_2" name="peoples[]" class="flat-red" value="2" disabled="true">
-                                            <label for="all_2" class="font_style">大于6个月的</label>
+                                            <label for="all_2" class="font_style">老员工</label>
                                             <input type="checkbox" id="all_3" name="peoples[]" class="flat-red" value="3" disabled="true">
-                                            <label for="all_3" class="font_style">少于6个月的</label><br>
+                                            <label for="all_3" class="font_style">新员工</label><br>
                                             <input type="checkbox" id="all_4" name="peoples[]" class="flat-red" value="4" disabled="true">
-                                            <label for="all_4" class="font_style">嘉宾</label>
+                                            <label for="all_4" class="font_style">试用期</label>
                                         </div>
                                         <script>
                                             $("input[type=radio]").on('click',function () {
@@ -451,9 +451,9 @@
                                                 <select class="form-control edited " id="form_parent_menu_7" name="level">
                                                     <option value="0" >--用户类型--</option>
                                                         <option value="1" >管理</option>
-                                                        <option value="2" >工作6个月以上员工</option>
-                                                        <option value="3" >工作6个月内员工</option>
-                                                        <option value="4" >嘉宾</option>
+                                                        <option value="2" >老员工</option>
+                                                        <option value="3" >新员工</option>
+                                                        <option value="4" >试用期</option>
                                                         <option value="5" >其它</option>
                                                 </select>
                                                 <label for="form_parent_menu_7"><span class="imp">*&nbsp;</span>用户标识设置</label>
