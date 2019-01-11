@@ -171,7 +171,7 @@ class LotteryController extends Controller
         }
 
         foreach ($res as $re) {
-            $tmp[] = $re->id;
+            $tmp[$re->id] = $re->id;
             $all_user[$re->id] = $re->level;
         }
         if (count($tmp)<$turn_total_number){
@@ -313,4 +313,17 @@ class LotteryController extends Controller
         ];
         return response()->json($ret);
     }
+
+    //展示中奖用户
+    public function lotterywinner()
+    {
+        $query = DB::connection('mysql_lucky');
+        $res = $query->table('lucky_user')->get();
+        foreach ($res as $v) {
+            $user[$v->id] = $v->real_name;
+        }
+        $lotterywinner = $query->table('lucky_record')->get();
+        return view('system.lotterywinner',['user'=>$user,'lotterywinner'=>$lotterywinner]);
+    }
+
 }

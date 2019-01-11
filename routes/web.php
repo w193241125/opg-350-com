@@ -62,6 +62,7 @@ Route::group([ 'prefix' => 'system','namespace' => 'System', 'middleware'=>['Che
     Route::get('ajaxCheckRole', 'RoleController@ajaxCheckRole')->name('RoleController.ajaxCheckRole');
 
     //抽奖配置信息表
+    Route::get('lotterywinner', 'LotteryController@lotterywinner')->name('lotterywinner.index');
     Route::get('lotteryuser', 'LotteryController@user')->name('lotteryuser.index');
     Route::get('lottery', 'LotteryController@index')->name('lottery.index');
     Route::post('lotteryone', 'LotteryController@lotteryone')->name('lotteryone');
