@@ -45,81 +45,94 @@
                                     <script>
                                         $('.flush').on('click',function () {
                                             swal({
-                                                title: '确定清空吗？',
-                                                text: '请谨慎操作！！！',
-                                                type: 'warning',
+                                                title: '请输入密码！',
+                                                input: 'text',
                                                 showCancelButton: true,
-                                                confirmButtonColor: '#3085d6',
-                                                cancelButtonColor: '#d33',
-                                                confirmButtonText: '确定清空！',
-                                                cancelButtonText: '取消清空！',
-                                                confirmButtonClass: 'btn btn-success',
-                                                cancelButtonClass: 'btn btn-danger',
-                                                buttonsStyling: false
-                                            },function () {
-                                                var _item = $(this);
-                                                    $.ajax({
-                                                        url: '/system/oneKeyFlush/',
-                                                        type: 'get',
-                                                        dataType: 'json',
-                                                        beforeSend: function () {
-                                                            _item.attr('disabled', 'true');
-                                                        },
-                                                        success: function (response) {
-                                                            sweetAlert(response.message);
-                                                        }
-                                                    }).fail(function (response) {
-                                                        if (response.status == 422) {
-                                                            var data = $.parseJSON(response.responseText);
-                                                            var layerStr = "";
-                                                            for (var i in data.errors) {
-                                                                layerStr += data.errors[i] + " ";
+                                                confirmButtonText: 'Submit',
+                                                showLoaderOnConfirm: true,
+                                                preConfirm: function(text) {
+                                                    return new Promise(function(resolve, reject) {
+                                                            if (text !== 'swl123') {
+                                                                swal({
+                                                                    type: 'error',
+                                                                    title: '错误！',
+                                                                    html: '密码错误'
+                                                                });
+                                                            } else {
+                                                                var _item = $(this);
+                                                                $.ajax({
+                                                                    url: '/system/oneKeyFlush/',
+                                                                    type: 'get',
+                                                                    dataType: 'json',
+                                                                    beforeSend: function () {
+                                                                        _item.attr('disabled', 'true');
+                                                                    },
+                                                                    success: function (response) {
+                                                                        sweetAlert(response.message);
+                                                                    }
+                                                                }).fail(function (response) {
+                                                                    if (response.status == 422) {
+                                                                        var data = $.parseJSON(response.responseText);
+                                                                        var layerStr = "";
+                                                                        for (var i in data.errors) {
+                                                                            layerStr += data.errors[i] + " ";
+                                                                        }
+                                                                        sweetAlert('错误', layerStr);
+                                                                    }
+                                                                }).always(function () {
+                                                                    _item.removeAttr('disabled');
+                                                                });
                                                             }
-                                                            sweetAlert('错误', layerStr);
-                                                        }
-                                                    }).always(function () {
-                                                        _item.removeAttr('disabled');
                                                     });
-                                                });
+                                                },
+                                                allowOutsideClick: false
                                             });
+                                        });
+
 
                                         $('.setpool').on('click',function () {
                                             swal({
-                                                title: '确定生成吗？',
-                                                text: '请谨慎操作！！！',
-                                                type: 'warning',
+                                                title: '请输入密码！',
+                                                input: 'text',
                                                 showCancelButton: true,
-                                                confirmButtonColor: '#3085d6',
-                                                cancelButtonColor: '#d33',
-                                                confirmButtonText: '确定！',
-                                                cancelButtonText: '取消！',
-                                                confirmButtonClass: 'btn btn-success',
-                                                cancelButtonClass: 'btn btn-danger',
-                                                buttonsStyling: false
-                                            },function () {
-                                                var _item = $(this);
-                                                $.ajax({
-                                                    url: '/system/setPool/',
-                                                    type: 'get',
-                                                    dataType: 'json',
-                                                    beforeSend: function () {
-                                                        _item.attr('disabled', 'true');
-                                                    },
-                                                    success: function (response) {
-                                                        sweetAlert(response.message);
-                                                    }
-                                                }).fail(function (response) {
-                                                    if (response.status == 422) {
-                                                        var data = $.parseJSON(response.responseText);
-                                                        var layerStr = "";
-                                                        for (var i in data.errors) {
-                                                            layerStr += data.errors[i] + " ";
+                                                confirmButtonText: 'Submit',
+                                                showLoaderOnConfirm: true,
+                                                preConfirm: function(text) {
+                                                    return new Promise(function(resolve, reject) {
+                                                        if (text !== 'swl123') {
+                                                            swal({
+                                                                type: 'error',
+                                                                title: '错误！',
+                                                                html: '密码错误'
+                                                            });
+                                                        } else {
+                                                            var _item = $(this);
+                                                            $.ajax({
+                                                                url: '/system/setPool/',
+                                                                type: 'get',
+                                                                dataType: 'json',
+                                                                beforeSend: function () {
+                                                                    _item.attr('disabled', 'true');
+                                                                },
+                                                                success: function (response) {
+                                                                    sweetAlert(response.message);
+                                                                }
+                                                            }).fail(function (response) {
+                                                                if (response.status == 422) {
+                                                                    var data = $.parseJSON(response.responseText);
+                                                                    var layerStr = "";
+                                                                    for (var i in data.errors) {
+                                                                        layerStr += data.errors[i] + " ";
+                                                                    }
+                                                                    sweetAlert('错误', layerStr);
+                                                                }
+                                                            }).always(function () {
+                                                                _item.removeAttr('disabled');
+                                                            });
                                                         }
-                                                        sweetAlert('错误', layerStr);
-                                                    }
-                                                }).always(function () {
-                                                    _item.removeAttr('disabled');
-                                                });
+                                                    });
+                                                },
+                                                allowOutsideClick: false
                                             });
                                         });
                                     </script>
