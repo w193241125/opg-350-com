@@ -48,7 +48,7 @@
                                 <tbody>
                                 @foreach($lotterywinner as $u)
                                 <tr>
-                                    <td>{{$u->id}}</td>
+                                    <td>{{$u->user_id}}</td>
                                     <td>{{$user[$u->user_id]}}</td>
                                     <td>{{$u->rank_mark}}</td>
                                 </tr>
