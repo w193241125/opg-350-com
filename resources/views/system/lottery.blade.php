@@ -288,6 +288,32 @@
                                             <span class="help-block">总共抽多少人</span>
                                         </div>
                                         <div class="form-group">
+                                            <span class="font_style">是否与其它奖项互斥：</span><br>
+                                            <input type="radio" id="mutex" name="mutex" class="flat-red man" value="100" checked>
+                                            <label for="mutex" class="font_style">否</label><br>
+                                            <input type="radio" id="mutexs" name="mutex" class="flat-red man" value="200">
+                                            <label for="mutexs" class="font_style">是</label><br>
+                                            <span id="mutex_turn">
+                                                @foreach($turns as $v)
+                                                    <input type="checkbox" id="mutex_{{$v['turn_id']}}" name="mutex_turn[]" class="flat-red mutex" value="{{$v['turn_id']}}" disabled="true">
+                                                    <label for="mutex_{{$v['turn_id']}}" class="font_style">{{$v['turn_name']}}</label>
+                                                @endforeach
+                                            </span>
+                                        </div>
+                                        <script>
+                                            $("input[name=mutex]").on('click',function () {
+                                                var mutex= $('input[name=mutex]:checked').val();
+                                                if ( mutex == 100 ) {
+                                                    $('.mutex').attr('disabled','true');
+                                                    $('input[name=mutex_turn]:checked').each(function() {
+                                                        $(this).attr('checked', false);
+                                                    });
+                                                }else{
+                                                    $('.mutex').removeAttr("disabled");
+                                                }
+                                            });
+                                        </script>
+                                        <div class="form-group">
                                             <span class="font_style">参加人员：</span><br>
                                             <input type="radio" id="man" name="man" class="flat-red man" value="100" checked>
                                             <label for="man" class="font_style">所有人</label><br>
@@ -303,8 +329,8 @@
                                             <label for="all_4" class="font_style">试用期</label>
                                         </div>
                                         <script>
-                                            $("input[type=radio]").on('click',function () {
-                                                var man= $('input:radio:checked').val();
+                                            $("input[name=man]").on('click',function () {
+                                                var man= $('input[name=man]:checked').val();
                                                 if ( man == 100 ) {
                                                     $('#all_1').attr('disabled','true');
                                                     $('#all_2').attr('disabled','true');
@@ -376,13 +402,20 @@
                                         if (data != []) {
                                             //先清空下拉列表
                                             $('#form_parent_menu_1').empty();
+                                            $('#mutex_turn').empty();
                                             $('#form_parent_menu_1').append("<option value='0' selected>--抽奖等级--</option>");
                                             console.log(data)
                                             var html = '';
+                                            var htmls = '';
                                             $(data).each(function (index, element) {
                                                 html += "<option value='"+element.turn_id+"' @if(old('turn_id')) selected='selected' @endif >"+element.turn_name+"</option>"
+                                                htmls += "<input type=\"checkbox\" id=\"mutex_" + element.turn_id + " \" name=\"mutex_turn[]\" class=\"flat-red mutex\" value=\" "+ element.turn_id + " \" disabled=\"true\">  <label for=\"mutex_" + element.turn_id + " \" class=\"font_style\">"+element.turn_name+"</label> "
+
                                             });
+                                            $('#mutex_turn').append(htmls);
                                             $('#form_parent_menu_1').append(html);
+                                            $('#mutexs').prop('checked',false);
+                                            $('#mutex').prop('checked',true);
                                         }
                                     }
                                 );
@@ -534,14 +567,6 @@
 
 {{--尾部前端资源--}}
 @section('script')
-    <script type="text/javascript">
-        //单选框美化
-//        $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
-//            checkboxClass: 'icheckbox_flat-green',
-//            radioClass   : 'iradio_flat-green'
-//        })
-
-    </script>
     <!-- BEGIN THEME GLOBAL SCRIPTS 这个js控制 添加菜单 的 label 上移与下移 -->
     <script src="{{asset('assets/admin/layouts/scripts/app.min.js')}}" type="text/javascript"></script>
 @endsection

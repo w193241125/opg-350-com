@@ -99,6 +99,8 @@ class LotteryController extends Controller
         $turn_pre_num = $request->input('pre_nums');
         $turn_total_number = $request->input('totals');
         $man = $request->input('man');
+        $mutex = $request->input('mutex');
+        $mutex_turn = $request->input('mutex_turn');
         $woman = $request->input('peoples');
         if (!$turn_name ||!$turn_pre_num || !$turn_total_number ||!$man){
             $ret =  [
@@ -117,9 +119,34 @@ class LotteryController extends Controller
             ];
             return response()->json($ret);
         }
+
+        //检验是否与其它奖项互斥
+        if ($mutex==100){
+            //不互斥
+        }elseif($mutex==200){
+            //互斥
+            $res = $query->table('lucky_record')->select(['user_id'])->whereIn('turn_id',$mutex_turn)->get();
+            if (!empty($res)){
+                foreach ($res as $re) {
+                    $turn_id[] = $re->user_id;
+                }
+            }
+        }else{
+            $ret =  [
+                'status' => 300,
+                'message' => '未知错误',
+            ];
+            return response()->json($ret);
+        }
+
         //添加奖池
         if ($man==100){//所有
-            $res = $query->table('lucky_user')->select(['id','level'])->get();
+            $res = $query->table('lucky_user')
+                ->select(['id','level'])
+                ->when($turn_id,function ($query) use ($turn_id){
+                    return $query->whereNotIn('id',$turn_id);
+                })
+                ->get();
         }elseif($man==200){//部分
             if (empty($woman)){
                 $ret =  [
@@ -128,7 +155,13 @@ class LotteryController extends Controller
                 ];
                 return response()->json($ret);
             }
-            $res = $query->table('lucky_user')->select(['id','level'])->whereIn('level',$woman)->get();
+            $res = $query->table('lucky_user')
+                ->select(['id','level'])
+                ->when($turn_id,function ($query) use ($turn_id){
+                    return $query->whereNotIn('id',$turn_id);
+                })
+                ->whereIn('level',$woman)
+                ->get();
         }else{
             $ret =  [
                 'status' => 300,
@@ -148,33 +181,43 @@ class LotteryController extends Controller
             ];
             return response()->json($ret);
         }
-        $pool = array_rand($tmp,$turn_total_number);
-        $res = $query->table('lucky_turn')->select(['turn_id'])->get()->toArray();
-        foreach ($pool as $p) {
-            $arr[] = $tmp[$p];
-            $data['user_id'] = $tmp[$p];
-            $data['level'] = $all_user[$tmp[$p]];
-            $data['turn_name'] = $turn_name;
-            $data['rank'] = $res[0]->turn_id;
-            $data['rank_mark'] = $turn_name;
-            $query->table('lucky_record')->insert($data);
-        }
-        $redis = Redis::connection();
-        $redis->sadd('turn_'.$res[0]->turn_id,$arr);
-
-        //更新当前抽奖配置
-        $data = [
-            'turn_id'=>$res[0]->turn_id,
-            'turn_pre_num'=>$turn_pre_num,
-        ];
-        $res =$query->table('lucky_config')->update($data);
         //添加抽奖奖项
         $lucky_turn = [
-            'turn_id'=>$res[0]->turn_id,
             'turn_name'=>$turn_name,
             'turn_total_number'=>$turn_total_number
         ];
-        $re =  $query->table('lucky_turn')->insert($lucky_turn);
+        $re_turnid =  $query->table('lucky_turn')->insertGetId($lucky_turn);
+        
+        $pool = array_rand($tmp,$turn_total_number);
+        if (is_array($pool)){
+            foreach ($pool as $p) {
+                $arr[] = $tmp[$p];
+                $data['user_id'] = $tmp[$p];
+                $data['level'] = $all_user[$tmp[$p]];
+                $data['turn_id'] = $re_turnid;
+                $data['rank'] = $re_turnid;
+                $data['rank_mark'] = $turn_name;
+                $query->table('lucky_record')->insert($data);
+            }
+        }else{
+            $data['user_id'] = $tmp[$pool];
+            $data['level'] = $all_user[$tmp[$pool]];
+            $data['turn_id'] = $re_turnid;
+            $data['rank'] = $re_turnid;
+            $data['rank_mark'] = $turn_name;
+            $query->table('lucky_record')->insert($data);
+        }
+
+        $redis = Redis::connection();
+        $redis->sadd('turn_'.$re_turnid,$arr);
+
+        //更新当前抽奖配置
+        $data = [
+            'turn_id'=>$re_turnid,
+            'turn_pre_num'=>$turn_pre_num,
+        ];
+        $res =$query->table('lucky_config')->update($data);
+        
 
         $ret =  [
             'status' => 200,
