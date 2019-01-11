@@ -1,6 +1,6 @@
 /**
  * 美化弹窗js
- * 传入删除啊 url 和 删除的 dom id
+ * 传入删除 url 和 删除的 dom id
  * Created by ADKi on 2016/12/21 0021.
  */
 var SweetAlert = function () {
@@ -30,24 +30,24 @@ var SweetAlert = function () {
                 var id = $(this).data('id');
                 $(this).click(function(){
                     swal({
-                            title: sa_title,
-                            text: sa_message,
-                            type: sa_type,
-                            allowOutsideClick: sa_allowOutsideClick,
-                            showConfirmButton: sa_showConfirmButton,
-                            showCancelButton: sa_showCancelButton,
-                            confirmButtonClass: sa_confirmButtonClass,
-                            cancelButtonClass: sa_cancelButtonClass,
-                            closeOnConfirm: sa_closeOnConfirm,
-                            closeOnCancel: sa_closeOnCancel,
-                            confirmButtonText: sa_confirmButtonText,
-                            cancelButtonText: sa_cancelButtonText,
-                            showLoaderOnConfirm: sa_showLoaderOnConfirm,
-                            popupMessageSuccess: sa_popupMessageSuccess,
-                            popupTitleCancel: sa_popupTitleCancel,
-                            popupMessageCancel: sa_popupMessageCancel
-                        },
-                        function () {
+                        title: sa_title,
+                        text: sa_message,
+                        type: sa_type,
+                        allowOutsideClick: sa_allowOutsideClick,
+                        showConfirmButton: sa_showConfirmButton,
+                        showCancelButton: sa_showCancelButton,
+                        confirmButtonClass: sa_confirmButtonClass,
+                        cancelButtonClass: sa_cancelButtonClass,
+                        //closeOnConfirm: sa_closeOnConfirm,
+                        //closeOnCancel: sa_closeOnCancel,
+                        confirmButtonText: sa_confirmButtonText,
+                        cancelButtonText: sa_cancelButtonText,
+                        showLoaderOnConfirm: sa_showLoaderOnConfirm,
+                        //popupMessageSuccess: sa_popupMessageSuccess,
+                        //popupTitleCancel: sa_popupTitleCancel,
+                        //popupMessageCancel: sa_popupMessageCancel
+                    }).then(function(isConfirm) {
+                        if (isConfirm.value === true) {
                             setTimeout(function () {
                                 var settings = {
                                     type: "DELETE",
@@ -81,7 +81,19 @@ var SweetAlert = function () {
                                 };
                                 $.ajax(settings);
                             }, 500);
-                        });
+
+                        } else if (isConfirm.value === false) {
+                            swal(
+                                'Cancelled',
+                                '已取消 :)',
+                                'error'
+                            );
+
+                        } else {
+                            //console.log(isConfirm.value)
+
+                        }
+                    });
                 });
             });
 

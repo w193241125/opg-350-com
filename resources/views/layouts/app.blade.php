@@ -25,7 +25,8 @@
     <!-- AdminLTE Skins. -->
     <link rel="stylesheet" href="/AdminLTE/dist/css/skins/_all-skins.min.css">
     {{--弹窗css--}}
-    <link href="{{ asset('vendor/bootstrap-sweetalert/sweetalert.css') }}" rel="stylesheet" type="text/css" />
+    {{--<link href="{{ asset('vendor/bootstrap-sweetalert/sweetalert.css') }}" rel="stylesheet" type="text/css" />--}}
+    <link href="{{ asset('sweetalert2/dist/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -88,7 +89,8 @@
 <script src="/AdminLTE/dist/js/demo.js"></script>
 
 {{--弹窗js--}}
-<script src="{{ asset('vendor/bootstrap-sweetalert/sweetalert.min.js') }}" type="text/javascript"></script>
+{{--<script src="{{ asset('vendor/bootstrap-sweetalert/sweetalert.min.js') }}" type="text/javascript"></script>--}}
+<script src="{{ asset('sweetalert2/dist/sweetalert2.all.js') }}" type="text/javascript"></script>
 {{--弹窗js--}}
 <script src="{{ asset('assets/admin/layouts/scripts/sweetalert/sweetalert-ajax-delete.js') }}" type="text/javascript"></script>
 {{--游戏多选js--}}
