@@ -360,6 +360,13 @@
                                                 }
                                             });
                                         </script>
+                                        <div class="form-group">
+                                            <span class="font_style">优先级：</span><br>
+                                            <input type="radio" id="priority" name="priority" class="flat-red priority" value="0" checked>
+                                            <label for="priority" class="font_style">否</label>
+                                            <input type="radio" id="prioritys" name="priority" class="flat-red priority" value="1">
+                                            <label for="prioritys" class="font_style">是</label>
+                                        </div>
                                     </div>
                                     <div class="form-actions noborder">
                                         <button type="submit" class="btn green lottery_two" >确认加抽</button>

@@ -102,6 +102,7 @@ class LotteryController extends Controller
         $mutex = $request->input('mutex');
         $mutex_turn = $request->input('mutex_turn');
         $woman = $request->input('peoples');
+        $priority = $request->input('priority');//优先级设置
         if (!$turn_name ||!$turn_pre_num || !$turn_total_number ||!$man){
             $ret =  [
                 'status' => 300,
@@ -124,7 +125,7 @@ class LotteryController extends Controller
         if ($mutex==100){
             //不互斥
         }elseif($mutex==200){
-            //互斥
+            //互斥，查出已中奖用户
             $res = $query->table('lucky_record')->select(['user_id'])->whereIn('turn_id',$mutex_turn)->get();
             if (!empty($res)){
                 foreach ($res as $re) {
@@ -155,6 +156,8 @@ class LotteryController extends Controller
                 ];
                 return response()->json($ret);
             }
+
+            //根据互斥奖项，查出可中奖用户
             $res = $query->table('lucky_user')
                 ->select(['id','level'])
                 ->when($turn_id,function ($query) use ($turn_id){
@@ -162,6 +165,7 @@ class LotteryController extends Controller
                 })
                 ->whereIn('level',$woman)
                 ->get();
+
         }else{
             $ret =  [
                 'status' => 300,
@@ -170,6 +174,7 @@ class LotteryController extends Controller
             return response()->json($ret);
         }
 
+        //处理中奖用户数组
         foreach ($res as $re) {
             $tmp[$re->id] = $re->id;
             $all_user[$re->id] = $re->level;
@@ -181,14 +186,56 @@ class LotteryController extends Controller
             ];
             return response()->json($ret);
         }
-        //添加抽奖奖项
+
+        //生成获奖记录和奖池
+        if (!empty($priority)){
+            $count = array_count_values($all_user);
+            $one = isset($count[1])?isset($count[1]):0;
+            $two = isset($count[2])?isset($count[2]):0;
+            $three = isset($count[3])?isset($count[3]):0;
+            $four = isset($count[4])?isset($count[4]):0;
+            $old_staff_num = $one + $two;//老员工数量
+            if ($old_staff_num >= $turn_total_number){//老员工数量比应中奖用户多，则从中奖老员工获取中奖用户
+
+                foreach ($all_user as $k=>$v) {
+                    if ($v==1||$v==2){
+                        $old_staff_tmp[$k]=$k;
+                    }
+                }
+                $pool = array_rand($old_staff_tmp,$turn_total_number);
+
+            }else{//老员工数量较少，需要老员工+ 非老员工 凑齐奖池
+                //先获取所有老员工id和非老员工
+                foreach ($all_user as $k=>$v) {
+                    if ($v==1||$v==2){
+                        $old_staff_tmp[$k]=$k;
+                    }else{
+                        $new_staff_tmp[$k]=$k;
+                    }
+                }
+                //从非老员工中，获取剩余获奖用户,
+                $pool_new = array_rand($new_staff_tmp,$turn_total_number-count($old_staff_tmp));
+                if (!empty($old_staff_tmp)){
+                    //合并
+                    $pool = array_merge($pool_new,$old_staff_tmp);
+                }else{
+                    $pool = $pool_new;
+                }
+
+
+            }
+        }else{
+            //没有优先级
+            $pool = array_rand($tmp,$turn_total_number);
+        }
+
+        //添加抽奖奖项，并获取插入的奖项turn_id
         $lucky_turn = [
             'turn_name'=>$turn_name,
             'turn_total_number'=>$turn_total_number
         ];
         $re_turnid =  $query->table('lucky_turn')->insertGetId($lucky_turn);
-        
-        $pool = array_rand($tmp,$turn_total_number);
+
         if (is_array($pool)){
             foreach ($pool as $p) {
                 $arr[] = $tmp[$p];
@@ -207,7 +254,7 @@ class LotteryController extends Controller
             $data['rank_mark'] = $turn_name;
             $query->table('lucky_record')->insert($data);
         }
-
+        //生成 redis 奖池
         $redis = Redis::connection();
         $redis->sadd('turn_'.$re_turnid,$arr);
 
