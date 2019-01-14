@@ -385,7 +385,7 @@
                                     $(".form_mark").css('color','red');
                                 }else{
                                     $("#form_mark").parent('div').removeClass('has-error');
-                                    $(".form_mark").html('使用：4,5,6，以此类推... 标识√');
+                                    $(".form_mark").html('使用：五等奖，以此类推... 标识√');
                                     $(".form_mark").css('color','#36c6d3');
                                 }
                             }

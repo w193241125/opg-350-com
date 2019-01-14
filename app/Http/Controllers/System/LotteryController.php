@@ -177,7 +177,7 @@ class LotteryController extends Controller
         if (count($tmp)<$turn_total_number){
             $ret =  [
                 'status' => 300,
-                'message' => '参加抽奖的人员数量少于抽奖总数',
+                'message' => '参加抽奖的人员数量少于抽奖总数_'.count($tmp),
             ];
             return response()->json($ret);
         }
