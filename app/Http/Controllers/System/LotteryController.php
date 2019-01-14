@@ -110,6 +110,13 @@ class LotteryController extends Controller
             ];
             return response()->json($ret);
         }
+        if (!empty($priority)&&$man==100){
+            $ret =  [
+                'status' => 300,
+                'message' => '选择优先级时，参加人员不能为所有人！',
+            ];
+            return response()->json($ret);
+        }
         $query = DB::connection('mysql_lucky');
         //验证标识是否已经存在
         $tid = $query->table('lucky_turn')->where(['turn_name'=>$turn_name])->get();
