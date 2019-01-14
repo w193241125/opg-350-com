@@ -197,10 +197,10 @@ class LotteryController extends Controller
         //生成获奖记录和奖池
         if (!empty($priority)){
             $count = array_count_values($all_user);
-            $one = isset($count[1])?isset($count[1]):0;
-            $two = isset($count[2])?isset($count[2]):0;
-            $three = isset($count[3])?isset($count[3]):0;
-            $four = isset($count[4])?isset($count[4]):0;
+            $one = isset($count[1])?$count[1]:0;
+            $two = isset($count[2])?$count[2]:0;
+            $three = isset($count[3])?$count[3]:0;
+            $four = isset($count[4])?$count[4]:0;
             $old_staff_num = $one + $two;//老员工数量
             if ($old_staff_num >= $turn_total_number){//老员工数量比应中奖用户多，则从中奖老员工获取中奖用户
 
