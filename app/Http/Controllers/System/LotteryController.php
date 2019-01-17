@@ -223,8 +223,14 @@ class LotteryController extends Controller
                 //从非老员工中，获取剩余获奖用户,
                 $pool_new = array_rand($new_staff_tmp,$turn_total_number-count($old_staff_tmp));
                 if (!empty($old_staff_tmp)){
-                    //合并
-                    $pool = array_merge($pool_new,$old_staff_tmp);
+                    if (is_array($pool_new)){
+                        //合并
+                        $pool = array_merge($pool_new,$old_staff_tmp);
+                    }else{
+                        $old_staff_tmp[$pool_new] = $pool_new;
+                        $pool = $old_staff_tmp;
+                    }
+
                 }else{
                     $pool = $pool_new;
                 }
