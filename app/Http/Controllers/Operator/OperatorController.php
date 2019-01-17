@@ -894,4 +894,9 @@ class OperatorController extends Controller
 
         return view('operator.hm_channel.total',$assign);
     }
+
+    public function test()
+    {
+        //
+    }
 }
