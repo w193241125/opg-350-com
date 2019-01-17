@@ -260,6 +260,7 @@ class LotteryController extends Controller
                 $query->table('lucky_record')->insert($data);
             }
         }else{
+            $arr[] = $tmp[$pool];
             $data['user_id'] = $tmp[$pool];
             $data['level'] = $all_user[$tmp[$pool]];
             $data['turn_id'] = $re_turnid;
@@ -277,7 +278,7 @@ class LotteryController extends Controller
             'turn_pre_num'=>$turn_pre_num,
         ];
         $res =$query->table('lucky_config')->update($data);
-        
+
 
         $ret =  [
             'status' => 200,
@@ -332,7 +333,7 @@ class LotteryController extends Controller
         $user = $query->table('lucky_user')->get();
         return view('system.lotteryuser',['user'=>$user]);
     }
-    
+
     //一键清空
     public function oneKeyFlush(Curl $curl)
     {
@@ -357,7 +358,7 @@ class LotteryController extends Controller
         ];
         return response()->json($ret);
     }
-    
+
     //生成奖池
     public function setPool(Curl $curl)
     {
