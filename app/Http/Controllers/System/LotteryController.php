@@ -333,8 +333,8 @@ class LotteryController extends Controller
         $key = 'yW3HbG58mxoToBIN';
         $data['time'] = time();
         $data['sign'] = md5($key.$data['time']);
-
-        $res = $curl->post('http://lucky.350.com/api/flush_all.php',$data);
+        $url = getenv('LOTTERY_FLUSH');
+        $res = $curl->post($url,$data);
 
 //        $query = DB::connection('mysql_lucky');
 //        $res = $query->table('lucky_turn')->select('turn_id')->get();
@@ -356,10 +356,11 @@ class LotteryController extends Controller
     public function setPool(Curl $curl)
     {
         $key = 'oKMuiE8aAiqzeWpl';
+        $url = getenv('LOTTERY_POOL');
         $data['time'] = time();
         $data['sign'] = md5($key.$data['time']);
 
-        $res = $curl->post('http://lucky.350.com/api/generate_rank.php',$data);
+        $res = $curl->post($url,$data);
 
         $ret =  [
             'status' => 200,
