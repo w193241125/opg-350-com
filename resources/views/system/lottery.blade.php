@@ -201,7 +201,7 @@
                                             </div>
                                             <div class="form-group form-md-line-input form-md-floating-label
                 <?php if ($errors->has('total')) { echo "has-error"; } ?>">
-                                                <input type="text" class="form-control" id="form_total" name="total" value="{{ old('total') }}">
+                                                <input type="text" class="form-control" id="form_total" name="total" readonly="readonly" value="{{ old('total') }}">
                                                 <label for="form_total"><span class="imp">*&nbsp;</span><span id="total">奖项人数</span></label>
                                                 <span class="help-block">总共抽多少人</span>
                                             </div>
@@ -296,7 +296,7 @@
                                         </div>
                                         <div class="form-group form-md-line-input form-md-floating-label
                 <?php if ($errors->has('totals')) { echo "has-error"; } ?>">
-                                            <input type="text" class="form-control" id="form_totals" name="totals" value="{{ old('totals') }}">
+                                            <input type="text" class="form-control" id="form_totals" name="totals"  value="{{ old('totals') }}">
                                             <label for="form_totals"><span class="imp">*&nbsp;</span>奖项人数</label>
                                             <span class="help-block">总共抽多少人</span>
                                         </div>
@@ -367,6 +367,13 @@
                                             <input type="radio" id="prioritys" name="priority" class="flat-red priority" value="1">
                                             <label for="prioritys" class="font_style">是</label>
                                         </div>
+                                        {{--<div class="form-group">--}}
+                                            {{--<span class="font_style">是否可以重复中：</span><br>--}}
+                                            {{--<input type="radio" id="repeat" name="repeat" class="flat-red priority" value="0" checked>--}}
+                                            {{--<label for="repeat" class="font_style">否</label>--}}
+                                            {{--<input type="radio" id="repeats" name="repeat" class="flat-red priority" value="1">--}}
+                                            {{--<label for="repeats" class="font_style">是</label>--}}
+                                        {{--</div>--}}
                                     </div>
                                     <div class="form-actions noborder">
                                         <button type="submit" class="btn green lottery_two" >确认加抽</button>
