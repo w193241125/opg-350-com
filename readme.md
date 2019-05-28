@@ -1,5 +1,6 @@
 ##注意
 - 本项目权限使用 `spatie/Laravel-permission` 扩展。
+- 数据库文件（*.sql）都在 database/seeds 里面了懒得写数据填充了。
 
 ##菜单
 1. 项目开始从 

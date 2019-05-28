@@ -1,0 +1,150 @@
+<?php
+
+/**
+ * 生成用户获奖列表
+ */
+
+$dirroot = $_SERVER['DOCUMENT_ROOT'];
+require_once($dirroot . '/common/bootstrap.php');
+
+$sign = isset($_REQUEST['sign']) ? $_REQUEST['sign'] : '';
+$time = isset($_REQUEST['time']) ? $_REQUEST['time'] : '';
+$key = 'oKMuiE8aAiqzeWpl';
+$_sign = md5($key . $time);
+if ($sign != $_sign) {
+    ajaxReturn(array('code' => -1, 'msg' => 'sign is error'));
+}
+
+//配置一等奖二等奖三等奖人数
+$rank_array = array('first_prize' => 43, 'second_prize' => 22, 'third_prize' => 8);
+$sum_people = array_sum($rank_array);
+$sql = "SELECT COUNT(id) as total FROM lucky.lucky_record WHERE turn_id IN(1,2,3)";
+$total_row = $pdo->query($sql, 'Row');
+$total_num = $total_row['total'];
+//判断如果生成过则终止，防止重复生成
+if ($sum_people == $total_num) {
+    ajaxReturn(array('code' => -1, 'msg' => 'prize rank has been generated'));
+}
+
+//获取所有用户id和其所对应的level等级
+$sql = "SELECT id,level FROM lucky.lucky_user";
+$all_data = $pdo->query($sql);
+$all_user = array();    //所有用户ID所对应的level等级
+foreach ($all_data as $val) {
+    $all_user[$val['id']] = $val['level'];
+}
+
+//*****************************************************************************
+$sql = "SELECT id FROM lucky.lucky_user WHERE level=1"; //获取所有level=1的用户
+$level_one_data = $pdo->query($sql);
+$level_one_arr = array();
+foreach ($level_one_data as $val) {
+    $level_one_arr[] = $val['id'];
+}
+
+$sql = "SELECT id FROM lucky.lucky_user WHERE level=2"; //获取所有level=2的用户
+$level_two_data = $pdo->query($sql);
+$level_two_arr = array();
+foreach ($level_two_data as $val) {
+    $level_two_arr[] = $val['id'];
+}
+
+$sql = "SELECT id FROM lucky.lucky_user WHERE level=3"; //获取所有level=3的用户
+$level_three_data = $pdo->query($sql);
+$level_three_arr = array();
+foreach ($level_three_data as $val) {
+    $level_three_arr[] = $val['id'];
+}
+
+$sql = "SELECT id FROM lucky.lucky_user WHERE level=4"; //获取所有level=4的用户
+$level_four_data = $pdo->query($sql);
+$level_four_arr = array();
+foreach ($level_four_data as $val) {
+    $level_four_arr[] = $val['id'];
+}
+
+//从level2中随机取出部分[7]用户和level3合并抽二等级
+$level_two_take = unique_array($level_two_arr, 7);  //level2拿走的部分用户
+$level_two_leave = array_diff($level_two_arr, $level_two_take);  //level2被拿走后剩下的用户
+
+//从level3中随机取出部分[4]用户和level4合并抽三等级
+$level_three_take = unique_array($level_three_arr, 4);  //level3拿走的部分用户
+$level_three_leave = array_diff($level_three_arr, $level_three_take);  //level3被拿走后剩下的用户
+
+/******************************************************1****************************************************************/
+//计算level2剩下的用户需产生几个一等奖
+$level_two_prize_num = $rank_array['first_prize'] - count($level_one_arr);  //level_two剩下人产生一等奖数 = 一等奖总个数 - level_one人数
+//level2剩下用户随机产生一等奖操作
+$level_two_prize_get = unique_array($level_two_leave, $level_two_prize_num);
+//level1用户数和level2剩下用户产生的一等奖合并
+$rank_one_top = array_merge($level_one_arr, $level_two_prize_get);
+$commit_flag_one = true;
+$pdo->beginTrans();
+foreach ($rank_one_top as $v) {
+    $sql = "INSERT INTO lucky.lucky_record(user_id, level,turn_id,rank,rank_mark) values ($v, $all_user[$v],1,1,'一等奖')";//记录一等奖中奖信息
+    $res = $pdo->execSql($sql);
+    if (!$res) $commit_flag_one = false;
+}
+//全部插入成功,执行提交操作
+if ($commit_flag_one) {
+    $pdo->commit();
+} else {
+    ajaxReturn(array('status' => -1, 'msg' => 'error one'));
+}
+
+/******************************************************2****************************************************************/
+//计算level3剩下的用户需产生几个二等奖
+$level_three_prize_num = $rank_array['second_prize'] - 7;   //level_three剩下人产生二等奖数 = 二等奖总个数 - 从level_two拿出的必中人数量
+//level3剩下用户随机产生二等奖操作
+$level_three_prize_get = unique_array($level_three_leave, $level_three_prize_num);
+//level2拿走的用户数和level3剩下的用户产生的二等奖合并
+$rank_two_top = array_merge($level_two_take, $level_three_prize_get);
+$commit_flag_two = true;
+$pdo->beginTrans();
+foreach ($rank_two_top as $var) {
+    $sql = "INSERT INTO lucky.lucky_record(user_id, level,turn_id,rank,rank_mark) values ($var, $all_user[$var],2,2,'二等奖')";//记录二等奖中奖信息
+    $res = $pdo->execSql($sql);
+    if (!$res) $commit_flag_two = false;
+}
+//全部插入成功,执行提交操作
+if ($commit_flag_two) {
+    $pdo->commit();
+} else {
+    ajaxReturn(array('status' => -1, 'msg' => 'error two'));
+}
+
+/****************************************************3******************************************************************/
+//level3拿走用户和level4合并操作
+$level_three_four_merge = array_merge($level_three_take, $level_four_arr);
+//随机产生三等奖
+$rank_three_top = unique_array($level_three_four_merge, $rank_array['third_prize']);
+$commit_flag_three = true;
+$pdo->beginTrans();
+foreach ($rank_three_top as $val) {
+    $sql = "INSERT INTO lucky.lucky_record(user_id, level,turn_id,rank,rank_mark) values ($val, $all_user[$val],3,3,'三等奖')";//记录三等奖中奖信息
+    $res = $pdo->execSql($sql);
+    if (!$res) $commit_flag_three = false;
+}
+//全部插入成功,执行提交操作
+if ($commit_flag_three) {
+    $pdo->commit();
+} else {
+    ajaxReturn(array('status' => -1, 'msg' => 'error three'));
+}
+
+
+/*******************************************************************************/
+/*******************************************************************************/
+//将产生的抽奖数据放入redis缓存
+$sql = "SELECT user_id,rank FROM lucky.lucky_record";
+$all_of_data = $pdo->query($sql);
+$all_prizes = array();
+foreach ($all_of_data as $v) {
+    $all_prizes[$v['rank']][] = $v['user_id'];
+}
+
+$redis->sAdd('turn_1', $all_prizes[1]);
+$redis->sAdd('turn_2', $all_prizes[2]);
+$redis->sAdd('turn_3', $all_prizes[3]);
+
+ajaxReturn(array('status' => 1, 'msg' => 'generate success!'));

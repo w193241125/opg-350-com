@@ -1,0 +1,13 @@
+INSERT INTO `position` VALUES (1, 'boss', 8, '2018-9-20 02:45:10', '2018-9-20 02:45:10');
+INSERT INTO `position` VALUES (2, 'PHP工程师', 1, '2018-9-20 02:45:10', '2018-9-20 02:45:10');
+INSERT INTO `position` VALUES (3, 'Android工程师', 1, '2018-9-20 02:45:10', '2018-9-20 02:45:10');
+INSERT INTO `position` VALUES (4, 'IOS工程师', 1, '2018-9-20 02:45:10', '2018-9-20 02:45:10');
+INSERT INTO `position` VALUES (5, 'Android工程师', 1, '2018-9-20 02:45:10', '2018-9-20 02:45:10');
+INSERT INTO `position` VALUES (6, '运营主管', 3, '2018-9-20 02:45:10', '2018-9-20 02:45:10');
+INSERT INTO `position` VALUES (7, '运营专员', 3, '2018-9-20 02:45:10', '2018-9-20 02:45:10');
+INSERT INTO `position` VALUES (8, '市场主管', 2, '2018-9-20 02:45:10', '2018-9-20 02:45:10');
+INSERT INTO `position` VALUES (9, '市场专员', 2, '2018-9-20 02:45:10', '2018-9-20 02:45:10');
+INSERT INTO `position` VALUES (10, '客服主管', 6, '2018-9-20 02:45:10', '2018-9-20 02:45:10');
+INSERT INTO `position` VALUES (11, '客服专员', 6, '2018-9-20 02:45:10', '2018-9-20 02:45:10');
+INSERT INTO `position` VALUES (12, '商务', 7, '2018-9-20 02:45:10', '2018-9-20 02:45:10');
+INSERT INTO `position` VALUES (13, '编辑', 3, '2018-9-20 02:45:10', '2018-9-20 02:45:10');

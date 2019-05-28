@@ -588,8 +588,10 @@ class OperatorController extends Controller
             $game_table                 = "pay_" . trim($game_row[0]->game_byname) . "_log";
             $pay_row                    = $db_pay->table($game_table)->select(['stat','pay_gold','back_result'])->where(['orderid'=>$orderid])->get();
 //            $result[$orderid]['area'] = $v->user_ip?geoip()->getLocation(long2ip(intval($v->user_ip)))->getDisplayNameAttribute():'';
-            $address = Ip::find(long2ip(intval($v->user_ip)));
-            $result[$orderid]['area'] = $v->user_ip?$address['country'].$address['region'].$address['city']:'';
+//            $address = Ip::find(long2ip(intval($v->user_ip)));
+            $address = '';
+//            $result[$orderid]['area'] = $v->user_ip?$address['country'].$address['region'].$address['city']:'';
+            $result[$orderid]['area'] = '';
             $result[$orderid]['stat'] = $pay_row[0]->stat;
         }
         $assign=[

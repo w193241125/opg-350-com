@@ -14,9 +14,19 @@ class LotteryController extends Controller
     public function index()
     {
         $query = DB::connection('mysql_lucky');
+        $user = $query->table('lucky_user')->get();
+        foreach ($user as $item) {
+            $all_user[$item->id] = $item->id;
+        }
+        $level = [1=>'管理',2=>'老员工',3=>'新员工', 4=>'试用期'];
         $res = $query->table('lucky_turn')->get();
+
+        $columns = ' count(id) as num, rank_mark,level ';
+        $record = $query->table('lucky_record')->select(DB::raw($columns))->groupBy(['level'])->get();
+
+        $record = toArray($record);
         $turns = toArray($res);
-        return view('system.lottery',['turns'=>$turns]);
+        return view('system.lottery',['turns'=>$turns,'record'=>$record,'user'=>$all_user,'level'=>$level]);
     }
 
     //获取所有抽奖等级

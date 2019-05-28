@@ -37,8 +37,8 @@
     <!-- jQuery 3 -->
     <script src="/AdminLTE/bower_components/jquery/dist/jquery.min.js"></script>
     <!-- Google Font -->
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    {{--<link rel="stylesheet"--}}
+          {{--href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">--}}
 
     {{--游戏多选--}}
     <link href="{{ asset('select/select.css') }}" rel="stylesheet" type="text/css" />

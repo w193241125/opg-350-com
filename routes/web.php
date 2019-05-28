@@ -100,5 +100,8 @@ Route::group([ 'prefix' => 'operator','namespace' => 'Operator', 'middleware'=>[
     Route::post('total','OperatorController@total')->name('hm_channel.total');
     //春节活动调试
     Route::get('other','OperaterController@test')->name('other');
+
+    //活动中心
+    Route::get('activity','ActivityController@index')->name('activity.index');
 });
 
