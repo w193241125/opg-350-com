@@ -103,5 +103,8 @@ Route::group([ 'prefix' => 'operator','namespace' => 'Operator', 'middleware'=>[
 
     //活动中心
     Route::get('activity','ActivityController@index')->name('activity.index');
+    Route::get('ajaxGetActivity','ActivityController@ajaxGetActivity')->name('ajaxGetActivity');
+    Route::post('/activity_add','ActivityController@activity_add')->name('activity.activity_add');
+    Route::post('/activity_upd','ActivityController@activity_upd')->name('activity.activity_upd');
 });
 

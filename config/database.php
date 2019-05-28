@@ -98,6 +98,21 @@ return [
             'engine' => null,
         ],
 
+        'mysql_activity' => [
+            'driver' => 'mysql',
+            'host' => env('ACTIVITY_HOST', '127.0.0.1'),
+            'port' => env('ACTIVITY_PORT', '3306'),
+            'database' => env('ACTIVITY_DATABASE', 'forge'),
+            'username' => env('ACTIVITY_USERNAME', 'forge'),
+            'password' => env('ACTIVITY_PASSWORD', ''),
+            'unix_socket' => env('ACTIVITY_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => FALSE,
+            'engine' => null,
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', '127.0.0.1'),
