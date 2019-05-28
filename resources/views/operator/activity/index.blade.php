@@ -129,6 +129,7 @@
                             },
                             success:function (response) {
                                 sweetAlert(response.message);
+                                location.reload()
                             }
                         }).fail(function(response) {
                             if(response.status == 422){
