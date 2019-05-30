@@ -220,56 +220,55 @@
         //补发申请
         $('.activity_del').on('click',function () {
             var _item = $(this);
-            swal({
-                    title: "确定删除吗？",
-                    text: "请谨慎操作！",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "确定删除！",
-                    closeOnConfirm: false
-                },
-                function(){
-                    var award_id = _item.attr('award_id');
+            swal.fire({
+                title: "确定删除吗？",
+                text: "请谨慎操作！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '确定删除！'
+            }).then(function () {
+                var award_id = _item.attr('award_id');
 //                        触发补发ajax
-                    $.ajax({
-                        url:'/operator/award_del',
-                        type:'post',
-                        data:{award_id:award_id},
-                        headers : {
-                            'X-CSRF-TOKEN': $("input[name='_token']").val()
-                        },
-                        beforeSend: function(data){console.log(data);},
-                        success:function (res) {
-                            console.log(res);
-                            if(res.status==200){
-                                swal("删除成功！", res.message, "success");
-                            }else{
-                                swal("删除！", res.message, "error");
-                            }
-                        },
-                        error: function (xhr,errorText,errorType) {
-                            var result =$.parseJSON(xhr.responseText);
-                            console.log(result);
-                            if (result.error == "no_permissions") {
-                                sweetAlert({
-                                    title:"您没有此权限",
-                                    text:"请联系管理员",
-                                    type:"error"
-                                });
-                                return false;
-                            } else {
-                                sweetAlert({
-                                    title:"未知错误",
-                                    text:"请联系管理员",
-                                    type:"error"
-                                });
-                                return false;
-                            }
+                $.ajax({
+                    url:'/operator/award_del',
+                    type:'post',
+                    data:{award_id:award_id},
+                    headers : {
+                        'X-CSRF-TOKEN': $("input[name='_token']").val()
+                    },
+                    beforeSend: function(data){console.log(data);},
+                    success:function (res) {
+                        console.log(res);
+                        if(res.status==200){
+                            swal("删除成功！", res.message, "success");
+                            location.reload()
+                        }else{
+                            swal("删除！", res.message, "error");
                         }
-                    });
-
+                    },
+                    error: function (xhr,errorText,errorType) {
+                        var result =$.parseJSON(xhr.responseText);
+                        console.log(result);
+                        if (result.error == "no_permissions") {
+                            sweetAlert({
+                                title:"您没有此权限",
+                                text:"请联系管理员",
+                                type:"error"
+                            });
+                            return false;
+                        } else {
+                            sweetAlert({
+                                title:"未知错误",
+                                text:"请联系管理员",
+                                type:"error"
+                            });
+                            return false;
+                        }
+                    }
                 });
+            });
         })
     </script>
 @endsection
