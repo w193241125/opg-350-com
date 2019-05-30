@@ -106,5 +106,12 @@ Route::group([ 'prefix' => 'operator','namespace' => 'Operator', 'middleware'=>[
     Route::get('ajaxGetActivity','ActivityController@ajaxGetActivity')->name('ajaxGetActivity');
     Route::post('/activity_add','ActivityController@activity_add')->name('activity.activity_add');
     Route::post('/activity_upd','ActivityController@activity_upd')->name('activity.activity_upd');
+
+    Route::get('/activity_award','ActivityController@activity_award')->name('activity.award');
+    Route::get('ajaxGetAward','ActivityController@ajaxGetAward')->name('ajaxGetAward');
+    Route::post('/award_upd','ActivityController@award_upd')->name('activity.award_upd');
+    Route::post('/award_add','ActivityController@award_add')->name('activity.award_add');
+    Route::get('/award_list','ActivityController@award_list')->name('activity.award_list');
+    Route::post('/award_del','ActivityController@award_del')->name('activity.award_del');
 });
 

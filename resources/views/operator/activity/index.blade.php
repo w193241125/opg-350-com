@@ -334,7 +334,7 @@
                 <?php if ($errors->has('activity_name')) { echo "has-error"; } ?> ">
                                                 <input type="text" class="form-control" id="form_activity_names" name="activity_name" value="{{ old('activity_name') }}">
                                                 <label for="form_activity_name"><span class="imp">*&nbsp;</span><span id="activitynames">活动名称</span></label>
-                                                <span class="help-block form_activity_name">活动名称</span>
+                                                <span class="help-block form_activity_name">活动名称,使用activity1，activity2...以此递增</span>
                                             </div>
                                             <div class="form-group form-md-line-input form-md-floating-label
                 <?php if ($errors->has('activity_title')) { echo "has-error"; } ?> ">
