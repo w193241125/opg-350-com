@@ -113,5 +113,13 @@ Route::group([ 'prefix' => 'operator','namespace' => 'Operator', 'middleware'=>[
     Route::post('/award_add','ActivityController@award_add')->name('activity.award_add');
     Route::get('/award_list','ActivityController@award_list')->name('activity.award_list');
     Route::post('/award_del','ActivityController@award_del')->name('activity.award_del');
+
+    Route::get('/xlczg','ActivityController@xlczg')->name('activity.xlczg');
+    Route::post('/add_user','ActivityController@add_user')->name('activity.add_user');
+    Route::get('/user_list','ActivityController@user_list')->name('activity.user_list');
+    Route::post('/user_list','ActivityController@user_list')->name('activity.user_list');
+    Route::post('/user_del','ActivityController@user_del')->name('activity.user_del');
+    Route::get('/user_edit/{id}','ActivityController@user_edit')->name('activity.user_edit');
+    Route::post('/user_upd','ActivityController@user_upd')->name('activity.user_upd');
 });
 

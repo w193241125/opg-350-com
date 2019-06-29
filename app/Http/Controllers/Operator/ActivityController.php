@@ -156,4 +156,109 @@ class ActivityController extends Controller
         ];
         return response()->json($ret);
     }
+
+    public function xlczg()
+    {
+        return view('operator.activity.xlczg');
+    }
+
+    //添加用户3
+    public function add_user(Request $request)
+    {
+        $uid = $request->input('server_name');
+        $realname = $request->input('role_name');
+        $level = $request->input('total');
+        if (!$uid ||!$realname||!$level){
+            $ret =  [
+                'status' => 300,
+                'message' => '请填写必要参数',
+            ];
+            return response()->json($ret);
+        }
+        $query = DB::connection('mysql_activity');
+        $r = $query->table('recharge_rank')->where(['server_name'=>$uid,'role_name'=>$realname])->get();
+        if (!empty(toArray($r))){
+            $ret =  [
+                'status' => 300,
+                'message' => '用户已存在',
+            ];
+            return response()->json($ret);
+        }
+        $data = [
+            'server_name'=>$uid,
+            'role_name'=>$realname,
+            'total'=>$level,
+            'status'=>2,
+        ];
+
+
+        $res = $query->table('recharge_rank')->insert($data);
+
+        $ret =  [
+            'status' => 200,
+            'message' => $res ? '添加成功':'添加失败',
+        ];
+        return response()->json($ret);
+    }
+
+    public function user_list(Request $request)
+    {
+        $only = $request->input('only');
+        $activity_name = $request->input('activity_name');
+
+        $end = $request->input('length')?$request->input('length'):20;
+
+        $db = DB::connection('mysql_activity');
+        $res = $db->table('activity.recharge_rank')
+            ->when($activity_name,function ($query) use ($activity_name){
+                return $query->where('activity_name','=',$activity_name);
+            })
+            ->when($only,function ($query) use ($only){
+                return $query->where('status','=',2);
+            })
+            ->orderby('total','desc')
+            ->paginate($end);
+        $assign=[
+            'data'=>$res,
+            'filters'=>[
+                'only'=>$only,
+            ],
+        ];
+
+        return view('operator.activity.userlist',$assign);
+    }
+
+    public function user_del(Request $request)
+    {
+        $id = $request->input('user_id');
+        $query = DB::connection('mysql_activity');
+        $sql = "delete from activity.recharge_rank where id={$id}";
+        $res = $query->delete($sql);
+        $ret =  [
+            'status' => 200,
+            'message' => $res ? '删除成功':'删除失败',
+        ];
+        return response()->json($ret);
+    }
+
+    public function user_edit(Request $request)
+    {
+        $id = $request->route('id');
+        $query = DB::connection('mysql_activity');
+        $res = $query->table('recharge_rank')->where(['id'=>$id])->get()->toarray();
+        return view('operator.activity.user_edit')->with(['data'=>$res[0]]);
+    }
+
+    public function user_upd(Request $request)
+    {
+        $id = $request->input('id');
+        $total = $request->input('total');
+        $query = DB::connection('mysql_activity');
+        $res = $query->table('recharge_rank')->where(['id'=>$id])->update(['total'=>$total]);
+        $ret =  [
+            'status' => 200,
+            'message' => $res ? '更新成功':'更新失败',
+        ];
+        return response()->json($ret);
+    }
 }
