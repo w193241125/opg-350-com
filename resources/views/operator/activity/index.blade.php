@@ -80,6 +80,7 @@
                                                 <span class="help-block form_activity_time">活动时间</span>
                                             </div>
                                         </div>
+
                                         <div class="form-group form-md-line-input form-md-floating-label
                 <?php if ($errors->has('activity_server')) { echo "has-error"; } ?>">
                                             <input type="text" class="form-control" id="form_activity_server" name="activity_server" value="{{ old('activity_server') }}">
@@ -87,6 +88,14 @@
                                             <span class="help-block">活动区服</span>
                                         </div>
 
+                                        <div class="form-group form-md-line-input form-md-floating-label
+                <?php if ($errors->has('activity_ext')) { echo "has-error"; } ?>">
+                                            <input type="text" class="form-control" id="form_activity_ext" name="activity_ext" value="{{ old('activity_ext') }}">
+                                            <label for="form_activity_ext"><span class="imp">*&nbsp;</span>其它参数，如金额限制，等。</label>
+                                            <span class="help-block">其它参数，如金额限制，等。</span>
+                                        </div>
+
+                                        
                                         <div class="form-group form-md-line-input form-md-floating-label
                 <?php if ($errors->has('activity_desc')) { echo "has-error"; } ?>">
                                             <input type="text" class="form-control" id="activity_descs" readonly>
@@ -310,6 +319,12 @@
                                                                 $("#form_activity_servers").attr("value","");
                                                                 $("#form_activity_servers").addClass('edited');
                                                                 $("#form_activity_servers").attr("value",data[0].activity_server);
+                                                                
+                                                                $("#activityexts").html("");
+                                                                $("#activityexts").html('其它参数：'+ data[0].activity_ext);
+                                                                $("#form_activity_exts").attr("value","");
+                                                                $("#form_activity_exts").addClass('edited');
+                                                                $("#form_activity_exts").attr("value",data[0].activity_ext);
 
                                                                 $("#activitydescss").html("");
                                                                 $("#activitydescss").html(data[0].activity_desc);
@@ -360,6 +375,14 @@
                                                 <label for="form_activity_server"><span class="imp">*&nbsp;</span><span id="activityservers">活动区服</span></label>
                                                 <span class="help-block form_activity_server">活动区服</span>
                                             </div>
+
+                                            <div class="form-group form-md-line-input form-md-floating-label
+                <?php if ($errors->has('activity_ext')) { echo "has-error"; } ?> ">
+                                                <input type="text" class="form-control" id="form_activity_exts" name="activity_ext" value="{{ old('activity_ext') }}">
+                                                <label for="form_activity_ext"><span class="imp">*&nbsp;</span><span id="activityexts">其它参数，如金额限制，等。</span></label>
+                                                <span class="help-block form_activity_ext">其它参数，如金额限制，等。</span>
+                                            </div>
+
                                             <div class="form-group form-md-line-input form-md-floating-label
                 <?php if ($errors->has('activity_desc')) { echo "has-error"; } ?>">
                                                 <input type="text" class="form-control" id="activity_descs" readonly>

@@ -37,6 +37,7 @@ class ActivityController extends Controller
         $data['activity_title'] = $request->input('activity_title');
         $data['activity_time'] = $request->input('activity_time');
         $data['activity_server'] = $request->input('activity_server');
+        $data['activity_ext'] = $request->input('activity_ext');
         $data['activity_name'] = $request->input('activity_name');
         $data['activity_status'] = $request->input('activity_status');
         $query = DB::connection('mysql_activity');
@@ -55,6 +56,7 @@ class ActivityController extends Controller
         $data['activity_title'] = $request->input('activity_title');
         $data['activity_time'] = $request->input('activity_time');
         $data['activity_server'] = $request->input('activity_server');
+        $data['activity_ext'] = $request->input('activity_ext');
         $data['activity_name'] = $request->input('activity_name');
         $data['activity_status'] = $request->input('activity_status');
         $query = DB::connection('mysql_activity');
