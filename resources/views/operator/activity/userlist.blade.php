@@ -61,8 +61,9 @@
                                     <input type="checkbox" name="only" id="kf">：只看客服
                                 </div>
                                 <button type="submit" class="btn btn-primary">提交</button>
+                                &nbsp; &nbsp; &nbsp; &nbsp;
+                                <a href="javascript:void(0);" class="btn red flush" >一键清空</a>
                             </form>
-                            <button  type="submit" class="btn red flush pull-left" >一键清空</button>
                             <script>
                                 $('.flush').on('click',function () {
                                     swal({
@@ -90,6 +91,7 @@
                                                         },
                                                         success: function (response) {
                                                             sweetAlert(response.message);
+                                                            location.reload();
                                                         }
                                                     }).fail(function (response) {
                                                         if (response.status == 422) {
