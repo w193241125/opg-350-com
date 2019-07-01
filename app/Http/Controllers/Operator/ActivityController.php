@@ -167,6 +167,7 @@ class ActivityController extends Controller
     {
         $uid = $request->input('server_name');
         $realname = $request->input('role_name');
+        $role_id = $request->input('role_id');
         $level = $request->input('total');
         if (!$uid ||!$realname||!$level){
             $ret =  [
@@ -176,7 +177,7 @@ class ActivityController extends Controller
             return response()->json($ret);
         }
         $query = DB::connection('mysql_activity');
-        $r = $query->table('recharge_rank')->where(['server_name'=>$uid,'role_name'=>$realname])->get();
+        $r = $query->table('recharge_rank')->where(['role_id'=>$uid,'role_name'=>$realname])->get();
         if (!empty(toArray($r))){
             $ret =  [
                 'status' => 300,
@@ -187,6 +188,7 @@ class ActivityController extends Controller
         $data = [
             'server_name'=>$uid,
             'role_name'=>$realname,
+            'role_id'=>$role_id,
             'total'=>$level,
             'status'=>2,
         ];
@@ -258,6 +260,17 @@ class ActivityController extends Controller
         $ret =  [
             'status' => 200,
             'message' => $res ? '更新成功':'更新失败',
+        ];
+        return response()->json($ret);
+    }
+
+    public function oneKeyFlush()
+    {
+        $db = DB::connection('mysql_activity');
+        $res = $db->table('recharge_rank')->truncate();
+        $ret =  [
+            'status' => 200,
+            'message' => '清空成功',
         ];
         return response()->json($ret);
     }

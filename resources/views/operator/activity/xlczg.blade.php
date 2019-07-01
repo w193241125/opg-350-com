@@ -89,6 +89,12 @@
                                             <span class="help-block form_server_name">如：1服</span>
                                         </div>
                                         <div class="form-group form-md-line-input form-md-floating-label
+                <?php if ($errors->has('role_id')) { echo "has-error"; } ?> ">
+                                            <input type="text" class="form-control" id="form_role_id" name="role_id" value="{{ old('role_id') }}">
+                                            <label for="form_role_id"><span class="imp">*&nbsp;</span>角色ID</label>
+                                            <span class="help-block form_role_id">如：1</span>
+                                        </div>
+                                        <div class="form-group form-md-line-input form-md-floating-label
                 <?php if ($errors->has('role_name')) { echo "has-error"; } ?>">
                                             <input type="text" class="form-control" id="form_role_name" name="role_name" value="{{ old('role_name') }}">
                                             <label for="form_role_name"><span class="imp">*&nbsp;</span>角色名</label>

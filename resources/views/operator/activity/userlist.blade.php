@@ -62,6 +62,54 @@
                                 </div>
                                 <button type="submit" class="btn btn-primary">提交</button>
                             </form>
+                            <button  type="submit" class="btn red flush pull-left" >一键清空</button>
+                            <script>
+                                $('.flush').on('click',function () {
+                                    swal({
+                                        title: '请输入密码！',
+                                        input: 'text',
+                                        showCancelButton: true,
+                                        confirmButtonText: 'Submit',
+                                        showLoaderOnConfirm: true,
+                                        preConfirm: function(text) {
+                                            return new Promise(function(resolve, reject) {
+                                                if (text !== 'swl123') {
+                                                    swal({
+                                                        type: 'error',
+                                                        title: '错误！',
+                                                        html: '密码错误'
+                                                    });
+                                                } else {
+                                                    var _item = $(this);
+                                                    $.ajax({
+                                                        url: '/operator/oneKeyFlush/',
+                                                        type: 'get',
+                                                        dataType: 'json',
+                                                        beforeSend: function () {
+                                                            _item.attr('disabled', 'true');
+                                                        },
+                                                        success: function (response) {
+                                                            sweetAlert(response.message);
+                                                        }
+                                                    }).fail(function (response) {
+                                                        if (response.status == 422) {
+                                                            var data = $.parseJSON(response.responseText);
+                                                            var layerStr = "";
+                                                            for (var i in data.errors) {
+                                                                layerStr += data.errors[i] + " ";
+                                                            }
+                                                            sweetAlert('错误', layerStr);
+                                                        }
+                                                    }).always(function () {
+                                                        _item.removeAttr('disabled');
+                                                    });
+                                                }
+                                            });
+                                        },
+                                        allowOutsideClick: false
+                                    });
+                                });
+                            </script>
                             <div style="clear: both"></div>
                             <table id="order_info" class="table table-bordered table-striped" width="100%">
                                 <thead>
