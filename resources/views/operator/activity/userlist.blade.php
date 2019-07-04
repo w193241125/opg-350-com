@@ -160,7 +160,7 @@
                                 @endif
                                 </tbody>
                             </table>
-                            {{ $data->links() }}
+                            {{$data->appends(['consume' => $filters['consume']])->render()}}
                         </div>
                         <!-- /.box-body -->
                     </div>
