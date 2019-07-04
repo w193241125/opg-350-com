@@ -90,16 +90,21 @@
                                                     });
                                                 } else {
                                                     var _item = $(this);
+                                                    var consume = $('#consume').prop('checked');
+                                                    console.log(consume)
                                                     $.ajax({
                                                         url: '/operator/oneKeyFlush/',
-                                                        type: 'get',
-                                                        dataType: 'json',
+                                                        type: 'post',
+                                                        data:{consume:consume},
+                                                        headers : {
+                                                            'X-CSRF-TOKEN': $("input[name='_token']").val()
+                                                        },
                                                         beforeSend: function () {
                                                             _item.attr('disabled', 'true');
                                                         },
                                                         success: function (response) {
                                                             sweetAlert(response.message);
-                                                            location.reload();
+                                                            // location.reload();
                                                         }
                                                     }).fail(function (response) {
                                                         if (response.status == 422) {

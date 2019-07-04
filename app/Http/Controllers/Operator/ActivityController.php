@@ -276,10 +276,12 @@ class ActivityController extends Controller
         return response()->json($ret);
     }
 
-    public function oneKeyFlush()
+    public function oneKeyFlush(Request $request)
     {
         $db = DB::connection('mysql_activity');
-        $res = $db->table('recharge_rank')->truncate();
+        $table = 'rechaarge_rank';
+        if ($request->input('consume')) $table = 'consume_rank';
+        $res = $db->table($table)->truncate();
         $ret =  [
             'status' => 200,
             'message' => '清空成功',

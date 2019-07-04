@@ -121,6 +121,6 @@ Route::group([ 'prefix' => 'operator','namespace' => 'Operator', 'middleware'=>[
     Route::post('/user_del','ActivityController@user_del')->name('activity.user_del');
     Route::get('/user_edit/{id}','ActivityController@user_edit')->name('activity.user_edit');
     Route::post('/user_upd','ActivityController@user_upd')->name('activity.user_upd');
-    Route::get('/oneKeyFlush','ActivityController@oneKeyFlush')->name('activity.oneKeyFlush');
+    Route::post('/oneKeyFlush','ActivityController@oneKeyFlush')->name('activity.oneKeyFlush');
 });
 
