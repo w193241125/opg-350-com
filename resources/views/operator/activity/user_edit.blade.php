@@ -29,11 +29,12 @@
 <script>
     function upd_user(){
         var id = $('#upd_id').val()
+        var consume = $('#consume').prop('checked');
         var total = $('#upd_total').val()
         $.ajax({
             'type' : 'POST',
             'url' :  '/operator/user_upd',
-            data: {id: id,total:total},
+            data: {id: id,total:total,consume:consume},
             headers : {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },

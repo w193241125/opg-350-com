@@ -58,7 +58,15 @@
 {{--                                    <input type="text" name="user_name" class="form-control" placeholder="账号">--}}
 {{--                                </div>--}}
                                 <div class="form-group col-xs-6 col-sm-6 col-md-4 col-lg-2">
+                                    <label>
                                     <input type="checkbox" name="only" id="kf">：只看客服
+                                    </label>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" name="consume" id="consume" class="flat-red">：查看消费列表
+                                    </label>
                                 </div>
                                 <button type="submit" class="btn btn-primary">提交</button>
                                 &nbsp; &nbsp; &nbsp; &nbsp;
@@ -259,6 +267,9 @@
             if (filters.only != undefined){
                 $('#kf').prop('checked',true);
             }
+            if (filters.consume != undefined){
+                $('#consume').prop('checked',true);
+            }
         });
 
         //删除
@@ -273,12 +284,13 @@
                 cancelButtonColor: '#d33',
                 confirmButtonText: '确定删除！'
             }).then(function () {
+                var consume = $('#consume').prop('checked');
                 var user_id = _item.attr('user_id');
 //                        触发补发ajax
                 $.ajax({
                     url:'/operator/user_del',
                     type:'post',
-                    data:{user_id:user_id},
+                    data:{user_id:user_id,consume:consume},
                     headers : {
                         'X-CSRF-TOKEN': $("input[name='_token']").val()
                     },

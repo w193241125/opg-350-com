@@ -206,12 +206,15 @@ class ActivityController extends Controller
     public function user_list(Request $request)
     {
         $only = $request->input('only');
+        $consume = $request->input('consume');
         $activity_name = $request->input('activity_name');
 
         $end = $request->input('length')?$request->input('length'):20;
 
+        $table = 'recharge_rank';
+        if ($request->input('consume')) $table = 'consume_rank';
         $db = DB::connection('mysql_activity');
-        $res = $db->table('activity.recharge_rank')
+        $res = $db->table($table)
             ->when($activity_name,function ($query) use ($activity_name){
                 return $query->where('activity_name','=',$activity_name);
             })
@@ -224,6 +227,7 @@ class ActivityController extends Controller
             'data'=>$res,
             'filters'=>[
                 'only'=>$only,
+                'consume'=>$consume,
             ],
         ];
 
@@ -234,7 +238,10 @@ class ActivityController extends Controller
     {
         $id = $request->input('user_id');
         $query = DB::connection('mysql_activity');
-        $sql = "delete from activity.recharge_rank where id={$id}";
+        $table = 'recharge_rank';
+        if ($request->input('consume')) $table = 'consume_rank';
+
+        $sql = "delete from {$table} where id={$id}";
         $res = $query->delete($sql);
         $ret =  [
             'status' => 200,
@@ -247,7 +254,10 @@ class ActivityController extends Controller
     {
         $id = $request->route('id');
         $query = DB::connection('mysql_activity');
-        $res = $query->table('recharge_rank')->where(['id'=>$id])->get()->toarray();
+        $table = 'recharge_rank';
+        if ($request->input('consume')) $table = 'consume_rank';
+
+        $res = $query->table($table)->where(['id'=>$id])->get()->toarray();
         return view('operator.activity.user_edit')->with(['data'=>$res[0]]);
     }
 
@@ -256,7 +266,9 @@ class ActivityController extends Controller
         $id = $request->input('id');
         $total = $request->input('total');
         $query = DB::connection('mysql_activity');
-        $res = $query->table('recharge_rank')->where(['id'=>$id])->update(['total'=>$total]);
+        $table = 'recharge_rank';
+        if ($request->input('consume')) $table = 'consume_rank';
+        $res = $query->table($table)->where(['id'=>$id])->update(['total'=>$total]);
         $ret =  [
             'status' => 200,
             'message' => $res ? '更新成功':'更新失败',
