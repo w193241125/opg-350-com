@@ -279,7 +279,7 @@ class ActivityController extends Controller
     public function oneKeyFlush(Request $request)
     {
         $db = DB::connection('mysql_activity');
-        $table = 'rechaarge_rank';
+        $table = 'recharge_rank';
         if ($request->input('consume')) $table = 'consume_rank';
         $res = $db->table($table)->truncate();
         $ret =  [
