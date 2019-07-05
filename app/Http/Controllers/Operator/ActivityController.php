@@ -280,7 +280,7 @@ class ActivityController extends Controller
     {
         $db = DB::connection('mysql_activity');
         $table = 'recharge_rank';
-        if ($request->input('consume')) $table = 'consume_rank';
+        if ($request->input('consume') != 'false') $table = 'consume_rank';
         $res = $db->table($table)->truncate();
         $ret =  [
             'status' => 200,
