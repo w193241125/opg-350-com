@@ -100,7 +100,7 @@ class ActivityController extends Controller
         $query = DB::connection('mysql_activity');
         foreach ($pdata as $k=>$v) {
             if ($k=='activity'){$activity = $v;continue;}
-            $res = $query->update('update `award` set award=? where money=? and activity_name=? ', [$v,$k,$activity]);
+            $res = $query->update('update `award` set award=?,money=? where id=? and activity_name=? ', [$v[1],$v[0],$k,$activity]);
         }
 
         $ret =  [

@@ -183,12 +183,10 @@
                                                                 console.log(data)
                                                                 for ( var i = 0; i <data.length; i++) {
                                                                     html = html + '<div class="form-group form-md-line-input form-md-floating-label">\n' +
-                                                                        '                                                    <input type="text" class="form-control edited" id="form_award_'+data[i].money+'" name="'+data[i].money+'" value="'+data[i].award+'"\>\n' +
-                                                                        '                                                    <label for="form_award_'+data[i].money+'"><span class="imp">*&nbsp;</span><span id="activityaward">'+data[i].money+'：</span></label>\n' +
-                                                                        '                                                    <span class="help-block form_award">活动奖品</span>\n' +
-                                                                        '                                                </div>'
+                                                                        '<input type="text" class="form-control edited" id="form_money_'+data[i].id+'" name="'+data[i].id+'[]" value="'+data[i].money+'"\>\n' +  '<label for="form_money_'+data[i].id+'"><span class="imp">*&nbsp;</span><span id="activitymoney">'+data[i].id+'：</span></label>\n' + '<span class="help-block form_money">活动奖品</span>\n' + '</div>'
+                                                                    html = html + '<div class="form-group form-md-line-input form-md-floating-label">\n' +
+                                                                        '<input type="text" class="form-control edited" id="form_award_'+data[i].id+'" name="'+data[i].id+'[]" value="'+data[i].award+'"\>\n' +  '<label for="form_award_'+data[i].id+'"><span class="imp">*&nbsp;</span><span id="activityaward">'+data[i].id+'：</span></label>\n' + '<span class="help-block form_award">活动奖品</span>\n' + '</div>'
                                                                 }
-
                                                                 $("#award_area").html("");
                                                                 $("#award_area").html(html);
                                                             }
