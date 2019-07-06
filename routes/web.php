@@ -111,6 +111,7 @@ Route::group([ 'prefix' => 'operator','namespace' => 'Operator', 'middleware'=>[
     Route::get('ajaxGetAward','ActivityController@ajaxGetAward')->name('ajaxGetAward');
     Route::post('/award_upd','ActivityController@award_upd')->name('activity.award_upd');
     Route::post('/award_add','ActivityController@award_add')->name('activity.award_add');
+    Route::post('/award_bulk_add','ActivityController@award_bulk_add')->name('activity.award_bulk_add');
     Route::get('/award_list','ActivityController@award_list')->name('activity.award_list');
     Route::post('/award_del','ActivityController@award_del')->name('activity.award_del');
 

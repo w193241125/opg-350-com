@@ -254,7 +254,98 @@
                     });
                 </script>
 
-
+                {{--上传excel--}}
+                <div class="col-xs-4">
+                    <div class="box">
+                        <!-- /.box-header -->
+                        <div class="portlet light bordered formBox" id="lottery_three">
+                            <div class="portlet-title">
+                                <div class="caption font-green">
+                                    <i class="icon-pin font-green"></i>
+                                    <span class="caption-subject bold uppercase">添加新充值奖励</span>
+                                </div>
+                                <div class="actions">
+                                    <a class="btn btn-circle btn-icon-only btn-default close-link">
+                                        <i class="fa fa-times"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="portlet-body form">
+                                @if (count($errors) > 0)
+                                    <div class="alert alert-danger">
+                                        <strong>信息填写出错!</strong>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </div>
+                                @endif
+                                <form role="form" id="award_bulk_add">
+                                    {{ csrf_field() }}
+                                    <div class="form-body">
+                                        <div class="form-group">
+                                            <textarea name="award_bulk_add" id="" cols="30" rows="10"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-actions noborder">
+                                        <button type="submit" class="btn green award_bulk_add" >批量添加</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <span style="color:red">请在excel中按以下格式编辑后复制(整行复制)到框中(不需要表头)，</span>
+                            <br>
+                            <span style="color:red"> A列为活动名，B列为累充金额，C列为奖品</span>
+                            <br>
+                            <span style="color:red">奖品只能都在一个单元格</span>
+                            <div class="bs-example" data-example-id="contextual-table">
+                                <table class="table table-bordered tbext">
+                                    <thead>
+                                    <tr >
+                                        <td >A列: activity1</td>
+                                        <td >B列: 第一名</td>
+                                        <td >C列: 热血神剑*1</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    $('.award_bulk_add').on('click',function () {
+                        console.log('lottery_three')
+                        var _item = $(this);
+                        var _form = $('#award_bulk_add');
+                        console.log(_form.serializeArray());
+                        $.ajax({
+                            url: '/operator/award_bulk_add',
+                            type:'post',
+                            dataType: 'json',
+                            data:_form.serializeArray(),
+                            headers : {
+                                'X-CSRF-TOKEN': $("input[name='_token']").val()
+                            },
+                            beforeSend : function(){
+                                _item.attr('disabled','true');
+                            },
+                            success:function (response) {
+                                sweetAlert(response.message);
+                            }
+                        }).fail(function(response) {
+                            if(response.status == 422){
+                                var data = $.parseJSON(response.responseText);
+                                var layerStr = "";
+                                for(var i in data.errors){
+                                    layerStr += data.errors[i]+" ";
+                                }
+                                sweetAlert('错误', layerStr);
+                            }
+                        }).always(function () {
+                            _item.removeAttr('disabled');
+                        });
+                    });
+                </script>
                 <!-- /.col -->
             </div>
             <!-- /.row -->

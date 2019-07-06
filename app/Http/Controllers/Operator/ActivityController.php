@@ -93,6 +93,30 @@ class ActivityController extends Controller
         return response()->json($ret);
     }
 
+    public function award_bulk_add(Request $request)
+    {
+        $award_bulk_add = $request->input('award_bulk_add');
+        if(empty($request->input('award_bulk_add'))) return;
+        $i = 0;
+        foreach(explode("\n", $award_bulk_add) as $v){
+            if(empty($v)) continue;
+            $line = explode("\t", $v);
+            $for[$i]['activity_name'] = $line[0];
+            $for[$i]['money'] = $line[1];
+            $for[$i]['award'] = $line[2];
+            $i ++;
+        }
+        //批量添加
+        $query = DB::connection('mysql_activity');
+        $res = $query->table('award')->insert($for);
+
+        $ret =  [
+            'status' => 200,
+            'message' => $res? '添加成功':'可能有插入失败的',
+        ];
+        return response()->json($ret);
+    }
+
     public function award_upd(Request $request)
     {
         $pdata = $request->input();
