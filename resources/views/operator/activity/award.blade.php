@@ -64,7 +64,7 @@
                                                     <select class="form-control edited " id="form_parent_menu_2" name="activity_name">
                                                         <option value="0" >--选择活动-</option>
                                                         @foreach($activity as $v)
-                                                            <option value="{{$v['activity_name']}}" @if(old('activity')) selected="selected" @endif>{{$v['activity_title']}}</option>
+                                                            <option value="{{$v['activity_name']}}" @if(old('activity')) selected="selected" @endif>{{$v['game_name']}}:{{$v['activity_title']}}</option>
                                                         @endforeach
                                                     </select>
                                                     <label for="form_parent_menu_1"><span class="imp">*&nbsp;</span>活动设置</label>
@@ -293,16 +293,17 @@
                             </div>
                             <span style="color:red">请在excel中按以下格式编辑后复制(整行复制)到框中(不需要表头)，</span>
                             <br>
-                            <span style="color:red"> A列为活动名，B列为累充金额，C列为奖品</span>
+                            <span style="color:red"> A列为游戏缩写，B列为活动名，C列为累充金额，D列为奖品</span>
                             <br>
                             <span style="color:red">奖品只能都在一个单元格</span>
                             <div class="bs-example" data-example-id="contextual-table">
                                 <table class="table table-bordered tbext">
                                     <thead>
                                     <tr >
-                                        <td >A列: activity1</td>
-                                        <td >B列: 第一名</td>
-                                        <td >C列: 热血神剑*1</td>
+                                        <td >A列: xlczg</td>
+                                        <td >B列: activity1</td>
+                                        <td >C列: 第一名</td>
+                                        <td >D列: 热血神剑*1</td>
                                     </tr>
                                     </thead>
                                     <tbody>

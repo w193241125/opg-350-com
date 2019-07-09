@@ -62,7 +62,13 @@
                 <?php if ($errors->has('activity_name')) { echo "has-error"; } ?> ">
                                             <input type="text" class="form-control" id="form_activity_name" name="activity_name" value="{{ old('activity_name') }}">
                                             <label for="form_activity_name"><span class="imp">*&nbsp;</span>活动名称</label>
-                                            <span class="help-block form_activity_name">活动名称</span>
+                                            <span class="help-block form_activity_name">活动名称,如：activity1，由技术部提供。</span>
+                                        </div>
+                                        <div class="form-group form-md-line-input form-md-floating-label
+                <?php if ($errors->has('game_name')) { echo "has-error"; } ?> ">
+                                            <input type="text" class="form-control" id="form_game_name" name="game_name" value="{{ old('game_name') }}">
+                                            <label for="form_game_name"><span class="imp">*&nbsp;</span>游戏缩写</label>
+                                            <span class="help-block form_game_name">游戏缩写,如xlczg，由技术部提供</span>
                                         </div>
                                         <div class="form-group form-md-line-input form-md-floating-label
                 <?php if ($errors->has('activity_title')) { echo "has-error"; } ?> ">
@@ -283,7 +289,7 @@
                                                         <select class="form-control edited " id="form_parent_menu_1" name="activity">
                                                             <option value="0" >--选择活动-</option>
                                                             @foreach($activity as $v)
-                                                                <option value="{{$v['id']}}" @if(old('activity')) selected="selected" @endif>{{$v['activity_title']}}</option>
+                                                                <option value="{{$v['id']}}" @if(old('activity')) selected="selected" @endif>{{$v['game_name']}}:{{$v['activity_title']}}</option>
                                                             @endforeach
                                                         </select>
                                                         <label for="form_parent_menu_1"><span class="imp">*&nbsp;</span>活动设置</label>
@@ -311,6 +317,12 @@
                                                                 $("#form_activity_names").attr("value","");
                                                                 $("#form_activity_names").addClass('edited');
                                                                 $("#form_activity_names").val(data[0].activity_name);
+
+                                                                $("#gamenames").html("");
+                                                                $("#gamenames").html('游戏缩写：'+ data[0].game_name);
+                                                                $("#form_game_names").attr("value","");
+                                                                $("#form_game_names").addClass('edited');
+                                                                $("#form_game_names").val(data[0].game_name);
 
                                                                 $('#reservations').val(data[0].activity_time);
 
@@ -349,8 +361,16 @@
                 <?php if ($errors->has('activity_name')) { echo "has-error"; } ?> ">
                                                 <input type="text" class="form-control" id="form_activity_names" name="activity_name" value="{{ old('activity_name') }}">
                                                 <label for="form_activity_name"><span class="imp">*&nbsp;</span><span id="activitynames">活动名称</span></label>
-                                                <span class="help-block form_activity_name">活动名称,使用activity1，activity2...以此递增</span>
+                                                <span class="help-block form_activity_name">活动名称,如：activity1，由技术部提供。</span>
                                             </div>
+
+                                            <div class="form-group form-md-line-input form-md-floating-label
+                <?php if ($errors->has('game_name')) { echo "has-error"; } ?> ">
+                                                <input type="text" class="form-control" id="form_game_names" name="game_name" value="{{ old('game_name') }}">
+                                                <label for="form_game_name"><span class="imp">*&nbsp;</span><span id="gamenames">游戏缩写</span></label>
+                                                <span class="help-block form_game_name">游戏缩写,如xlczg，由技术部提供</span>
+                                            </div>
+
                                             <div class="form-group form-md-line-input form-md-floating-label
                 <?php if ($errors->has('activity_title')) { echo "has-error"; } ?> ">
                                                 <input type="text" class="form-control" id="form_activity_titles" name="activity_title" value="{{ old('activity_title') }}">
