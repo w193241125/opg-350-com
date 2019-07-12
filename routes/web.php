@@ -115,9 +115,16 @@ Route::group([ 'prefix' => 'operator','namespace' => 'Operator', 'middleware'=>[
     Route::get('/award_list','ActivityController@award_list')->name('activity.award_list');
     Route::post('/award_del','ActivityController@award_del')->name('activity.award_del');
 
+    //活动
+    Route::get('/list','ActivityController@activity_list')->name('gactivity.list');
+    Route::post('/list','ActivityController@activity_list')->name('activity.list');
+    Route::get('/activity_edit/{id}','ActivityController@activity_edit')->name('activity.activity_edit');
+    Route::post('/activity_upd','ActivityController@activity_upd')->name('activity.activity_upd');
+    Route::post('/activity_del','ActivityController@activity_del')->name('activity.activity_del');
+    //活动用户
     Route::get('/xlczg','ActivityController@xlczg')->name('activity.xlczg');
     Route::post('/add_user','ActivityController@add_user')->name('activity.add_user');
-    Route::get('/user_list','ActivityController@user_list')->name('activity.user_list');
+    Route::get('/user_list','ActivityController@user_list')->name('activity.guser_list');
     Route::post('/user_list','ActivityController@user_list')->name('activity.user_list');
     Route::post('/user_del','ActivityController@user_del')->name('activity.user_del');
     Route::get('/user_edit/{id}','ActivityController@user_edit')->name('activity.user_edit');

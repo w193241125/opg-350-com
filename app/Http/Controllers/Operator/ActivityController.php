@@ -188,6 +188,56 @@ class ActivityController extends Controller
         return view('operator.activity.xlczg');
     }
 
+    public function activity_list(Request $request)
+    {
+        $game_name = $request->input('game_name');
+        $activity_name = $request->input('activity_name');
+
+        $end = $request->input('length')?$request->input('length'):20;
+
+        $table = 'activity';
+        if ($request->input('consume')) $table = 'consume_rank';
+        $db = DB::connection('mysql_activity');
+        $res = $db->table($table)
+            ->when($game_name,function ($query) use ($game_name){
+                return $query->where('game_name','like','%'.$game_name.'%');
+            })
+            ->orderby('id','desc')
+            ->paginate($end);
+        $assign=[
+            'data'=>$res,
+            'filters'=>[
+                'game_name'=>$game_name,
+            ],
+        ];
+
+        return view('operator.activity.activitylist',$assign);
+    }
+
+    public function activity_del(Request $request)
+    {
+        $id = $request->input('activity_id');
+        $query = DB::connection('mysql_activity');
+        $table = 'activity';
+        $sql = "delete from {$table} where id={$id}";
+        $res = $query->delete($sql);
+        $ret =  [
+            'status' => 200,
+            'message' => $res ? '删除成功':'删除失败',
+        ];
+        return response()->json($ret);
+    }
+
+    public function activity_edit(Request $request)
+    {
+        $id = $request->route('id');
+        $query = DB::connection('mysql_activity');
+        $table = 'activity';
+
+        $res = $query->table($table)->where(['id'=>$id])->get()->toarray();
+        return view('operator.activity.activity_edit')->with(['data'=>$res[0]]);
+    }
+
     //添加用户3
     public function add_user(Request $request)
     {
@@ -275,6 +325,7 @@ class ActivityController extends Controller
         ];
         return response()->json($ret);
     }
+
 
     public function user_edit(Request $request)
     {
