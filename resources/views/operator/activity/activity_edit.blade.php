@@ -23,7 +23,7 @@
             <div class="input-group-addon">
                 <i class="fa fa-calendar"></i>
             </div>
-            <input type="text" name="activity_time" class="form-control pull-right" id="reservations">
+            <input type="text" name="activity_time" class="form-control pull-right" id="reservations" value="{{$data->activity_time}}">
             <span class="help-block form_activity_time">活动时间</span>
         </div>
     </div>
@@ -93,7 +93,7 @@
     }
 
     $(function () {
-        //Date range picker
+        //Date range pickers
         $('#reservations').daterangepicker({
             "locale": {
                 format: 'YYYY-MM-DD',
@@ -107,5 +107,9 @@
             "startDate": moment(),
             "endDate": moment()
         });
+
+    });
+    $(document).ready(function () {
+        $('#reservations').val({{$data->activity_time}})
     });
 </script>
