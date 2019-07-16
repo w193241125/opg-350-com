@@ -288,7 +288,15 @@
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 confirmButtonText: '确定删除！'
-            }).then(function () {
+            }).then(function (isConfirm) {
+                if(isConfirm.dismiss == 'cancel'){
+                    swal(
+                        '已取消！',
+                        '你的数据没有被删除:)',
+                        'error'
+                    );
+                    return;
+                }
                 var consume = $('#consume').prop('checked');
                 var user_id = _item.attr('user_id');
 //                        触发补发ajax

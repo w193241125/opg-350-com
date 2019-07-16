@@ -288,7 +288,15 @@
         });
 
         //删除
-        $('.activity_del').on('click',function () {
+        $('.activity_del').on('click',function (isConfirm) {
+            if(isConfirm.dismiss == 'cancel'){
+                swal(
+                    '已取消！',
+                    '你的数据没有被删除:)',
+                    'error'
+                );
+                return;
+            }
             var _item = $(this);
             swal.fire({
                 title: "确定删除吗？",
@@ -298,9 +306,18 @@
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 confirmButtonText: '确定删除！'
-            }).then(function () {
+            }).then(function (isConfirm) {
+
+                if(isConfirm.dismiss == 'cancel'){
+                    swal(
+                        '已取消！',
+                        '你的数据没有被删除:)',
+                        'error'
+                    );
+                    return;
+                }
                 var activity_id = _item.attr('activity_id');
-//                        触发补发ajax
+                // 触发补发ajax
                 $.ajax({
                     url:'/operator/activity_del',
                     type:'post',
