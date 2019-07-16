@@ -127,6 +127,7 @@
                                 <thead>
                                 <tr>
                                     <th >id</th>
+                                    <th width="70">活动名称</th>
                                     <th width="70">活动标题</th>
                                     <th width="105">活动时间</th>
                                     <th width="60">活动区服</th>
@@ -142,6 +143,7 @@
                                     @foreach($data as $key=>$p)
                                         <tr>
                                         <td height="25">{{$p->id}}</td>
+                                        <td>{{$p->activity_name}}</td>
                                         <td>{{$p->activity_title}}</td>
                                         <td>{{$p->activity_time}}</td>
                                         <td>{{$p->activity_server}}</td>
@@ -388,6 +390,7 @@
 
         function upd_activity(){
             var id = $('#upd_id').val()
+            var activity_name = $('#activity_name').val()
             var activity_title = $('#activity_title').val()
             var activity_time = $('#reservations').val()
             var activity_status = $(':radio[name="activity_status"]:checked').val();
@@ -398,6 +401,7 @@
                 'type' : 'POST',
                 'url' :  '/operator/activity_upd',
                 data: { activity: id,
+                    activity_name:activity_name,
                     activity_title:activity_title,
                     activity_time:activity_time,
                     activity_status:activity_status,

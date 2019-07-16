@@ -10,12 +10,17 @@
     </div>
 
     <div class="form-group">
-        <label for="role_name">活动标题</label>
+        <label for="activity_name">活动名称</label>
+        <input type="text" class="form-control" id="activity_name" value="{{$data->activity_name}}">
+    </div>
+
+    <div class="form-group">
+        <label for="activity_title">活动标题</label>
         <input type="text" class="form-control" id="activity_title" value="{{$data->activity_title}}">
     </div>
 
     <div class="form-group">
-        <label for="role_name">游戏标识</label>
+        <label for="game_name">游戏标识</label>
         <input type="text" class="form-control" id="game_name" value="{{$data->game_name}}">
     </div>
     <div class="form-group form-md-line-input form-md-floating-label ">
