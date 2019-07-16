@@ -36,6 +36,8 @@ class ActivityController extends Controller
         $data['activity_desc'] = $request->input('activity_desc');
         $data['activity_title'] = $request->input('activity_title');
         $data['activity_time'] = $request->input('activity_time');
+        $data['start_date'] = explode('~',$request->input('activity_time'))[0];
+        $data['end_date'] = explode('~',$request->input('activity_time'))[1];
         $data['activity_server'] = $request->input('activity_server');
         $data['activity_ext'] = $request->input('activity_ext');
         $data['activity_name'] = $request->input('activity_name');
@@ -56,6 +58,8 @@ class ActivityController extends Controller
         $data['activity_desc'] = $request->input('activity_desc');
         $data['activity_title'] = $request->input('activity_title');
         $data['activity_time'] = $request->input('activity_time');
+        $data['start_date'] = explode('~',$request->input('activity_time'))[0];
+        $data['end_date'] = explode('~',$request->input('activity_time'))[1];
         $data['activity_server'] = $request->input('activity_server');
         $data['activity_ext'] = $request->input('activity_ext');
         $data['activity_name'] = $request->input('activity_name');
@@ -235,7 +239,9 @@ class ActivityController extends Controller
         $table = 'activity';
 
         $res = $query->table($table)->where(['id'=>$id])->get()->toarray();
-        return view('operator.activity.activity_edit')->with(['data'=>$res[0]]);
+        $start_date = explode('~',$res[0]->activity_time)[0];
+        $end_date = explode('~',$res[0]->activity_time)[1];
+        return view('operator.activity.activity_edit')->with(['data'=>$res[0],'start_date'=>$start_date,'end_date'=>$end_date]);
     }
 
     //添加用户3
