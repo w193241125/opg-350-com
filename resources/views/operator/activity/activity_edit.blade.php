@@ -109,6 +109,7 @@
         });
 
     });
+
     $(document).ready(function () {
         $('#reservations').val({{$data->activity_time}})
     });

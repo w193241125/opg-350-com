@@ -195,7 +195,7 @@ class ActivityController extends Controller
     public function activity_list(Request $request)
     {
         $game_name = $request->input('game_name');
-        $activity_name = $request->input('activity_name');
+        $date = $request->input('date');
 
         $end = $request->input('length')?$request->input('length'):20;
 
@@ -206,12 +206,18 @@ class ActivityController extends Controller
             ->when($game_name,function ($query) use ($game_name){
                 return $query->where('game_name','like','%'.$game_name.'%');
             })
+            ->when($date,function ($query) use ($date){
+                $start_date = explode('~',$date)[0];
+                $end_date = explode('~',$date)[1];
+                return $query->where([['start_date','>=',$start_date],['end_date','<=',$end_date]]);
+            })
             ->orderby('id','desc')
             ->paginate($end);
         $assign=[
             'data'=>$res,
             'filters'=>[
                 'game_name'=>$game_name,
+                'date'=>$date,
             ],
         ];
 

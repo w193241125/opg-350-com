@@ -53,12 +53,21 @@
                         <div class="box-body table-responsive">
                             <form action="{{route('activity.list')}}" method="post" class="search-form">
                                 {{csrf_field()}}
+                                <div class="form-group  col-xs-12 col-sm-6 col-md-3 col-lg-2">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </div>
+                                        <input type="text" name="date" class="form-control pull-right" id="reservation">
+                                    </div>
+                                    <!-- /.input group -->
+                                </div>
                                 <div class="form-group col-xs-6 col-sm-6 col-md-4 col-lg-2">
                                     <input type="text" name="game_name" class="form-control" placeholder="输入游戏标识">
                                 </div>
                                 <button type="submit" class="btn btn-primary">提交</button>
                                 &nbsp; &nbsp; &nbsp; &nbsp;
-                                <a href="javascript:void(0);" class="btn red flush" >一键清空</a>
+{{--                                <a href="javascript:void(0);" class="btn red flush" >一键清空</a>--}}
                             </form>
                             <script>
                                 $('.flush').on('click',function () {
@@ -264,10 +273,14 @@
                 "endDate": moment()
             });
         });
+
         var filters = {!! json_encode($filters) !!};
+
         $(document).ready(function () {
             SelectForGame.init($('.select-down'));
-            $('.search-form input[name=game_name]').val(filters.game_name);
+            if (filters.date != null) {
+                $('.search-form input[name=date]').val(filters.date);
+            }
 
             if (filters.consume != undefined){
                 $('#consume').prop('checked',true);
