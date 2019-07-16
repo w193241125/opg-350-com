@@ -190,11 +190,6 @@ class ActivityController extends Controller
         return response()->json($ret);
     }
 
-    public function xlczg()
-    {
-        return view('operator.activity.xlczg');
-    }
-
     public function activity_list(Request $request)
     {
         $game_name = $request->input('game_name');
@@ -253,14 +248,21 @@ class ActivityController extends Controller
         return view('operator.activity.activity_edit')->with(['data'=>$res[0],'start_date'=>$start_date,'end_date'=>$end_date]);
     }
 
+    public function user_manage()
+    {
+        return view('operator.activity.xlczg');
+    }
+
     //添加用户3
     public function add_user(Request $request)
     {
         $uid = $request->input('server_name');
         $realname = $request->input('role_name');
         $role_id = $request->input('role_id');
-        $level = $request->input('total');
-        if (!$uid ||!$realname||!$level){
+        $total = $request->input('total');
+        $game_name = $request->input('game_name');
+        $type = $request->input('type');
+        if (!$uid ||!$realname||!$total){
             $ret =  [
                 'status' => 300,
                 'message' => '请填写必要参数',
@@ -268,7 +270,9 @@ class ActivityController extends Controller
             return response()->json($ret);
         }
         $query = DB::connection('mysql_activity');
-        $r = $query->table('recharge_rank')->where(['role_id'=>$uid,'role_name'=>$realname])->get();
+        $table = 'recharge_rank';
+        if ($type=='consume') $table = 'consume_rank';
+        $r = $query->table($table)->where(['role_id'=>$uid,'role_name'=>$realname,'game_name'=>$game_name])->get();
         if (!empty(toArray($r))){
             $ret =  [
                 'status' => 300,
@@ -280,12 +284,13 @@ class ActivityController extends Controller
             'server_name'=>$uid,
             'role_name'=>$realname,
             'role_id'=>$role_id,
-            'total'=>$level,
+            'total'=>$total,
+            'game_name'=>$game_name,
             'status'=>2,
         ];
 
 
-        $res = $query->table('recharge_rank')->insert($data);
+        $res = $query->table($table)->insert($data);
 
         $ret =  [
             'status' => 200,

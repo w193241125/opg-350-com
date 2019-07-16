@@ -122,7 +122,7 @@ Route::group([ 'prefix' => 'operator','namespace' => 'Operator', 'middleware'=>[
     Route::post('/activity_upd','ActivityController@activity_upd')->name('activity.activity_upd');
     Route::post('/activity_del','ActivityController@activity_del')->name('activity.activity_del');
     //活动用户
-    Route::get('/xlczg','ActivityController@xlczg')->name('activity.xlczg');
+    Route::get('/user_manage','ActivityController@user_manage')->name('activity.user_manage');
     Route::post('/add_user','ActivityController@add_user')->name('activity.add_user');
     Route::get('/user_list','ActivityController@user_list')->name('activity.guser_list');
     Route::post('/user_list','ActivityController@user_list')->name('activity.user_list');

@@ -106,8 +106,21 @@
                                             <label for="form_total"><span class="imp">*&nbsp;</span>充值金额</label>
                                             <span class="help-block">请填写充值金额</span>
                                         </div>
-                                    </div>
+                                        <div class="form-group form-md-line-input form-md-floating-label
+                <?php if ($errors->has('game_name')) { echo "has-error"; } ?> ">
+                                            <input type="text" class="form-control" id="form_game_name" name="game_name" value="{{ old('game_name') }}">
+                                            <label for="form_game_name"><span class="imp">*&nbsp;</span>游戏缩写</label>
+                                            <span class="help-block form_game_name">游戏缩写,如xlczg，由技术部提供</span>
+                                        </div>
 
+                                    </div>
+                                    <div class="form-group">
+                                        <span class="font_style">充值/消费：</span><br>
+                                        <input type="radio" id="type_1" name="type" class="flat-red type" value="recharge" checked>
+                                        <label for="type_1" class="font_style">充值</label>
+                                        <input type="radio" id="type_2" name="type" class="flat-red type" value="consume">
+                                        <label for="type_2" class="font_style">消费</label>
+                                    </div>
                                     <div class="form-actions noborder">
                                         <button type="submit" class="btn green lottery_three" >添加用户</button>
                                     </div>
