@@ -52,13 +52,13 @@
 <div class="modal-footer">
     <button type="button" class="btn btn-default" id="close_mod" data-dismiss="modal">暂不修改
     </button>
-    <button type="button" class="btn btn-primary" id="bind_btn" onclick="upd_user();">
+    <button type="button" class="btn btn-primary" id="bind_btn" onclick="upd_activity();">
         更新
     </button>
 </div>
 
 <script>
-    function upd_user(){
+    function upd_activity(){
         var id = $('#upd_id').val()
         var activity_title = $('#activity_title').val()
         var activity_time = $('#reservations').val()
