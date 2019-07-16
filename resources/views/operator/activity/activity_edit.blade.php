@@ -43,7 +43,7 @@
                {{$data->activity_status == 1 ? 'checked' : ''}}>
         <label for="activity_status" class="font_style">开</label>
         <input type="radio" id="activity_status_2" name="activity_status" class="flat-red activity_status" value="2"
-                {{$data->activity_status == 0 ? 'checked' : ''}}>
+                {{$data->activity_status == 2 ? 'checked' : ''}}>
         <label for="activity_statuss" class="font_style">关</label>
     </div>
 
