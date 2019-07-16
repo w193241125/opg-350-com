@@ -84,6 +84,12 @@
                                             <label for="form_award"><span class="imp">*&nbsp;</span><span id="activityaward">活动奖品：</span></label>
                                             <span class="help-block form_award">活动奖品</span>
                                         </div>
+                                        <div class="form-group form-md-line-input form-md-floating-label
+                <?php if ($errors->has('award_ext')) { echo "has-error"; } ?> ">
+                                            <input type="text" class="form-control" id="form_award_exts" name="award_ext" value="{{ old('award_ext') }}">
+                                            <label for="form_award_ext"><span class="imp">*&nbsp;</span><span id="activityaward_ext">其它说明：</span></label>
+                                            <span class="help-block form_award_ext">其它说明</span>
+                                        </div>
                                     </div>
                                     <div class="form-actions noborder">
                                         <button type="submit" class="btn green lottery_three" >添加奖励</button>
@@ -183,9 +189,11 @@
                                                                 console.log(data)
                                                                 for ( var i = 0; i <data.length; i++) {
                                                                     html = html + '<div class="form-group form-md-line-input form-md-floating-label">\n' +
-                                                                        '<input type="text" class="form-control edited" id="form_money_'+data[i].id+'" name="'+data[i].id+'[]" value="'+data[i].money+'"\>\n' +  '<label for="form_money_'+data[i].id+'"><span class="imp">*&nbsp;</span><span id="activitymoney">'+data[i].money+'：</span></label>\n' + '<span class="help-block form_money">累充金额</span>\n' + '</div>'
+                                                                        '<input type="text" class="form-control edited" id="form_money_'+data[i].id+'" name="'+data[i].id+'[]" value="'+data[i].money+'"\>\n' +  '<label for="form_money_'+data[i].id+'"><span class="imp">*&nbsp;</span><span id="activitymoney">累充金额：</span></label>\n' + '<span class="help-block form_money">累充金额</span>\n' + '</div>'
                                                                     html = html + '<div class="form-group form-md-line-input form-md-floating-label">\n' +
-                                                                        '<input type="text" class="form-control edited" id="form_award_'+data[i].id+'" name="'+data[i].id+'[]" value="'+data[i].award+'"\>\n' +  '<label for="form_award_'+data[i].id+'"><span class="imp">*&nbsp;</span><span id="activityaward">'+data[i].money+'：</span></label>\n' + '<span class="help-block form_award">活动奖品</span>\n' + '</div>'
+                                                                        '<input type="text" class="form-control edited" id="form_award_'+data[i].id+'" name="'+data[i].id+'[]" value="'+data[i].award+'"\>\n' +  '<label for="form_award_'+data[i].id+'"><span class="imp">*&nbsp;</span><span id="activityaward">活动奖品：</span></label>\n' + '<span class="help-block form_award">活动奖品</span>\n' + '</div>'
+                                                                    html = html + '<div class="form-group form-md-line-input form-md-floating-label">\n' +
+                                                                        '<input type="text" class="form-control edited" id="form_award_ext_'+data[i].id+'" name="'+data[i].id+'[]" value="'+data[i].award_ext+'"\>\n' +  '<label for="form_award_ext_'+data[i].id+'"><span class="imp">*&nbsp;</span><span id="activityaward_ext">其它说明：</span></label>\n' + '<span class="help-block form_award_ext">其它说明</span>\n' + '</div>'
                                                                 }
                                                                 $("#award_area").html("");
                                                                 $("#award_area").html(html);
@@ -293,7 +301,7 @@
                             </div>
                             <span style="color:red">请在excel中按以下格式编辑后复制(整行复制)到框中(不需要表头)，</span>
                             <br>
-                            <span style="color:red"> A列为游戏缩写，B列为活动名，C列为累充金额，D列为奖品</span>
+                            <span style="color:red"> A列为游戏缩写，B列为活动名，C列为累充金额，D列为奖品，E列为其它说明，如累充门槛</span>
                             <br>
                             <span style="color:red">奖品只能都在一个单元格</span>
                             <div class="bs-example" data-example-id="contextual-table">
@@ -304,6 +312,7 @@
                                         <td >B列: activity1</td>
                                         <td >C列: 第一名</td>
                                         <td >D列: 热血神剑*1</td>
+                                        <td >E列: 25000</td>
                                     </tr>
                                     </thead>
                                     <tbody>

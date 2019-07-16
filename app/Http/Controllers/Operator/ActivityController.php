@@ -90,6 +90,7 @@ class ActivityController extends Controller
         $data['money'] = $request->input('money');
         $data['award'] = $request->input('award');
         $data['activity_name'] = $request->input('activity_name');
+        $data['activity_ext'] = $request->input('activity_ext');
         $query = DB::connection('mysql_activity');
         $res = $query->table('award')->insert($data);
         $ret =  [
@@ -107,9 +108,11 @@ class ActivityController extends Controller
         foreach(explode("\n", $award_bulk_add) as $v){
             if(empty($v)) continue;
             $line = explode("\t", $v);
-            $for[$i]['activity_name'] = $line[0];
-            $for[$i]['money'] = $line[1];
-            $for[$i]['award'] = $line[2];
+            $for[$i]['game_name'] = $line[0];
+            $for[$i]['activity_name'] = $line[1];
+            $for[$i]['money'] = $line[2];
+            $for[$i]['award'] = $line[3];
+            $for[$i]['award_ext'] = $line[4]?$line[4]:'';
             $i ++;
         }
         //批量添加
@@ -130,7 +133,7 @@ class ActivityController extends Controller
         $query = DB::connection('mysql_activity');
         foreach ($pdata as $k=>$v) {
             if ($k=='activity'){$activity = $v;continue;}
-            $res = $query->update('update `award` set award=?,money=? where id=? and activity_name=? ', [$v[1],$v[0],$k,$activity]);
+            $res = $query->update('update `award` set award=?,money=?,award_ext=? where id=? and activity_name=? ', [$v[1],$v[0],$v[2],$k,$activity]);
         }
 
         $ret =  [
