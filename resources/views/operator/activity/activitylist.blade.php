@@ -373,7 +373,7 @@
             var id = $('#upd_id').val()
             var activity_title = $('#activity_title').val()
             var activity_time = $('#reservations').val()
-            var activity_status = $(':radio[name="activity_status"]').val();
+            var activity_status = $(':radio[name="activity_status"]:checked').val();
             var activity_desc = $('#activity_desc').val();
             var game_name = $('#game_name').val();
             var activity_ext = $('#activity_ext').val()
