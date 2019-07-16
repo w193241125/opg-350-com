@@ -58,39 +58,7 @@
 </div>
 
 <script>
-    function upd_activity(){
-        var id = $('#upd_id').val()
-        var activity_title = $('#activity_title').val()
-        var activity_time = $('#reservations').val()
-        var activity_status = $('#activity_status').prop('checked');
-        var activity_desc = $('#activity_desc').val();
-        var game_name = $('#game_name').val();
-        var activity_ext = $('#activity_ext').val()
-        $.ajax({
-            'type' : 'POST',
-            'url' :  '/operator/activity_upd',
-            data: { activity: id,
-                    activity_title:activity_title,
-                    activity_time:activity_time,
-                    activity_status:activity_status,
-                    activity_desc:activity_desc,
-                    game_name:game_name,
-                    activity_ext:activity_ext
-            },
-            headers : {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success : function (res) {
-                if(res.status==200){
-                    $('#close_mod').trigger("click");
-                    swal("更新成功！", res.message, "success");
-                    location.reload()
-                }else{
-                    swal("更新！", res.message, "error");
-                }
-            }
-        });
-    }
+
 
     $(function () {
         //Date range pickers
