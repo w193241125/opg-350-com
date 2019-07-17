@@ -90,7 +90,8 @@ class ActivityController extends Controller
         $data['money'] = $request->input('money');
         $data['award'] = $request->input('award');
         $data['activity_name'] = $request->input('activity_name');
-        $data['activity_ext'] = $request->input('activity_ext');
+        $data['game_name'] = $request->input('game_name');
+        $data['award_ext'] = $request->input('award_ext');
         $query = DB::connection('mysql_activity');
         $res = $query->table('award')->insert($data);
         $ret =  [

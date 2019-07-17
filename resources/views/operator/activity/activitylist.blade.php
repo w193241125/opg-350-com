@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', '奖励列表')
+@section('title', '活动列表')
 {{--顶部前端资源--}}
 @section('styles')
     <style>
@@ -42,7 +42,7 @@
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> 活动</a></li>
-                <li class="active">奖励列表</li>
+                <li class="active">活动列表</li>
             </ol>
         </section>
         <!-- Main content -->

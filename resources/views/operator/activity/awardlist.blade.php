@@ -228,7 +228,15 @@
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 confirmButtonText: '确定删除！'
-            }).then(function () {
+            }).then(function (isConfirm) {
+                if(isConfirm.dismiss == 'cancel'){
+                    swal(
+                        '已取消！',
+                        '你的数据没有被删除:)',
+                        'error'
+                    );
+                    return;
+                }
                 var award_id = _item.attr('award_id');
 //                        触发补发ajax
                 $.ajax({

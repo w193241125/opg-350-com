@@ -72,6 +72,13 @@
                                             </div>
                                         </div>
                                         <div class="form-group form-md-line-input form-md-floating-label
+                <?php if ($errors->has('game_name')) { echo "has-error"; } ?> ">
+                                            <input type="text" class="form-control" id="form_game_name" name="game_name" value="{{ old('game_name') }}">
+                                            <label for="form_game_name"><span class="imp">*&nbsp;</span>游戏缩写</label>
+                                            <span class="help-block form_game_name">游戏缩写,如xlczg，由技术部提供</span>
+                                        </div>
+
+                                        <div class="form-group form-md-line-input form-md-floating-label
                 <?php if ($errors->has('money')) { echo "has-error"; } ?> ">
                                             <input type="text" class="form-control" id="form_money" name="money" value="{{ old('money') }}">
                                             <label for="form_money"><span class="imp">*&nbsp;</span><span id="activitytitle">累充金额</span></label>
@@ -141,7 +148,7 @@
                                 <div class="portlet-title">
                                     <div class="caption font-green">
                                         <i class="icon-pin font-green"></i>
-                                        <span class="caption-subject bold uppercase">活动配置更改</span>
+                                        <span class="caption-subject bold uppercase">活动奖励更改</span>
                                     </div>
                                     <div class="actions">
                                         <a class="btn btn-circle btn-icon-only btn-default close-link">

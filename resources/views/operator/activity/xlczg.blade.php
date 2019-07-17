@@ -24,7 +24,7 @@
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> 系统设置</a></li>
-                <li class="active">用户配置</li>
+                <li class="active">角色配置</li>
             </ol>
         </section>
         <!-- Main content -->
