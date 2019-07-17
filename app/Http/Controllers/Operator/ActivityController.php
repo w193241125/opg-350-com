@@ -145,6 +145,25 @@ class ActivityController extends Controller
 
     }
 
+    public function award_upds(Request $request)
+    {
+        $pdata = $request->input();
+        $id = $request->input('id');
+        unset($pdata['_token']);
+        unset($pdata['id']);
+        $query = DB::connection('mysql_activity');
+
+        $res = $query->table('award')->where('id',$id)->update($pdata);
+
+
+        $ret =  [
+            'status' => 200,
+            'message' => '更新成功',
+        ];
+        return response()->json($ret);
+
+    }
+
     public function ajaxGetAward(Request $request)
     {
         $name = $request->input('activity_name');
@@ -157,7 +176,6 @@ class ActivityController extends Controller
     public function award_list(Request $request)
     {
         $activity_name = $request->input('activity_name');
-        $pay_channel = $request->input('pay_channel');
 
         //datatables 服务器模式
         $order_column  = $request->input('order');
@@ -191,6 +209,14 @@ class ActivityController extends Controller
         return response()->json($ret);
     }
 
+    public function award_edit(Request $request)
+    {
+        $id = $request->route('id');
+        $query = DB::connection('mysql_activity');
+        $table = 'award';
+        $res = $query->table($table)->where(['id'=>$id])->get()->toarray();
+        return view('operator.activity.award_edit')->with(['data'=>$res[0]]);
+    }
     public function activity_list(Request $request)
     {
         $game_name = $request->input('game_name');

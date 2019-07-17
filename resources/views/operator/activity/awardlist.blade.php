@@ -51,27 +51,10 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-body table-responsive">
-                            <form action="{{route('activity.award_list')}}" method="post" class="search-form">
+                            <form action="{{route('activity.paward_list')}}" method="post" class="search-form">
                                 {{csrf_field()}}
-                                <div class="form-group  col-xs-12 col-sm-6 col-md-3 col-lg-2">
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-calendar"></i>
-                                        </div>
-                                        <input type="text" name="date" class="form-control pull-right" id="reservation">
-                                    </div>
-                                    <!-- /.input group -->
-                                </div>
                                 <div class="form-group col-xs-6 col-sm-6 col-md-4 col-lg-2">
-                                    <input type="text" name="user_name" class="form-control" placeholder="账号">
-                                </div>
-                                <div class="form-group col-xs-6 col-sm-6 col-md-4 col-lg-2">
-                                    <select name="activity_name" class="form-control" id="pay_channel">
-                                        <option value="0">所有</option>
-                                        <option value="1">支付宝</option>
-                                        <option value="4">微信</option>
-                                        <option value="3">苹果</option>
-                                    </select>
+                                    <input type="text" name="activity_name" class="form-control" placeholder="活动名">
                                 </div>
                                 <button type="submit" class="btn btn-primary">提交</button>
                             </form>
@@ -81,9 +64,11 @@
                                 <tr>
                                     <th >id</th>
                                     <th >活动</th>
+                                    <th >游戏</th>
                                     <th >累充金额</th>
                                     <th >奖品</th>
-                                    <th width="5%">操作</th>
+                                    <th >其它参数</th>
+                                    <th width="10%">操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -92,12 +77,20 @@
                                         <tr>
                                         <td height="25">{{$p->id}}</td>
                                         <td>{{$p->activity_name}}</td>
+                                        <td>{{$p->game_name}}</td>
                                         <td>{{$p->money}}</td>
                                         <td>{{$p->award}}</td>
+                                        <td>{{$p->award_ext}}</td>
                                         <td class="center">
-                                                <div><a href="javascript:;" award_id='{{$p->id}}' class="btn btn-warning btn-xs activity_del" >
+                                                <div>
+                                                    <a href="javascript:;" class="btn btn-info btn-xs award_edit" onclick="myModal({{$p->id}})">
+                                                        <i class="fa fa-edit">编辑</i>
+                                                    </a>
+                                                    <a href="javascript:;" award_id='{{$p->id}}' class="btn btn-danger btn-xs award_del" >
                                                         <i class="fa fa-edit">删除</i>
-                                                    </a></div>
+                                                    </a>
+                                                </div>
+
                                         </td>
                                         </tr>
 
@@ -217,8 +210,8 @@
             SelectForGame.init($('.select-down'));
             $('.search-form input[name=user_name]').val(filters.user_name);
         });
-        //补发申请
-        $('.activity_del').on('click',function () {
+        //奖励删除
+        $('.award_del').on('click',function () {
             var _item = $(this);
             swal.fire({
                 title: "确定删除吗？",
@@ -278,5 +271,66 @@
                 });
             });
         })
+
+
+        function myModal(id){
+            var id = id
+            //先保存地址，加载时event.target可能会变化
+            var loadURI= '/operator/award_edit/'+ id;
+            if(!$("#myModal").attr('id')){    //防止重复添加
+                //动态添加modal框容器
+                var obj=$('<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>');
+                obj.appendTo($('body'));
+                var obj1=$('<div class="modal-dialog">');
+                obj1.appendTo($(obj));
+                var obj2=$('<div class="modal-content">');
+                obj2.appendTo($(obj1));
+            }
+            //显示时加载可以避免“百度地图”等定位图标错误的问题
+            $("#myModal").on('show.bs.modal', function () {
+                //动态加载链接地址
+                $('#myModal .modal-content').load(loadURI);
+            }).modal().off('show.bs.modal');    //立即注消事件，不然事件会累加形成闪屏
+            //隐藏时清除数据，避免缓存等问题引起的时好时坏的问题
+            $('#myModal').off('hidden.bs.modal').on("hidden.bs.modal", function() {
+                $('#myModal .modal-content').html('');
+                $(this).removeData("bs.modal");
+            });
+            //中断事件执行，避免a等元素点击后跳转到相应页面
+            event.preventDefault();
+        }
+
+        function upd_award(){
+            var id = $('#upd_id').val()
+            var activity_name = $('#activity_name').val()
+            var game_name = $('#game_name').val();
+            var money = $('#money').val()
+            var award = $('#award').val();
+            var award_ext = $('#award_ext').val()
+            $.ajax({
+                'type' : 'POST',
+                'url' :  '/operator/award_upds',
+                data: {
+                    id: id,
+                    activity_name:activity_name,
+                    game_name:game_name,
+                    money:money,
+                    award:award,
+                    award_ext:award_ext
+                },
+                headers : {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success : function (res) {
+                    if(res.status==200){
+                        $('#close_mod').trigger("click");
+                        swal("更新成功！", res.message, "success");
+                        location.reload()
+                    }else{
+                        swal("更新！", res.message, "error");
+                    }
+                }
+            });
+        }
     </script>
 @endsection

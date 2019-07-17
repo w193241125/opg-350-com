@@ -66,62 +66,7 @@
                                     <input type="text" name="game_name" class="form-control" placeholder="输入游戏标识">
                                 </div>
                                 <button type="submit" class="btn btn-primary">提交</button>
-                                &nbsp; &nbsp; &nbsp; &nbsp;
-{{--                                <a href="javascript:void(0);" class="btn red flush" >一键清空</a>--}}
                             </form>
-                            <script>
-                                $('.flush').on('click',function () {
-                                    swal({
-                                        title: '请输入密码！',
-                                        input: 'text',
-                                        showCancelButton: true,
-                                        confirmButtonText: 'Submit',
-                                        showLoaderOnConfirm: true,
-                                        preConfirm: function(text) {
-                                            return new Promise(function(resolve, reject) {
-                                                if (text !== 'swl123') {
-                                                    swal({
-                                                        type: 'error',
-                                                        title: '错误！',
-                                                        html: '密码错误'
-                                                    });
-                                                } else {
-                                                    var _item = $(this);
-                                                    var consume = $('#consume').prop('checked');
-                                                    console.log(consume)
-                                                    $.ajax({
-                                                        url: '/operator/oneKeyFlush/',
-                                                        type: 'post',
-                                                        data:{consume:consume},
-                                                        headers : {
-                                                            'X-CSRF-TOKEN': $("input[name='_token']").val()
-                                                        },
-                                                        beforeSend: function () {
-                                                            _item.attr('disabled', 'true');
-                                                        },
-                                                        success: function (response) {
-                                                            sweetAlert(response.message);
-                                                            // location.reload();
-                                                        }
-                                                    }).fail(function (response) {
-                                                        if (response.status == 422) {
-                                                            var data = $.parseJSON(response.responseText);
-                                                            var layerStr = "";
-                                                            for (var i in data.errors) {
-                                                                layerStr += data.errors[i] + " ";
-                                                            }
-                                                            sweetAlert('错误', layerStr);
-                                                        }
-                                                    }).always(function () {
-                                                        _item.removeAttr('disabled');
-                                                    });
-                                                }
-                                            });
-                                        },
-                                        allowOutsideClick: false
-                                    });
-                                });
-                            </script>
                             <div style="clear: both"></div>
                             <table id="order_info" class="table table-bordered table-striped" width="100%">
                                 <thead>
