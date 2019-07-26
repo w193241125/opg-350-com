@@ -51,7 +51,7 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-body table-responsive">
-                            <form action="{{route('activity.list')}}" method="post" class="search-form">
+                            <form action="{{route('activity.plist')}}" method="post" class="search-form">
                                 {{csrf_field()}}
                                 <div class="form-group  col-xs-12 col-sm-6 col-md-3 col-lg-2">
                                     <div class="input-group">

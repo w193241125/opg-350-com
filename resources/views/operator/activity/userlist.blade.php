@@ -54,9 +54,15 @@
                             <form action="{{route('activity.user_list')}}" method="post" class="search-form">
                                 {{csrf_field()}}
 
-{{--                                <div class="form-group col-xs-6 col-sm-6 col-md-4 col-lg-2">--}}
-{{--                                    <input type="text" name="user_name" class="form-control" placeholder="账号">--}}
-{{--                                </div>--}}
+                                <div class="form-group  col-xs-12 col-sm-6 col-md-3 col-lg-2">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </div>
+                                        <input type="text" name="date" class="form-control pull-right" id="reservation">
+                                    </div>
+                                    <!-- /.input group -->
+                                </div>
                                 <div class="form-group col-xs-6 col-sm-6 col-md-4 col-lg-2">
                                     <label>
                                     <input type="checkbox" name="only" id="kf">：只看客服
@@ -68,9 +74,10 @@
                                         <input type="checkbox" name="consume" id="consume" class="flat-red">：查看消费列表
                                     </label>
                                 </div>
+                                <div class="form-group">
                                 <button type="submit" class="btn btn-primary">提交</button>
-                                &nbsp; &nbsp; &nbsp; &nbsp;
-                                <a href="javascript:void(0);" class="btn red flush" >一键清空</a>
+{{--                                <a href="javascript:void(0);" class="btn red flush" >一键清空</a>--}}
+                                </div>
                             </form>
                             <script>
                                 $('.flush').on('click',function () {
@@ -133,6 +140,8 @@
                                     <th >区服</th>
                                     <th >角色名</th>
                                     <th >充值金额</th>
+                                    <th >开始时间</th>
+                                    <th >结束时间</th>
                                     <th width="15%">操作</th>
                                 </tr>
                                 </thead>
@@ -144,6 +153,8 @@
                                         <td>{{$p->server_name}}</td>
                                         <td>{{$p->role_name}}</td>
                                         <td>{{$p->total}}</td>
+                                        <td>{{$p->start_date}}</td>
+                                        <td>{{$p->end_date}}</td>
                                         <td class="center">
                                                 <div>
                                                     <a href="javascript:;" user_id='{{$p->id}}' class="btn btn-warning btn-xs activity_del" ><i class="fa fa-edit">删除</i></a>
@@ -269,6 +280,9 @@
         $(document).ready(function () {
             SelectForGame.init($('.select-down'));
             $('.search-form input[name=user_name]').val(filters.user_name);
+            if (filters.date != null) {
+                $('.search-form input[name=date]').val(filters.date);
+            }
             if (filters.only != undefined){
                 $('#kf').prop('checked',true);
             }

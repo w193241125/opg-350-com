@@ -217,6 +217,7 @@ class ActivityController extends Controller
         $res = $query->table($table)->where(['id'=>$id])->get()->toarray();
         return view('operator.activity.award_edit')->with(['data'=>$res[0]]);
     }
+
     public function activity_list(Request $request)
     {
         $game_name = $request->input('game_name');
@@ -331,7 +332,7 @@ class ActivityController extends Controller
         $only = $request->input('only');
         $consume = $request->input('consume');
         $activity_name = $request->input('activity_name');
-
+        $date = $request->input('date');
         $end = $request->input('length')?$request->input('length'):20;
 
         $table = 'recharge_rank';
@@ -341,6 +342,11 @@ class ActivityController extends Controller
             ->when($activity_name,function ($query) use ($activity_name){
                 return $query->where('activity_name','=',$activity_name);
             })
+            ->when($date,function ($query) use ($date){
+                $start_date = explode('~',$date)[0];
+                $end_date = explode('~',$date)[1];
+                return $query->where([['start_date','>=',$start_date],['end_date','<=',$end_date]]);
+            })
             ->when($only,function ($query) use ($only){
                 return $query->where('status','=',2);
             })
@@ -349,6 +355,7 @@ class ActivityController extends Controller
         $assign=[
             'data'=>$res,
             'filters'=>[
+                'date'=>$date,
                 'only'=>$only,
                 'consume'=>$consume,
             ],
