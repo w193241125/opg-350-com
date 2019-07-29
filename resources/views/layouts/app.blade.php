@@ -42,6 +42,15 @@
 
     {{--游戏多选--}}
     <link href="{{ asset('select/select.css') }}" rel="stylesheet" type="text/css" />
+    <!-- 引入添加菜单的样式 -->
+    <link href="{{asset('assets/admin/layouts/css/components-md.min.css')}}" rel="stylesheet" id="style_components"
+          type="text/css"/>
+    <link href="{{asset('assets/admin/layouts/css/plugins-md.min.css')}}" rel="stylesheet" type="text/css"/>
+    <!-- 引入添加菜单的样式结束 -->
+    <!-- daterange picker -->
+    <link rel="stylesheet" href="/AdminLTE/bower_components/bootstrap-daterangepicker/daterangepicker.css">
+    <!-- bootstrap datepicker -->
+    <link rel="stylesheet" href="/AdminLTE/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
     @yield('styles')
 </head>
 <body class="fixed hold-transition skin-blue sidebar-mini">
@@ -96,6 +105,10 @@
 {{--游戏多选js--}}
 <script src="{{ asset('select/select.js') }}" type="text/javascript"></script>
 
+<!-- date-range-picker -->
+<script src="/AdminLTE/bower_components/moment/min/moment.min.js"></script>
+<script src="/AdminLTE/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+<script src="/select/select.js" type="text/javascript"></script>
 
 {{--无权限弹窗_刷新页面--}}
 @if(session('error') == 'no_permissions')

@@ -112,7 +112,12 @@
                                             <label for="form_game_name"><span class="imp">*&nbsp;</span>游戏缩写</label>
                                             <span class="help-block form_game_name">游戏缩写,如xlczg，由技术部提供</span>
                                         </div>
-
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+                                            <input type="text" name="date" class="form-control pull-right" id="reservation">
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <span class="font_style">充值/消费：</span><br>
@@ -130,6 +135,22 @@
                     </div>
                 </div>
                 <script>
+                    $(function () {
+                        //Date range picker
+                        $('#reservation').daterangepicker({
+                            "locale": {
+                                format: 'YYYY-MM-DD',
+                                separator: '~',
+                                applyLabel: "应用",
+                                cancelLabel: "取消",
+                                resetLabel: "重置",
+                                daysOfWeek: ["日", "一", "二", "三", "四", "五", "六"],
+                                monthNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+                            },
+                            "startDate": moment(),
+                            "endDate": moment()
+                        });
+                    });
                     $('.lottery_three').on('click',function () {
                         console.log('lottery_three')
                         var _item = $(this);
@@ -162,27 +183,6 @@
                             _item.removeAttr('disabled');
                         });
                     });
-                    //实时判断用户名是否存在
-                    $("#form_username").bind("input propertychange",function(event){
-                        uid = $("#form_username").val();
-                        url =  "{{ route('ajaxcheckUid') }}";
-                        $.getJSON(
-                            url,
-                            {uid:uid},
-                            function (data) {
-                                if (data.length != 0) {
-                                    console.log(data)
-                                    $("#form_username").parent('div').addClass('has-error');
-                                    $(".form_username").html('用户ID已存在');
-                                    $(".form_username").css('color','red');
-                                }else{
-                                    $("#form_username").parent('div').removeClass('has-error');
-                                    $(".form_username").html('用户名');
-                                    $(".form_username").css('color','#36c6d3');
-                                }
-                            }
-                        );
-                    });
                 </script>
                 <!-- /.col -->
             </div>
@@ -195,6 +195,8 @@
 
 {{--尾部前端资源--}}
 @section('script')
+    <script>
+    </script>
     <!-- BEGIN THEME GLOBAL SCRIPTS 这个js控制 添加菜单 的 label 上移与下移 -->
     <script src="{{asset('assets/admin/layouts/scripts/app.min.js')}}" type="text/javascript"></script>
 @endsection

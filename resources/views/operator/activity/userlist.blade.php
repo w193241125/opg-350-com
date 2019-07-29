@@ -17,17 +17,6 @@
             border: 1px solid #dddddd;
         }
     </style>
-    <!-- 引入添加菜单的样式 -->
-    <link href="{{asset('assets/admin/layouts/css/components-md.min.css')}}" rel="stylesheet" id="style_components"
-          type="text/css"/>
-    <link href="{{asset('assets/admin/layouts/css/plugins-md.min.css')}}" rel="stylesheet" type="text/css"/>
-    <!-- 引入添加菜单的样式结束 -->
-
-    <!-- daterange picker -->
-    <link rel="stylesheet" href="/AdminLTE/bower_components/bootstrap-daterangepicker/daterangepicker.css">
-    <!-- bootstrap datepicker -->
-    <link rel="stylesheet" href="/AdminLTE/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
-
 
 @endsection
 
@@ -188,10 +177,6 @@
 
 {{--尾部前端资源--}}
 @section('script')
-    <!-- date-range-picker -->
-    <script src="/AdminLTE/bower_components/moment/min/moment.min.js"></script>
-    <script src="/AdminLTE/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
-    <script src="/select/select.js" type="text/javascript"></script>
     <script>
         $(document).ready(function () {
             $('#order_info').DataTable();
@@ -380,6 +365,32 @@
             });
             //中断事件执行，避免a等元素点击后跳转到相应页面
             event.preventDefault();
+        }
+
+        function upd_user(){
+            var id = $('#upd_id').val()
+            var consume = $('#consume').prop('checked');
+            var total = $('#upd_total').val()
+            var game_name = $('#form_game_name').val()
+            var reservations = $('#reservations').val()
+            $.ajax({
+                'type' : 'POST',
+                'url' :  '/operator/user_upd',
+                data: {id: id,total:total,consume:consume,game_name:game_name,date:reservations},
+                headers : {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success : function (res) {
+                    if(res.status==200){
+                        $('#close_mod').trigger("click");
+                        swal("更新成功！", res.message, "success");
+                        location.reload()
+                    }else{
+                        $('#close_mod').trigger("click");
+                        swal("更新！", res.message, "error");
+                    }
+                }
+            });
         }
     </script>
 @endsection

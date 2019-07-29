@@ -1,6 +1,6 @@
 <div class="modal-header">
     <h4 class="modal-title" id="myModalLabel">
-        编辑用户充值信息
+        编辑活动信息
     </h4>
 </div>
 <div class="modal-body">

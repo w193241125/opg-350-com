@@ -46,7 +46,7 @@ class ActivityController extends Controller
         $query = DB::connection('mysql_activity');
         $res = $query->table('activity')->insert($data);
         $ret =  [
-            'status' => 200,
+            'status' => $res ? 200: '-100',
             'message' => $res ? '添加成功':'添加失败',
         ];
         return response()->json($ret);
@@ -68,7 +68,7 @@ class ActivityController extends Controller
         $query = DB::connection('mysql_activity');
         $res = $query->table('activity')->where(['id'=>$id])->update($data);
         $ret =  [
-            'status' => 200,
+            'status' => $res ? 200: '-100',
             'message' => $res ? '修改成功':'修改失败',
         ];
         return response()->json($ret);
@@ -203,7 +203,7 @@ class ActivityController extends Controller
         $sql = "delete from activity.award where id={$id}";
         $res = $query->delete($sql);
         $ret =  [
-            'status' => 200,
+            'status' => $res ? 200: '-100',
             'message' => $res ? '删除成功':'删除失败',
         ];
         return response()->json($ret);
@@ -289,6 +289,9 @@ class ActivityController extends Controller
         $role_id = $request->input('role_id');
         $total = $request->input('total');
         $game_name = $request->input('game_name');
+        $date = $request->input('date');
+        $start_date = explode('~',$date)[0];
+        $end_date = explode('~',$date)[1];
         $type = $request->input('type');
         if (!$uid ||!$realname||!$total){
             $ret =  [
@@ -315,13 +318,15 @@ class ActivityController extends Controller
             'total'=>$total,
             'game_name'=>$game_name,
             'status'=>2,
+            'start_date'=>$start_date,
+            'end_date'=>$end_date,
         ];
 
 
         $res = $query->table($table)->insert($data);
 
         $ret =  [
-            'status' => 200,
+            'status' => $res ? 200: '-100',
             'message' => $res ? '添加成功':'添加失败',
         ];
         return response()->json($ret);
@@ -395,13 +400,16 @@ class ActivityController extends Controller
     public function user_upd(Request $request)
     {
         $id = $request->input('id');
-        $total = $request->input('total');
+        $data['total'] = $request->input('total');
+        $data['game_name'] = $request->input('game_name');
+        $data['start_date'] = explode('~',$request->input('activity_time'))[0];
+        $data['end_date'] = explode('~',$request->input('activity_time'))[1];
         $query = DB::connection('mysql_activity');
         $table = 'recharge_rank';
         if ($request->input('consume')) $table = 'consume_rank';
-        $res = $query->table($table)->where(['id'=>$id])->update(['total'=>$total]);
+        $res = $query->table($table)->where('id',$id)->update($data);
         $ret =  [
-            'status' => 200,
+            'status' => $res ? 200: '-100',
             'message' => $res ? '更新成功':'更新失败',
         ];
         return response()->json($ret);
