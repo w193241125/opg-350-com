@@ -226,7 +226,6 @@ class ActivityController extends Controller
         $end = $request->input('length')?$request->input('length'):20;
 
         $table = 'activity';
-        if ($request->input('consume')) $table = 'consume_rank';
         $db = DB::connection('mysql_activity');
         $res = $db->table($table)
             ->when($game_name,function ($query) use ($game_name){
@@ -374,8 +373,7 @@ class ActivityController extends Controller
         $id = $request->input('user_id');
         $query = DB::connection('mysql_activity');
         $table = 'recharge_rank';
-        if ($request->input('consume')) $table = 'consume_rank';
-
+        if ($request->input('consume') != 'false') $table = 'consume_rank';
         $sql = "delete from {$table} where id={$id}";
         $res = $query->delete($sql);
         $ret =  [
@@ -406,7 +404,7 @@ class ActivityController extends Controller
         $data['end_date'] = explode('~',$request->input('activity_time'))[1];
         $query = DB::connection('mysql_activity');
         $table = 'recharge_rank';
-        if ($request->input('consume')) $table = 'consume_rank';
+        if ($request->input('consume') != 'false') $table = 'consume_rank';
         $res = $query->table($table)->where('id',$id)->update($data);
         $ret =  [
             'status' => $res ? 200: '-100',

@@ -372,11 +372,11 @@
             var consume = $('#consume').prop('checked');
             var total = $('#upd_total').val()
             var game_name = $('#form_game_name').val()
-            var reservations = $('#reservations').val()
+            var activity_time = $('#reservations').val()
             $.ajax({
                 'type' : 'POST',
                 'url' :  '/operator/user_upd',
-                data: {id: id,total:total,consume:consume,game_name:game_name,date:reservations},
+                data: {id: id,total:total,consume:consume,game_name:game_name,activity_time:activity_time},
                 headers : {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
