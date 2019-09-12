@@ -336,6 +336,7 @@
         function upd_activity(){
             var id = $('#upd_id').val()
             var activity_name = $('#activity_name').val()
+            var activity_server = $('#activity_server').val()
             var activity_title = $('#activity_title').val()
             var activity_time = $('#reservations').val()
             var activity_status = $(':radio[name="activity_status"]:checked').val();
@@ -347,6 +348,7 @@
                 'url' :  '/operator/activity_upd',
                 data: { activity: id,
                     activity_name:activity_name,
+                    activity_server:activity_server,
                     activity_title:activity_title,
                     activity_time:activity_time,
                     activity_status:activity_status,
@@ -363,7 +365,9 @@
                         swal("更新成功！", res.message, "success");
                         location.reload()
                     }else{
+                        $('#close_mod').trigger("click");
                         swal("更新！", res.message, "error");
+                        location.reload()
                     }
                 }
             });
