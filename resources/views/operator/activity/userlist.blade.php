@@ -48,7 +48,7 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
                                         </div>
-                                        <input type="text" name="date" class="form-control pull-right" id="reservation">
+                                        <input type="text" name="date" class="form-control pull-right" id="reservation" value="{{old('date')}}">
                                     </div>
                                     <!-- /.input group -->
                                 </div>
@@ -160,7 +160,7 @@
                                 @endif
                                 </tbody>
                             </table>
-                            {{$data->appends(['consume' => $filters['consume']])->render()}}
+                            {{$data->appends(['consume' => $filters['consume'],'date'=>$filters['date'],'only'=>$filters['only']])->render()}}
                         </div>
                         <!-- /.box-body -->
                     </div>

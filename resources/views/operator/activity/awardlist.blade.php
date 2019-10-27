@@ -54,7 +54,7 @@
                             <form action="{{route('activity.paward_list')}}" method="post" class="search-form">
                                 {{csrf_field()}}
                                 <div class="form-group col-xs-6 col-sm-6 col-md-4 col-lg-2">
-                                    <input type="text" name="activity_name" class="form-control" placeholder="活动名">
+                                    <input type="text" name="activity_name" class="form-control" placeholder="活动名" value="{{old('activity_name')}}">
                                 </div>
                                 <button type="submit" class="btn btn-primary">提交</button>
                             </form>
@@ -100,7 +100,8 @@
                                 @endif
                                 </tbody>
                             </table>
-                            {{ $data->links() }}
+{{--                            {{ $data->links() }}--}}
+                            {!! $data->appends(['activity_name'=>$filters['activity_name']])->render() !!}
                         </div>
                         <!-- /.box-body -->
                     </div>
@@ -208,7 +209,7 @@
         var filters = {!! json_encode($filters) !!};
         $(document).ready(function () {
             SelectForGame.init($('.select-down'));
-            $('.search-form input[name=user_name]').val(filters.user_name);
+            $('.search-form input[name=activity_name]').val(filters.activity_name);
         });
         //奖励删除
         $('.award_del').on('click',function () {
