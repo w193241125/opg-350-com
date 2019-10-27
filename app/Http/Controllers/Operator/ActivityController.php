@@ -186,10 +186,12 @@ class ActivityController extends Controller
             ->when($activity_name,function ($query) use ($activity_name){
                 return $query->where('activity_name','=',$activity_name);
             })
+            ->orderby('id','desc')
             ->paginate($end);
         $assign=[
             'data'=>$res,
             'filters'=>[
+                'activity_name'=>$activity_name
             ],
         ];
 
