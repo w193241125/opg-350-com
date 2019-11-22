@@ -90,14 +90,22 @@ class ActivityController extends Controller
         $data['money'] = $request->input('money');
         $data['award'] = $request->input('award');
         $data['activity_name'] = $request->input('activity_name');
-        $data['game_name'] = $request->input('game_name');
         $data['award_ext'] = $request->input('award_ext');
         $query = DB::connection('mysql_activity');
-        $res = $query->table('award')->insert($data);
-        $ret =  [
-            'status' => 200,
-            'message' => $res ? '添加成功':'添加失败',
-        ];
+        $activity = $query->table('activity')->where(['activity_name'=>$data['activity_name']])->get();
+        if (!$activity->isEmpty()){
+            $data['game_name'] = $activity[0]->game_name;
+            $res = $query->table('award')->insert($data);
+            $ret =  [
+                'status' => 200,
+                'message' => $res ? '添加成功':'添加失败',
+            ];
+        }else{
+            $ret =  [
+                'status' => 200,
+                'message' => '添加失败',
+            ];
+        }
         return response()->json($ret);
     }
 

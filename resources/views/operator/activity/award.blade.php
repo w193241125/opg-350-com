@@ -71,12 +71,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group form-md-line-input form-md-floating-label
-                <?php if ($errors->has('game_name')) { echo "has-error"; } ?> ">
-                                            <input type="text" class="form-control" id="form_game_name" name="game_name" value="{{ old('game_name') }}">
-                                            <label for="form_game_name"><span class="imp">*&nbsp;</span>游戏缩写</label>
-                                            <span class="help-block form_game_name">游戏缩写,如xlczg，由技术部提供</span>
-                                        </div>
 
                                         <div class="form-group form-md-line-input form-md-floating-label
                 <?php if ($errors->has('money')) { echo "has-error"; } ?> ">
