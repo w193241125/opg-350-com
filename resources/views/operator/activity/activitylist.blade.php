@@ -73,10 +73,12 @@
                                 <tr>
                                     <th >id</th>
                                     <th width="70">活动名称</th>
+                                    <th width="60">映射区服ID</th>
+                                    <th width="60">研发区服ID</th>
+                                    <th width="60">游戏名</th>
                                     <th width="70">活动标题</th>
                                     <th width="105">活动时间</th>
                                     <th width="60">活动区服</th>
-                                    <th width="60">游戏标识</th>
                                     <th width="60">其它参数</th>
                                     <th >活动描述</th>
                                     <th width="60">活动状态</th>
@@ -89,10 +91,12 @@
                                         <tr>
                                         <td height="25">{{$p->id}}</td>
                                         <td>{{$p->activity_name}}</td>
-                                        <td>{{$p->activity_title}}</td>
-                                        <td>{{$p->activity_time}}</td>
-                                        <td>{{$p->activity_server}}</td>
-                                        <td>{{$p->game_name}}</td>
+                                        <td>{{$p->sid}}</td>
+                                        <td>{{$p->server_id}}</td>
+                                            <td>{{$p->game_name}}</td>
+                                            <td>{{$p->activity_title}}</td>
+                                            <td>{{$p->activity_time}}</td>
+                                            <td>{{$p->activity_server}}</td>
                                         <td>{{$p->activity_ext}}</td>
                                             <td>{{$p->activity_desc}}</td>
                                             <td>
@@ -336,12 +340,14 @@
         function upd_activity(){
             var id = $('#upd_id').val()
             var activity_name = $('#activity_name').val()
+            var game_name = $('#game_name').val()
+            var server_id = $('#server_id').val()
+            var sid = $('#sid').val()
             var activity_server = $('#activity_server').val()
             var activity_title = $('#activity_title').val()
             var activity_time = $('#reservations').val()
             var activity_status = $(':radio[name="activity_status"]:checked').val();
             var activity_desc = $('#activity_desc').val();
-            var game_name = $('#game_name').val();
             var activity_ext = $('#activity_ext').val()
             $.ajax({
                 'type' : 'POST',
@@ -354,6 +360,8 @@
                     activity_status:activity_status,
                     activity_desc:activity_desc,
                     game_name:game_name,
+                    server_id:server_id,
+                    sid:sid,
                     activity_ext:activity_ext
                 },
                 headers : {

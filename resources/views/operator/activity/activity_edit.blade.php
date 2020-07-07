@@ -12,7 +12,7 @@
 
     <div class="form-group">
         <label>活动名</label>
-        <select class="form-control" name="activity_type">
+        <select class="form-control" name="activity_name" id="activity_name">
             <option value="pay_back" @if($data->activity_name == 'pay_back') selected @endif >充值返利</option>
             <option value="cost_back" @if($data->activity_name == 'cost_back') selected @endif>消费返利</option>
             <option value="recharge" @if($data->activity_name == 'recharge') selected @endif>充值排行榜</option>
@@ -25,32 +25,26 @@
 
     <div class="form-group form-md-floating-label">
         <label>游戏名</label>
-        <select class="form-control" name="game_name">
+        <select class="form-control" name="game_name" id="game_name">
             <option value="xlczg_zf" @if($data->game_name == 'xlczg_zf') selected @endif >老后台龙城专服</option>
             <option value="xlczg_xzf" @if($data->game_name == 'xlczg_xzf') selected @endif>新龙城专服</option>
             <option value="xlczg_hf" @if($data->game_name == 'xlczg_hf') selected @endif>龙城混服</option>
         </select>
-        <span class="help-block form_activity_name">游戏名,直接选取。</span>
     </div>
 
     <div class="form-group">
-        <input type="text" class="form-control" id="form_sid" name="sid" value="{{$data->sid}}">
-        <label for="form_sid"><span class="imp">*</span>新后台映射区服id</label>
+        <label for="sid"><span class="imp">*</span>新后台映射区服id</label>
+        <input type="text" class="form-control" id="sid" name="sid" value="{{$data->sid}}">
     </div>
 
     <div class="form-group">
-        <input type="text" class="form-control" id="form_server_id" name="sid" value="{{$data->server_id}}">
-        <label for="form_server_id"><span class="imp">*</span>研发区服id</label>
+        <label for="server_id"><span class="imp">*</span>研发区服id</label>
+        <input type="text" class="form-control" id="server_id" name="server_id" value="{{$data->server_id}}">
     </div>
 
     <div class="form-group">
         <label for="activity_title">活动标题</label>
         <input type="text" class="form-control" id="activity_title" value="{{$data->activity_title}}">
-    </div>
-
-    <div class="form-group">
-        <label for="game_name">游戏标识</label>
-        <input type="text" class="form-control" id="game_name" value="{{$data->game_name}}">
     </div>
 
     <div class="form-group form-md-line-input form-md-floating-label ">

@@ -70,6 +70,7 @@ class ActivityController extends Controller
         $data['sid'] = $request->input('sid');
         $data['server_id'] = $request->input('server_id');
         $query = DB::connection('mysql_activity');
+
         $res = $query->table('activity')->where(['id'=>$id])->update($data);
         $ret =  [
             'status' => $res ? 200: '-100',

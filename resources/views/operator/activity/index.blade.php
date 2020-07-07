@@ -92,7 +92,7 @@
 
                                         <div class="form-group form-md-line-input form-md-floating-label
                 @if ($errors->has('sid')) has-error @endif ">
-                                            <input type="text" class="form-control" id="form_server_id" name="sid" value="{{ old('server_id') }}">
+                                            <input type="text" class="form-control" id="form_server_id" name="server_id" value="{{ old('server_id') }}">
                                             <label for="form_server_id"><span class="imp">*</span>研发区服id</label>
                                             <span class="help-block">数字数字，如：46501</span>
                                         </div>
