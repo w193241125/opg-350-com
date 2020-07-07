@@ -43,6 +43,8 @@ class ActivityController extends Controller
         $data['activity_name'] = $request->input('activity_name');
         $data['game_name'] = $request->input('game_name');
         $data['activity_status'] = $request->input('activity_status');
+        $data['sid'] = $request->input('sid');
+        $data['server_id'] = $request->input('server_id');
         $query = DB::connection('mysql_activity');
         $res = $query->table('activity')->insert($data);
         $ret =  [
@@ -65,6 +67,8 @@ class ActivityController extends Controller
         $data['activity_name'] = $request->input('activity_name');
         $data['game_name'] = $request->input('game_name');
         $data['activity_status'] = $request->input('activity_status');
+        $data['sid'] = $request->input('sid');
+        $data['server_id'] = $request->input('server_id');
         $query = DB::connection('mysql_activity');
         $res = $query->table('activity')->where(['id'=>$id])->update($data);
         $ret =  [
