@@ -54,16 +54,17 @@
                             <form action="{{route('activity.paward_list')}}" method="post" class="search-form">
                                 {{csrf_field()}}
                                 <div class="form-group col-xs-6 col-sm-6 col-md-4 col-lg-2">
-                                <select class="form-control" name="activity_name">
-                                    <option value="0" > --请选择活动--</option>
-                                    <option value="pay_back" @if(old('activity_name') == 'pay_back') selected @endif >充值返利</option>
-                                    <option value="cost_back" @if(old('activity_name') == 'cost_back') selected @endif >消费返利</option>
-                                    <option value="recharge" @if(old('activity_name') == 'recharge') selected @endif >充值排行榜</option>
-                                    <option value="consume" @if(old('activity_name') == 'consume') selected @endif >消费排行榜</option>
-                                    <option value="login_gift" @if(old('activity_name') == 'login_gift') selected @endif >每日登录礼包</option>
-                                    <option value="pay_gift" @if(old('activity_name') == 'pay_gift') selected @endif >每日充值礼包</option>
-                                    <option value="guestbook" @if(old('activity_name') == 'guestbook') selected @endif >留言/祝福墙</option>
-                                    <option value="pay_back_box" @if(old('activity_name') == 'pay_back_box') selected @endif >充值返宝箱(最大)</option>
+                                <select class="form-control" name="activity_name" id="activity_name">
+                                    <option value="0">--选择活动--</option>
+                                    <option value="pay_back" >充值返利</option>
+                                    <option value="cost_back">消费返利</option>
+                                    <option value="recharge">充值排行榜</option>
+                                    <option value="consume">消费排行榜</option>
+                                    <option value="login_gift">每日登录礼包</option>
+                                    <option value="pay_gift">每日充值礼包</option>
+                                    <option value="guestbook">留言/祝福墙</option>
+                                    <option value="pay_back_box" >充值返宝箱(最大)</option>
+                                    {{--            <option value="lottery">抽奖</option>--}}
                                 </select>
                                 </div>
 
@@ -236,7 +237,10 @@
         var filters = {!! json_encode($filters) !!};
         $(document).ready(function () {
             SelectForGame.init($('.select-down'));
-            $('.search-form input[name=activity_name]').val(filters.activity_name);
+            console.log(filters.activity_name)
+            if ( filters.activity_name !== null){
+                $('.search-form select[name=activity_name]').val(filters.activity_name);
+            }
         });
         //奖励删除
         $('.award_del').on('click',function () {

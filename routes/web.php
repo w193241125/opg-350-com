@@ -124,6 +124,7 @@ Route::group([ 'prefix' => 'operator','namespace' => 'Operator', 'middleware'=>[
     Route::get('/activity_list','ActivityController@activity_list')->name('activity.list');
     Route::post('/list','ActivityController@activity_list')->name('activity.plist');
     Route::get('/activity_edit/{id}','ActivityController@activity_edit')->name('activity.activity_edit');
+    Route::post('/activity_upd_status','ActivityController@activity_upd_status')->name('activity.activity_upd_status');
     Route::post('/activity_upd','ActivityController@activity_upd')->name('activity.activity_upd');
     Route::post('/activity_del','ActivityController@activity_del')->name('activity.activity_del');
     //活动用户

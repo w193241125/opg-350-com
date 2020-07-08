@@ -63,7 +63,12 @@
                                     <!-- /.input group -->
                                 </div>
                                 <div class="form-group col-xs-6 col-sm-6 col-md-4 col-lg-2">
-                                    <input type="text" name="game_name" class="form-control" placeholder="输入游戏标识">
+                                    <select class="form-control" name="game_name" id="game_name">
+                                        <option value="0">--选择游戏--</option>
+                                        <option value="xlczg_zf" >老后台龙城专服 </option>
+                                        <option value="xlczg_xzf" >龙城专服 </option>
+                                        <option value="xlczg_hf" >龙城混服 </option>
+                                    </select>
                                 </div>
                                 <button type="submit" class="btn btn-primary">提交</button>
                             </form>
@@ -110,24 +115,26 @@
                                         <td>{{$ac[$p->activity_name] or $p->activity_name}}</td>
                                         <td>{{$p->sid}}</td>
                                         <td>{{$p->server_id}}</td>
-                                            <td>{{$gn[$p->game_name] or $p->game_name}}</td>
-                                            <td>{{$p->activity_title}}</td>
-                                            <td>{{$p->activity_time}}</td>
-                                            <td>{{$p->activity_server}}</td>
+                                        <td>{{$gn[$p->game_name] or $p->game_name}}</td>
+                                        <td>{{$p->activity_title}}</td>
+                                        <td>{{$p->activity_time}}</td>
+                                        <td>{{$p->activity_server}}</td>
                                         <td>{{$p->activity_ext}}</td>
-                                            <td>{{$p->activity_desc}}</td>
-                                            <td>
-                                                @if ($p->activity_status==1)开 @else 关 @endif
-                                            </td>
-                                            <td>https://activity.350.com/{{$p->game_name}}?got=5d80582734dd6</td>
-                                            <td class="center">
-                                                <div>
-                                                    <a href="javascript:;" activity_id='{{$p->id}}' class="btn btn-warning btn-xs activity_del" >
-                                                        <i class="fa fa-edit">删除</i></a>
-                                                    <a href="javascript:;" activity_id='{{$p->id}}' class="btn btn-info btn-xs activity_edit"  onclick="myModal({{$p->id}})">
-                                                        <i class="fa fa-edit">编辑</i></a>
+                                        <td>{{$p->activity_desc}}</td>
+                                        <td>
+                                            @if ($p->activity_status==1)开 @else 关 @endif
+                                        </td>
+                                            <td><a href="https://activity.350.com/{{$p->game_name}}?got=5d80582734dd6" target="_blank">https://activity.350.com/{{$p->game_name}}?got=5d80582734dd6</a></td>
+                                        <td class="center">
+                                        <div>
+                                            <a href="javascript:;" activity_id='{{$p->id}}' class="btn btn-warning btn-xs activity_del" >
+                                                <i class="fa fa-edit">删除</i></a>
+                                            <a href="javascript:;" activity_id='{{$p->id}}' class="btn btn-info btn-xs activity_edit"  onclick="myModal({{$p->id}})">
+                                                <i class="fa fa-edit">编辑</i></a>
+                                            <a href="javascript:;" activity_id='{{$p->id}}' class="btn btn-info btn-xs activity_edit"  onclick="close_activity({{$p->id}},{{$p->activity_status}})">
+                                                <i class="fa fa-close"> @if ($p->activity_status==1)关闭 @else 打开 @endif</i></a>
 
-                                                </div>
+                                        </div>
                                         </td>
                                         </tr>
 
@@ -250,7 +257,9 @@
             if (filters.date != null) {
                 $('.search-form input[name=date]').val(filters.date);
             }
-
+            if ( filters.game_name !== null){
+                $('.search-form select[name=game_name]').val(filters.game_name);
+            }
             if (filters.consume != undefined){
                 $('#consume').prop('checked',true);
             }
@@ -355,6 +364,30 @@
             event.preventDefault();
         }
 
+        function close_activity(aid,ast){
+            $.ajax({
+                'type' : 'POST',
+                'url' :  '/operator/activity_upd_status',
+                data: {
+                    activity: aid,
+                    activity_status:ast,
+                },
+                headers : {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success : function (res) {
+                    if(res.status==200){
+                        $('#close_mod').trigger("click");
+                        swal("更新成功！", res.message, "success");
+                        location.reload()
+                    }else{
+                        $('#close_mod').trigger("click");
+                        swal("更新！", res.message, "error");
+                        location.reload()
+                    }
+                }
+            });
+        }
         function upd_activity(){
             var id = $('#upd_id').val()
             var activity_name = $('#activity_name').val()

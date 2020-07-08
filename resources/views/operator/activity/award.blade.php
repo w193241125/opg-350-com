@@ -64,7 +64,7 @@
                                                     <select class="form-control edited " id="form_parent_menu_2" name="activity_name">
                                                         <option value="0" >--选择活动-</option>
                                                         @foreach($activity as $v)
-                                                            <option value="{{$v['activity_name']}}" @if(old('activity')) selected="selected" @endif>{{$v['game_name']}}:{{$v['activity_title']}}</option>
+                                                            <option value="{{$v['activity_name']}}/!/{{$v['game_name']}}" @if(old('activity')) selected="selected" @endif>{{$v['game_name']}}:{{$v['activity_title']}}</option>
                                                         @endforeach
                                                     </select>
                                                     <label for="form_parent_menu_1"><span class="imp">*&nbsp;</span>活动设置</label>

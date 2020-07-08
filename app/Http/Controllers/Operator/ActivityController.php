@@ -81,6 +81,22 @@ class ActivityController extends Controller
         return response()->json($ret);
     }
 
+    public function activity_upd_status(Request $request)
+    {
+        $id = $request->input('activity');
+        $status_map = [1=>2,2=>1];
+        $data['activity_status'] = $status_map[$request->input('activity_status')];
+
+        $query = DB::connection('mysql_activity');
+
+        $res = $query->table('activity')->where(['id'=>$id])->update($data);
+        $ret =  [
+            'status' => $res ? 200: '-100',
+            'message' => $res ? '修改成功':'修改失败',
+        ];
+        return response()->json($ret);
+    }
+
     public function activity_award()
     {
         $query = DB::connection('mysql_activity')->table('activity');
@@ -96,23 +112,16 @@ class ActivityController extends Controller
     {
         $data['money'] = $request->input('money');
         $data['award'] = $request->input('award');
-        $data['activity_name'] = $request->input('activity_name');
+        list($data['activity_name'],$data['game_name']) = explode('/!/',$request->input('activity_name'));
         $data['award_ext'] = $request->input('award_ext');
+
         $query = DB::connection('mysql_activity');
-        $activity = $query->table('activity')->where(['activity_name'=>$data['activity_name']])->get();
-        if (!$activity->isEmpty()){
-            $data['game_name'] = $activity[0]->game_name;
-            $res = $query->table('award')->insert($data);
-            $ret =  [
-                'status' => 200,
-                'message' => $res ? '添加成功':'添加失败',
-            ];
-        }else{
-            $ret =  [
-                'status' => 200,
-                'message' => '添加失败',
-            ];
-        }
+        $res = $query->table('award')->insert($data);
+        $ret =  [
+            'status' => 200,
+            'message' => $res ? '添加成功':'添加失败',
+        ];
+
         return response()->json($ret);
     }
 
@@ -191,7 +200,6 @@ class ActivityController extends Controller
     public function award_list(Request $request)
     {
         $activity_name = $request->input('activity_name');
-
         //datatables 服务器模式
         $order_column  = $request->input('order');
         $end = $request->input('length')?$request->input('length'):20;
