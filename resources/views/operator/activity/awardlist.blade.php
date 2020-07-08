@@ -59,6 +59,22 @@
                                 <button type="submit" class="btn btn-primary">提交</button>
                             </form>
                             <div style="clear: both"></div>
+                            <?php $ac = [
+                                'pay_back'=>'充值返利',
+                                'cost_back'=>'消费返利',
+                                'recharge'=>'充值排行榜',
+                                'consume'=>'消费排行榜',
+                                'login_gift'=>'每日登录礼包',
+                                'pay_gift'=>'每日充值礼包',
+                                'guestbook'=>'留言/祝福墙',
+                                'pay_back_box'=>'充值返宝箱(最大)',
+                            ];
+                            $gn = [
+                                'xlczg_zf'=>'老后台龙城专服',
+                                'xlczg_xzf'=>'新龙城专服',
+                                'xlczg_hf'=>'龙城混服',
+                            ];
+                            ?>
                             <table id="order_info" class="table table-bordered table-striped" width="100%">
                                 <thead>
                                 <tr>
@@ -76,8 +92,8 @@
                                     @foreach($data as $key=>$p)
                                         <tr>
                                         <td height="25">{{$p->id}}</td>
-                                        <td>{{$p->activity_name}}</td>
-                                        <td>{{$p->game_name}}</td>
+                                        <td>{{$ac[$p->activity_name] or $p->activity_name}}</td>
+                                            <td>{{$gn[$p->game_name] or $p->game_name}}</td>
                                         <td>{{$p->money}}</td>
                                         <td>{{$p->award}}</td>
                                         <td>{{$p->award_ext}}</td>
