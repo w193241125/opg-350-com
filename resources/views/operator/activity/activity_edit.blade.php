@@ -20,7 +20,7 @@
             <option value="login_gift" @if($data->activity_name == 'login_gift') selected @endif>每日登录礼包</option>
             <option value="pay_gift" @if($data->activity_name == 'pay_gift') selected @endif>每日充值礼包</option>
             <option value="guestbook" @if($data->activity_name == 'guestbook') selected @endif>留言/祝福墙</option>
-            <option value="pay_back_box" @if($data->activity_name == 'pay_back_box') selected @endif>留言/祝福墙</option>
+            <option value="pay_back_box" @if($data->activity_name == 'pay_back_box') selected @endif>充值返宝箱(最大)</option>
             {{--            <option value="lottery">抽奖</option>--}}
         </select>
     </div>
