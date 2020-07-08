@@ -11,7 +11,7 @@
 
     <div class="form-group">
         <label for="game_name">游戏标识</label>
-        <input type="text" class="form-control" id="game_name" value="{{$data->game_name}}">
+        <input type="text" class="form-control" id="game_names" value="{{$data->game_name}}">
     </div>
 
     <div class="form-group">

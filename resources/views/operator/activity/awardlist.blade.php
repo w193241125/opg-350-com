@@ -335,7 +335,7 @@
         function upd_award(){
             var id = $('#upd_id').val()
             var activity_name = $('#activity_name').val()
-            var game_name = $('#game_name').val();
+            var game_name = $('#game_names').val();
             var money = $('#money').val()
             var award = $('#award').val();
             var award_ext = $('#award_ext').val()
