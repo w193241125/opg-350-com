@@ -82,18 +82,35 @@
                                     <th width="60">其它参数</th>
                                     <th >活动描述</th>
                                     <th width="60">活动状态</th>
+                                    <th width="60">活动主页</th>
                                     <th width="15%">操作</th>
                                 </tr>
                                 </thead>
+                                <?php $ac = [
+                                    'pay_back'=>'充值返利',
+                                    'cost_back'=>'消费返利',
+                                    'recharge'=>'充值排行榜',
+                                    'consume'=>'消费排行榜',
+                                    'login_gift'=>'每日登录礼包',
+                                    'pay_gift'=>'每日充值礼包',
+                                    'guestbook'=>'留言/祝福墙',
+                                    'pay_back_box'=>'充值返宝箱(最大)',
+                                    ];
+                                    $gn = [
+                                        'xlczg_zf'=>'老后台龙城专服',
+                                        'xlczg_xzf'=>'新龙城专服',
+                                        'xlczg_hf'=>'龙城混服',
+                                    ];
+                                ?>
                                 <tbody>
                                 @if($data)
                                     @foreach($data as $key=>$p)
                                         <tr>
                                         <td height="25">{{$p->id}}</td>
-                                        <td>{{$p->activity_name}}</td>
+                                        <td>{{$ac[$p->activity_name] or $p->activity_name}}</td>
                                         <td>{{$p->sid}}</td>
                                         <td>{{$p->server_id}}</td>
-                                            <td>{{$p->game_name}}</td>
+                                            <td>{{$gn[$p->game_name] or $p->game_name}}</td>
                                             <td>{{$p->activity_title}}</td>
                                             <td>{{$p->activity_time}}</td>
                                             <td>{{$p->activity_server}}</td>
@@ -102,7 +119,8 @@
                                             <td>
                                                 @if ($p->activity_status==1)开 @else 关 @endif
                                             </td>
-                                        <td class="center">
+                                            <td>https://activity.350.com/{{$p->game_name}}?got=5d80582734dd6</td>
+                                            <td class="center">
                                                 <div>
                                                     <a href="javascript:;" activity_id='{{$p->id}}' class="btn btn-warning btn-xs activity_del" >
                                                         <i class="fa fa-edit">删除</i></a>

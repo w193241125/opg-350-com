@@ -159,7 +159,23 @@
                                             @endforeach
                                         </div>
                                     @endif
-                                    <form role="form" id="lottery_one_Form">
+                                        <?php $ac = [
+                                            'pay_back'=>'充值返利',
+                                            'cost_back'=>'消费返利',
+                                            'recharge'=>'充值排行榜',
+                                            'consume'=>'消费排行榜',
+                                            'login_gift'=>'每日登录礼包',
+                                            'pay_gift'=>'每日充值礼包',
+                                            'guestbook'=>'留言/祝福墙',
+                                            'pay_back_box'=>'充值返宝箱(最大)',
+                                        ];
+                                        $gn = [
+                                            'xlczg_zf'=>'老后台龙城专服',
+                                            'xlczg_xzf'=>'新龙城专服',
+                                            'xlczg_hf'=>'龙城混服',
+                                        ];
+                                        ?>
+                                    <form role="form" id="lottery_one_Form" enctype="multipart/form-data">
                                         {{ csrf_field() }}
                                         <div class="form-body">
                                             <div class="row ">
@@ -168,58 +184,43 @@
                                                         <select class="form-control edited " id="form_parent_menu_1" name="activity">
                                                             <option value="0" >--选择活动-</option>
                                                             @foreach($activity as $v)
-                                                                <option value="{{$v['activity_name']}}" @if(old('activity')) selected="selected" @endif>{{$v['activity_title']}}</option>
+                                                                <option value="{{$v['activity_name']}}/!/{{$v['game_name']}}" @if(old('activity')) selected="selected" @endif>{{$gn[$v['game_name']] OR $v['game_name']}}：{{$v['activity_title']}}</option>
                                                             @endforeach
                                                         </select>
                                                         <label for="form_parent_menu_1"><span class="imp">*&nbsp;</span>活动设置</label>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <script>
-                                                $('#form_parent_menu_1').change(function () {
-                                                    var name = $('#form_parent_menu_1').val();
-                                                    var url = "{{ route('ajaxGetAward') }}";
-                                                    $("#award_area").html("");
-                                                    var html = ''
-                                                    //重新获取下拉列表
-                                                    $.getJSON(
-                                                        url,
-                                                        {activity_name:name},
-                                                        function (data) {
-                                                            if (data != []) {
-                                                                console.log(data)
-                                                                for ( var i = 0; i <data.length; i++) {
-                                                                    html = html + '<div class="form-group form-md-line-input form-md-floating-label">\n' +
-                                                                        '<input type="text" class="form-control edited" id="form_money_'+data[i].id+'" name="'+data[i].id+'[]" value="'+data[i].money+'"\>\n' +  '<label for="form_money_'+data[i].id+'"><span class="imp">*&nbsp;</span><span id="activitymoney">累充金额：</span></label>\n' + '<span class="help-block form_money">累充金额</span>\n' + '</div>'
-                                                                    html = html + '<div class="form-group form-md-line-input form-md-floating-label">\n' +
-                                                                        '<input type="text" class="form-control edited" id="form_award_'+data[i].id+'" name="'+data[i].id+'[]" value="'+data[i].award+'"\>\n' +  '<label for="form_award_'+data[i].id+'"><span class="imp">*&nbsp;</span><span id="activityaward">活动奖品：</span></label>\n' + '<span class="help-block form_award">活动奖品</span>\n' + '</div>'
-                                                                    html = html + '<div class="form-group form-md-line-input form-md-floating-label">\n' +
-                                                                        '<input type="text" class="form-control edited" id="form_award_ext_'+data[i].id+'" name="'+data[i].id+'[]" value="'+data[i].award_ext+'"\>\n' +  '<label for="form_award_ext_'+data[i].id+'"><span class="imp">*&nbsp;</span><span id="activityaward_ext">其它说明：</span></label>\n' + '<span class="help-block form_award_ext">其它说明</span>\n' + '</div>'
-                                                                }
-                                                                $("#award_area").html("");
-                                                                $("#award_area").html(html);
-                                                            }
-                                                        }
-                                                    );
-                                                });
-                                            </script>
+                                            <div class="form-group">
+                                                <label for="exampleInputFile">礼包文件上传</label>
+                                                <input type="file" id="csv_file">
 
-                                            <div id="award_area">
-                                                <div class="form-group form-md-line-input form-md-floating-label
-                <?php if ($errors->has('award')) { echo "has-error"; } ?> ">
-                                                    <input type="text" class="form-control" id="form_awards" name="award" value="{{ old('award') }}">
-                                                    <label for="form_award"><span class="imp">*&nbsp;</span><span id="activityaward">累充金额：</span></label>
-                                                    <span class="help-block form_award">活动奖品</span>
-                                                </div>
+                                                <p class="help-block">选择csv，xls，xlsx文件</p>
 
                                             </div>
-
-
                                         </div>
                                         <div class="form-actions noborder">
-                                            <button type="submit" class="btn green lottery_one" >修改配置</button>
+                                            <a type="submit" class="btn green lottery_ones" >上传礼包</a>
                                         </div>
                                     </form>
+                                        <p class="help-block" style="color:red">文件内容说明：</p>
+                                        <span style="color:red">请在excel中按以下格式编辑(不需要表头，不需要表头，不需要表头)，</span>
+                                        <div class="bs-example" data-example-id="contextual-table">
+                                            <table class="table table-bordered tbext">
+                                                <thead>
+                                                <tr >
+                                                    <td >A列: 礼包码</td>
+                                                    <td >B列: 第几天的礼包(只有一个礼包的填1)</td>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td>bcife4121c5464ae</td>
+                                                    <td>1</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                 </div>
 
                             </div>
@@ -228,16 +229,21 @@
                     <!-- /.box -->
                 </div>
                 <script>
-                    $('.lottery_one').on('click',function () {
-                        console.log('lottery_one')
+                    $('.lottery_ones').on('click',function () {
                         var _item = $(this);
-                        var _form = $('#lottery_one_Form');
-                        console.log(_form.serializeArray());
+                        var activity = $('#form_parent_menu_1').val();
+                        var files = $('#csv_file').prop('files');
+                        var data = new FormData();
+                        data.append('csv_file', files[0]);
+                        data.append('activity', activity);
+                        console.log(data)
                         $.ajax({
-                            url: '/operator/award_upd',
+                            url: '/operator/gift_bag_upload',
                             type:'post',
-                            dataType: 'json',
-                            data:_form.serializeArray(),
+                            data:data,
+                            cache: false,
+                            contentType: false,
+                            processData: false,
                             headers : {
                                 'X-CSRF-TOKEN': $("input[name='_token']").val()
                             },
@@ -245,6 +251,7 @@
                                 _item.attr('disabled','true');
                             },
                             success:function (response) {
+                                console.log(response)
                                 sweetAlert(response.message);
 
                             }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Operator;
 use App\Models\payOrders;
 use Baijunyao\Ip\Ip;
 use Curl\Curl;
+use Illuminate\Support\Facades\Input;
+use Maatwebsite\Excel\Facades\Excel;
 use function foo\func;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -438,6 +440,79 @@ class ActivityController extends Controller
             'status' => 200,
             'message' => '清空成功',
         ];
+        return response()->json($ret);
+    }
+
+    //礼包码上传
+    public function gift_bag_upload(Request $request)
+    {
+        global $ret;
+        $file = Input::file('csv_file');
+        list($activity_name,$game_name) = explode('/!/',$request->input('activity'));
+        $query = DB::connection('mysql_activity');
+
+        $res = $query->table('activity')
+                ->where(['activity_name'=>$activity_name,'game_name'=>$game_name])
+                ->get();
+
+        if (empty($file) || empty($activity_name)){
+            $GLOBALS['ret'] =  [
+                'status' => 200,
+                'message' => '请上传礼包文件或选择活动！',
+            ];
+            return response()->json($GLOBALS['ret']);
+        }
+
+        if($file){
+            $realPath = $file->getRealPath();
+            $entension =  $file -> getClientOriginalExtension(); //上传文件的后缀.
+            $tabl_name = date('YmdHis').mt_rand(100,999);
+            $newName = $tabl_name.'.'.'xls';//$entension;
+            $path = $file->move(base_path().'/uploads',$newName);
+            $cretae_path = base_path().'/uploads/'.$newName;
+            $response = response();
+            Excel::load($cretae_path, function($reader) use($tabl_name, $res, $query, $response){
+                //$data = $reader->all();
+
+                //获取excel的第几张表
+                $reader = $reader->getSheet(0);
+                //获取表中的数据
+                $data = $reader->toArray();
+                if ($data[0][0] == null){
+                    $GLOBALS['ret'] =  [
+                        'status' => 200,
+                        'message' =>  '文件为空' ,
+                    ];
+                    return false;
+                }
+                $code_arr = [];
+
+                foreach ($data as $v) {
+                    $tmp = [
+                        'game_name'=>$res[0]->game_name,
+                        'activity_name'=>$res[0]->activity_name,
+                        'start_date'=>$res[0]->start_date,
+                        'end_date'=>$res[0]->end_date,
+                        'mark'=> intval($v[1]),
+                        'code'=>$v[0],
+                        'status'=>1,
+                    ];
+                    $code_arr[] = $tmp;
+                }
+
+                if (!empty($code_arr)){
+                    $num = $query->table('gift_code')->insert($code_arr);
+
+                    $GLOBALS['ret'] =  [
+                        'status' => 200,
+                        'message' => $num ?  '上传成功' : '上传失败',
+                    ];
+                    return $GLOBALS['ret'];
+                }
+
+            });
+        }
+
         return response()->json($ret);
     }
 }
