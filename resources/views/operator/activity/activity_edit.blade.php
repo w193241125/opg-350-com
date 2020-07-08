@@ -21,13 +21,12 @@
             <option value="pay_gift" @if($data->activity_name == 'pay_gift') selected @endif>每日充值礼包</option>
             <option value="guestbook" @if($data->activity_name == 'guestbook') selected @endif>留言/祝福墙</option>
             <option value="pay_back_box" @if($data->activity_name == 'pay_back_box') selected @endif>充值返宝箱(最大)</option>
-            {{--            <option value="lottery">抽奖</option>--}}
         </select>
     </div>
 
     <div class="form-group form-md-floating-label">
         <label>游戏名</label>
-        <select class="form-control" name="game_name" id="game_name">
+        <select class="form-control" name="game_name" id="game_names">
             <option value="xlczg_zf" @if($data->game_name == 'xlczg_zf') selected @endif >老后台龙城专服</option>
             <option value="xlczg_xzf" @if($data->game_name == 'xlczg_xzf') selected @endif>新龙城专服</option>
             <option value="xlczg_hf" @if($data->game_name == 'xlczg_hf') selected @endif>龙城混服</option>

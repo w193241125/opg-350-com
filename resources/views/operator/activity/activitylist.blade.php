@@ -391,7 +391,7 @@
         function upd_activity(){
             var id = $('#upd_id').val()
             var activity_name = $('#activity_name').val()
-            var game_name = $('#game_name').val()
+            var game_name = $('#game_names').val()
             var server_id = $('#server_id').val()
             var sid = $('#sid').val()
             var activity_server = $('#activity_server').val()
@@ -400,6 +400,7 @@
             var activity_status = $(':radio[name="activity_status"]:checked').val();
             var activity_desc = $('#activity_desc').val();
             var activity_ext = $('#activity_ext').val()
+
             $.ajax({
                 'type' : 'POST',
                 'url' :  '/operator/activity_upd',
