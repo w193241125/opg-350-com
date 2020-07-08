@@ -68,6 +68,9 @@
                                                 <option value="consume" @if(old('activity_name') == 'consume') selected @endif>消费排行榜</option>
                                                 <option value="login_gift" @if(old('activity_name') == 'login_gift') selected @endif>每日登录礼包</option>
                                                 <option value="pay_gift" @if(old('activity_name') == 'pay_gift') selected @endif>每日充值礼包</option>
+                                                <option value="pay_gift" @if(old('activity_name') == 'guestbook') selected @endif>留言/祝福墙</option>
+                                                <option value="guestbook" @if(old('activity_name') == 'guestbook') selected @endif>留言/祝福墙</option>
+                                                <option value="pay_back_box" @if(old('activity_name') == 'pay_back_box') selected @endif>充值返宝箱(最大)</option>
                                                 {{--            <option value="lottery">抽奖</option>--}}
                                             </select>
                                             <span class="help-block form_activity_name">活动名称,直接选取。</span>
