@@ -6,7 +6,7 @@
 <div class="modal-body">
     <div class="form-group">
         <label for="activity_name">活动名称</label>
-        <input type="text" class="form-control" id="activity_name" value="{{$data->activity_name}}">
+        <input type="text" class="form-control" id="activity_names" value="{{$data->activity_name}}">
     </div>
 
     <div class="form-group">

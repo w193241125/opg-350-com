@@ -119,6 +119,7 @@ Route::group([ 'prefix' => 'operator','namespace' => 'Operator', 'middleware'=>[
     Route::get('/award_edit/{id}','ActivityController@award_edit')->name('activity.award_edit');
     //礼包码上传
     Route::post('/gift_bag_upload','ActivityController@gift_bag_upload')->name('activity.gift_bag_upload');
+    Route::post('/gift_bag_time_change','ActivityController@gift_bag_time_change')->name('activity.gift_bag_time_change');
 
     //活动
     Route::get('/activity_list','ActivityController@activity_list')->name('activity.list');

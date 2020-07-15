@@ -523,4 +523,28 @@ class ActivityController extends Controller
 
         return response()->json($ret);
     }
+
+    public function gift_bag_time_change(Request $request)
+    {
+        $where = [];
+        $id = $request->input('id');
+
+        list($where['start_date'],$where['end_date']) = explode('~',$request->input('date'));
+
+        $query = DB::connection('mysql_activity');
+
+        $res = $query->table('activity')->where(['id'=>$id])->get();
+
+        $data = [
+            'start_date'=>$res[0]->start_date,
+            'end_date'=>$res[0]->end_date,
+        ];
+        $res = $query->table('gift_code')->where($where)->update($data);
+        $ret =  [
+            'status' => $res ? 200: '-100',
+            'message' => $res ? '更新成功':'更新失败',
+        ];
+        return response()->json($ret);
+
+    }
 }

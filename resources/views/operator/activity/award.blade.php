@@ -221,6 +221,38 @@
                                                 </tbody>
                                             </table>
                                         </div>
+{{--                                    //更改礼包日期--}}
+                                    <form role="form" id="lottery_one_Form" enctype="multipart/form-data">
+                                        <span style="color:red">下面是更改活动礼包时间的，活动时间有更改的话，礼包时间也需要更改</span>
+                                            {{ csrf_field() }}
+                                            <div class="form-body">
+                                                <div class="row ">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group form-md-line-input form-md-floating-label ">
+                                                            <select class="form-control edited " id="form_parent_menu_change" name="activity_change">
+                                                                <option value="0" >--选择活动-</option>
+                                                                @foreach($activity as $v)
+                                                                    <option value="{{$v['id']}}}}" @if(old('activity_change')) selected="selected" @endif>{{$gn[$v['game_name']] OR $v['game_name']}}：{{$v['activity_title']}}</option>
+                                                                @endforeach
+                                                            </select>
+                                                            <label for="form_parent_menu_1"><span class="imp">*&nbsp;</span>更改活动礼包时间</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group form-md-line-input form-md-floating-label ">
+                                                    <div class="input-group">
+                                                        <div class="input-group-addon">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </div>
+                                                        <input type="text" name="activity_time" class="form-control pull-right" id="reservation" value="{{$data->activity_time}}">
+                                                        <span class="help-block form_activity_time">原来活动时间</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-actions noborder">
+                                                <a type="submit" class="btn green lottery_ones_change" >更改礼包时间</a>
+                                            </div>
+                                        </form>
                                 </div>
 
                             </div>
@@ -229,6 +261,22 @@
                     <!-- /.box -->
                 </div>
                 <script>
+                    $(function () {
+                        //Date range picker
+                        $('#reservation').daterangepicker({
+                            "locale": {
+                                format: 'YYYY-MM-DD',
+                                separator: '~',
+                                applyLabel: "应用",
+                                cancelLabel: "取消",
+                                resetLabel: "重置",
+                                daysOfWeek: ["日", "一", "二", "三", "四", "五", "六"],
+                                monthNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+                            },
+                            "startDate": moment(),
+                            "endDate": moment()
+                        });
+                    });
                     $('.lottery_ones').on('click',function () {
                         var _item = $(this);
                         var activity = $('#form_parent_menu_1').val();
@@ -244,6 +292,38 @@
                             cache: false,
                             contentType: false,
                             processData: false,
+                            headers : {
+                                'X-CSRF-TOKEN': $("input[name='_token']").val()
+                            },
+                            beforeSend : function(){
+                                _item.attr('disabled','true');
+                            },
+                            success:function (response) {
+                                console.log(response)
+                                sweetAlert(response.message);
+
+                            }
+                        }).fail(function(response) {
+                            if(response.status == 422){
+                                var data = $.parseJSON(response.responseText);
+                                var layerStr = "";
+                                for(var i in data.errors){
+                                    layerStr += data.errors[i]+" ";
+                                }
+                                sweetAlert('错误', layerStr);
+                            }
+                        }).always(function () {
+                            _item.removeAttr('disabled');
+                        });
+                    });
+                    $('.lottery_ones_change').on('click',function () {
+                        var _item = $(this);
+                        var activity = $('#form_parent_menu_change').val();
+                        var date = $('#reservation').val()
+                        $.ajax({
+                            url: '/operator/gift_bag_time_change',
+                            type:'post',
+                            data:{id:activity,date:date},
                             headers : {
                                 'X-CSRF-TOKEN': $("input[name='_token']").val()
                             },
