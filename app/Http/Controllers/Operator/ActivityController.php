@@ -526,18 +526,18 @@ class ActivityController extends Controller
 
     public function gift_bag_time_change(Request $request)
     {
-        $where = [];
+
         $id = $request->input('id');
-
-        list($where['start_date'],$where['end_date']) = explode('~',$request->input('date'));
-
         $query = DB::connection('mysql_activity');
 
         $res = $query->table('activity')->where(['id'=>$id])->get();
-
-        $data = [
+        $where = [
             'game_name'=>$res[0]->game_name,
             'activity_name'=>$res[0]->activity_name,
+        ];
+        list($where['start_date'],$where['end_date']) = explode('~',$request->input('date'));
+
+        $data = [
             'start_date'=>$res[0]->start_date,
             'end_date'=>$res[0]->end_date,
         ];
