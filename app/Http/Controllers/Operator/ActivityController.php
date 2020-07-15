@@ -536,6 +536,8 @@ class ActivityController extends Controller
         $res = $query->table('activity')->where(['id'=>$id])->get();
 
         $data = [
+            'game_name'=>$res[0]->game_name,
+            'activity_name'=>$res[0]->activity_name,
             'start_date'=>$res[0]->start_date,
             'end_date'=>$res[0]->end_date,
         ];
